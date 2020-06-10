@@ -47,20 +47,6 @@
 				"navigationBarTitleText": "找回密码"
 			}
 		},
-		// #ifdef H5
-		{
-			"path": "pages/customer_list/index",
-			"style": {
-				"navigationBarTitleText": "客服列表"
-			}
-		},
-		{
-			"path": "pages/customer_list/chat",
-			"style": {
-				"navigationBarTitleText": "客服聊天"
-			}
-		},
-		// #endif
 		{
 			"path": "pages/goods_list/index",
 			"style": {
@@ -68,21 +54,9 @@
 			}
 		},
 		{
-			"path": "pages/news_list/index",
-			"style": {
-				"navigationBarTitleText": "资讯"
-			}
-		},
-		{
-			"path": "pages/news_details/index",
-			"style": {
-				"navigationBarTitleText": "资讯详情"
-			}
-		},
-		{
 			"path": "pages/auth/index",
 			"style": {
-				"navigationBarTitleText": "CRMEB"
+				"navigationBarTitleText": ""
 			}
 		},
 		{
@@ -431,48 +405,6 @@
 						"path": "bargain/index",
 						"style": {
 							"navigationBarTitleText": "砍价记录"
-						}
-					}
-				]
-			},
-			{
-				"root": "pages/admin",
-				"name": "adminOrder",
-				"pages":[
-					{
-						"path": "order/index",
-						"style": {
-							"navigationBarTitleText": "订单首页"
-						}
-					},
-					{
-						"path": "orderList/index",
-						"style": {
-							"navigationBarTitleText": "订单列表"
-						}
-					},
-					{
-						"path": "orderDetail/index",
-						"style": {
-							"navigationBarTitleText": "订单详情"
-						}
-					},
-					{
-						"path": "delivery/index",
-						"style": {
-							"navigationBarTitleText": "订单发货"
-						}
-					},
-					{
-						"path": "statistics/index",
-						"style": {
-							"navigationBarTitleText": "订单数据统计"
-						}
-					},
-					{
-						"path": "order_cancellation/index",
-						"style": {
-							"navigationBarTitleText": "订单核销"
 						}
 					}
 				]
