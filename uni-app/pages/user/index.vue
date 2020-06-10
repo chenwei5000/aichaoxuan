@@ -28,21 +28,6 @@
 						<view class="phone" v-if="!userInfo.phone && isLogin" @tap="bindPhone">绑定手机号</view>
 					</view>
 				</view>
-				<view class="num-wrapper">
-					<view class="num-item" @click="goMenuPage('/pages/users/user_money/index')">
-						<text class="num">{{userInfo.now_money || 0}}</text>
-						<view class="txt">余额</view>
-					</view>
-					<view class="num-item" @click="goMenuPage('/pages/users/user_integral/index')">
-						<text class="num">{{userInfo.integral || 0}}</text>
-						<view class="txt">积分</view>
-					</view>
-					<view class="num-item" @click="goMenuPage('/pages/users/user_coupon/index')">
-						<text class="num">{{userInfo.couponCount || 0}}</text>
-						<view class="txt">优惠券</view>
-					</view>
-				</view>
-				<view class="sign" @click="goSignIn">签到</view>
 			</view>
 			<view class="order-wrapper">
 				<view class="order-hd flex">
@@ -65,19 +50,7 @@
 				</view>
 			</view>
 		</view>
-		<!-- 轮播 -->
-		<view class="slider-wrapper" v-if="imgUrls.length>0">
-			<swiper indicator-dots="true" :autoplay="autoplay" :circular="circular" :interval="interval" :duration="duration"
-			 indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#fff">
-				<block v-for="(item,index) in imgUrls" :key="index">
-					<swiper-item>
-						<navigator :url='item.url' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
-							<image :src="item.pic" class="slide-image"></image>
-						</navigator>
-					</swiper-item>
-				</block>
-			</swiper>
-		</view>
+		
 		<!-- 会员菜单 -->
 		<view class="user-menus" style="margin-top: 20rpx;">
 			<block v-for="(item,index) in MyMenus" :key="index">
@@ -166,31 +139,32 @@
 					},
 				],
 				imgUrls: [],
-				userMenu: [{
-						icon: '/static/images/user_menu01.png',
-						title: '会员中心',
-						url: '/pages/users/user_vip/index'
-					},
-					{
-						icon: '/static/images/user_menu02.png',
-						title: '我的推广',
-						url: '/pages/users/user_spread_user/index'
-					},
-					{
-						icon: '/static/images/user_menu03.png',
-						title: '优惠券',
-						url: '/pages/users/user_coupon/index'
-					},
-					{
-						icon: '/static/images/user_menu04.png',
-						title: '砍价记录',
-						url: '/pages/activity/bargain/index'
-					},
-					{
-						icon: '/static/images/user_menu05.png',
-						title: '我的余额',
-						url: '/pages/users/user_money/index'
-					},
+				userMenu: [
+					// {
+					// 	icon: '/static/images/user_menu01.png',
+					// 	title: '会员中心',
+					// 	url: '/pages/users/user_vip/index'
+					// },
+					// {
+					// 	icon: '/static/images/user_menu02.png',
+					// 	title: '我的推广',
+					// 	url: '/pages/users/user_spread_user/index'
+					// },
+					// {
+					// 	icon: '/static/images/user_menu03.png',
+					// 	title: '优惠券',
+					// 	url: '/pages/users/user_coupon/index'
+					// },
+					// {
+					// 	icon: '/static/images/user_menu04.png',
+					// 	title: '砍价记录',
+					// 	url: '/pages/activity/bargain/index'
+					// },
+					// {
+					// 	icon: '/static/images/user_menu05.png',
+					// 	title: '我的余额',
+					// 	url: '/pages/users/user_money/index'
+					// },
 					{
 						icon: '/static/images/user_menu06.png',
 						title: '我的收藏',
