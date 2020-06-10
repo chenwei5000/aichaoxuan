@@ -48,23 +48,6 @@
 					</block>
 				</swiper>
 			</view>
-			<!-- menu -->
-			<view class='nav acea-row' v-if="menus.length">
-				<block v-for="(item,index) in menus" :key="index">
-					<navigator class='item' v-if="item.show == '1'" :url='item.url' open-type='switchTab' hover-class='none'>
-						<view class='pictrue'>
-							<image :src='item.pic'></image>
-						</view>
-						<view class="menu-txt">{{item.name}}</view>
-					</navigator>
-					<navigator class='item' v-else :url='item.url' hover-class='none'>
-						<view class='pictrue'>
-							<image :src='item.pic'></image>
-						</view>
-						<view class="menu-txt">{{item.name}}</view>
-					</navigator>
-				</block>
-			</view>
 			<!-- 直播 -->
 			<!-- #ifdef MP -->
 			<block v-if="liveList.length>0">
@@ -111,37 +94,6 @@
 				</view>
 			</block>
 			<!-- #endif -->
-			<!-- 拼团热点图 -->
-			<view class="hot-img" :style="{'marginTop':liveList.length>0?'40rpx':'0'}">
-				<swiper :autoplay="autoplay" :circular="circular" :interval="interval">
-					<block v-for="(item,index) in activityList" :key="index">
-						<swiper-item>
-							<navigator :url='item.link' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
-								<image :src="item.image" class="slide-image"></image>
-							</navigator>
-						</swiper-item>
-					</block>
-				</swiper>
-			</view>
-			<!-- 超值爆款 -->
-			<view class="explosion">
-				<view class="hd">
-					<image src="/static/images/explosion-title.png" mode=""></image>
-					<view class="txt">美好生活由此开始</view>
-				</view>
-				<view class="bd">
-					<navigator class="item" v-for="(item,index) in explosiveMoney" :key="index" :url="'/pages/columnGoods/HotNewGoods/index?type='+item.type"
-					 hover-class='none'>
-						<view class="con-box">
-							<view class="title line1">{{item.title}}</view>
-							<view class="con line2">{{item.info}}</view>
-							<view class="go">GO！<image src="/static/images/right-icon.png" mode=""></image>
-							</view>
-						</view>
-						<image :src="item.image"></image>
-					</navigator>
-				</view>
-			</view>
 			<!-- 限时秒杀 -->
 			<view class="spike-box" v-if="spikeList.length>0">
 				<view class="hd">
@@ -173,88 +125,8 @@
 					</scroll-view>
 				</view>
 			</view>
-			<!-- 砍价专区 -->
-			<view class="barg" v-if="bargList.length>0">
-				<view class="title">
-					<image src="/static/images/barg001.png" mode=""></image>
-				</view>
-				<view class="barg-swiper">
-					<scroll-view scroll-x="true" style="white-space: nowrap; display: flex" show-scrollbar="true">
-						<view class="wrapper">
-							<block v-for="(item,index) in bargList" :key="index">
-								<view class='list-box' @click="bargDetail(item)">
-									<image :src="item.image" class="slide-image"></image>
-									<view class="info-txt">
-										<view class="price">￥{{item.price}}</view>
-										<view class="txt">立即砍价</view>
-									</view>
-								</view>
-							</block>
-							<navigator url="/pages/activity/goods_bargain/index" class="more-box" hover-class="none">
-								<view class="txt">查看更多</view>
-								<image src="/static/images/mores.png"></image>
-							</navigator>
-						</view>
-
-					</scroll-view>
-				</view>
-			</view>
-			<!-- 拼团活动 -->
-			<view class="group-wrapper" v-if="combinationList.length>0">
-				<view class="hd">
-					<view class="left">
-						<image src="/static/images/group02.gif" class="icon"></image>
-						<image src="/static/images/group01.png" class="title"></image>
-						<view class="person">
-							<view class="avatar-box">
-								<block v-for="item in pinkInfo.avatars">
-									<image :src="item" mode=""></image>
-								</block>
-							</view>
-							<view class="num" v-if="pinkInfo.pink_count>0">{{pinkInfo.pink_count}}人拼团成功</view>
-						</view>
-					</view>
-					<navigator class="more" url="/pages/activity/goods_combination/index" hover-class="none">更多 <text class="iconfont icon-jiantou"></text></navigator>
-				</view>
-				<view class="group-scroll">
-					<scroll-view scroll-x="true" style="white-space: nowrap; display: flex" show-scrollbar="false">
-						<navigator class="group-item" v-for="(item,index) in combinationList" :key="index" :url="'/pages/activity/goods_combination_details/index?id='+item.id"
-						 hover-class="none">
-							<image :src="item.image" mode=""></image>
-							<view class="info">
-								<view class="name line1">{{item.title}}</view>
-								<view class="price-box">
-									<text class="tips">拼团价</text>
-									<text class="price"><text>￥</text>{{item.price}}</text>
-								</view>
-							</view>
-							<view class="bom-btn">参与拼团</view>
-						</navigator>
-					</scroll-view>
-				</view>
-			</view>
-			<!-- 精品推荐 -->
-			<view class='boutique'>
-				<swiper autoplay="true" indicator-dots="true" :circular="circular" :interval="interval" :duration="duration"
-				 indicator-color="rgba(0,0,0,.4)" indicator-active-color="#fff">
-					<block v-for="(item,index) in bastBanner" :key="index">
-						<swiper-item>
-							<navigator :url='item.link' style='width:100%;height:100%;' hover-class='none'>
-								<image :src="item.img" class="slide-image" />
-							</navigator>
-						</swiper-item>
-					</block>
-				</swiper>
-			</view>
 			<!-- 首页推荐 -->
 			<view class="index-product-wrapper">
-				<view class="nav-bd">
-					<view class="item" v-for="(item,index) in explosiveMoney" :index="item.id" :class="{active:index == ProductNavindex}"
-					 @click="ProductNavTab(item,index)">
-						<view class="txt">{{item.title}}</view>
-						<view class="label">{{item.info2}}</view>
-					</view>
-				</view>
 				<!-- 首发新品 -->
 				<view class="list-box animated" :class='tempArr.length > 0?"fadeIn on":""'>
 					<view class="item" v-for="(item,index) in tempArr" :key="index" @click="goDetail(item)">

@@ -2,7 +2,7 @@
 module.exports = {
 	// 请求域名 格式： https://您的域名
 	// #ifdef MP
-		HTTP_REQUEST_URL:'http://test.xiaosongzhixue.com/api',
+		HTTP_REQUEST_URL:'http://test.xiaosongzhixue.com',
 	// #endif
 	
 	// #ifdef H5

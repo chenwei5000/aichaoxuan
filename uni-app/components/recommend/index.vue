@@ -1,4 +1,5 @@
 <template>
+
 	<view class='recommend'>
 		<view class='title acea-row row-center-wrapper'>
 			<text class='iconfont icon-zhuangshixian'></text>

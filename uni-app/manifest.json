@@ -1,5 +1,5 @@
 {
-    "name" : "crmeb",
+    "name" : "chaoxuanshop",
     "appid" : "__UNI__06E0263",
     "description" : "",
     "versionName" : "1.0.0",
@@ -56,7 +56,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wx6ca9ac1a01f617a1",
+        "appid" : "wx9af5c0ce0db3632c",
         "setting" : {
             "urlCheck" : false,
             "minified" : true,
@@ -89,12 +89,8 @@
         },
         "domain" : "",
         "sdkConfigs" : {
-            "maps" : {
-                "qqmap" : {
-                    "key" : "NO7BZ-APDKP-UCBD7-VT7CX-R5UZK-JBF2W"
-                }
-            }
+            "maps" : {}
         },
-        "title" : "CRMEB"
+        "title" : "超选小店铺"
     }
 }
