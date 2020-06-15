@@ -63,169 +63,6 @@ export function registerReset(data) {
   return request.post("/register/reset", data, { noAuth: true });
 }
 
-/**
- * 获取用户中心菜单
- *
- */
-export function getMenuList() {
-  return request.get("menu/user");
-}
-
-/*
- * 签到用户信息
- * */
-export function postSignUser(sign) {
-  return request.post("sign/user", sign);
-}
-
-/**
- * 获取签到配置
- * 
-*/
-export function getSignConfig(){
-  return request.get('sign/config')
-}
-
-/**
- * 获取签到列表
- * @param object data
-*/
-export function getSignList(data){
-  return request.get('sign/list',data);
-}
-
-/**
- * 用户签到
-*/
-export function setSignIntegral(){
-  return request.post('sign/integral')
-}
-
-/**
- * 签到列表(年月)
- * @param object data
- * 
-*/
-export function getSignMonthList(data){
-  return request.get('sign/month',data)
-}
-
-/**
- * 活动状态
- * 
-*/
-export function userActivity(){
-  return request.get('user/activity');
-}
-
-/*
- * 资金明细（types|0=全部,1=消费,2=充值,3=返佣,4=提现）
- * */
-export function getCommissionInfo(q, types) {
-  return request.get("spread/commission/" + types, q);
-}
-
-/*
- * 积分记录
- * */
-export function getIntegralList(q) {
-  return request.get("integral/list", q);
-}
-
-/**
- * 获取分销海报图片
- * 
-*/
-export function spreadBanner(){
-	//#ifdef H5
-	return request.get('spread/banner',{type:2});
-	//#endif
-	//#ifdef MP
-	 return request.get('spread/banner',{type:1});
-	//#endif
-
-}
-
-/**
- *
- * 获取推广用户一级和二级
- * @param object data
-*/
-export function spreadPeople(data){
-  return request.post('spread/people',data);
-}
-
-/**
- * 
- * 推广佣金/提现总和
- * @param int type
-*/
-export function spreadCount(type){
-  return request.get('spread/count/'+type);
-}
-
-/*
- * 推广数据
- * */
-export function getSpreadInfo() {
-  return request.get("/commission");
-}
-
-
-/**
- * 
- * 推广订单
- * @param object data
-*/
-export function spreadOrder(data){
-  return request.post('spread/order',data);
-}
-
-/*
- * 获取推广人排行
- * */
-export function getRankList(q) {
-  return request.get("rank", q);
-}
-
-/*
- * 获取佣金排名
- * */
-export function getBrokerageRank(q) {
-  return request.get("brokerage_rank", q);
-}
-
-/**
- * 提现申请
- * @param object data
-*/
-export function extractCash(data){
-  return request.post('extract/cash',data)
-}
-
-/**
- * 提现银行/提现最低金额
- * 
-*/
-export function extractBank(){
-  return request.get('extract/bank');
-}
-
-/**
- * 会员等级列表
- * 
-*/
-export function userLevelGrade(){
-  return request.get('user/level/grade');
-}
-
-/**
- * 获取某个等级任务
- * @param int id 任务id
-*/
-export function userLevelTask(id){
-  return request.get('user/level/task/'+id);
-}
 
 /**
  * 检查用户是否可以成为会员
@@ -292,19 +129,6 @@ export function getLogout() {
   return request.get("logout");
 }
 /**
- * 小程序充值
- * 
-*/
-export function rechargeRoutine(data){
-  return request.post('recharge/routine',data)
-}
-/*
- * 公众号充值
- * */
-export function rechargeWechat(data) {
-  return request.post("recharge/wechat", data);
-}
-/**
  * 获取默认地址
  * 
 */
@@ -313,31 +137,11 @@ export function getAddressDefault(){
 }
 
 /**
- * 充值金额选择
- */
-export function getRechargeApi() {
-  return request.get("recharge/index");
-}
-
-/**
  * 登陆记录
  */
 export function setVisit(data)
 {
   return request.post('user/set_visit', {...data}, { noAuth:true});
-}
-
-/**
- * 客服列表
- */
-export function serviceList() {
-  return request.get("user/service/list");
-}
-/**
- * 客服详情
- */
-export function getChatRecord(to_uid, data) {
-  return request.get("user/service/record/" + to_uid, data);
 }
 
 /**
