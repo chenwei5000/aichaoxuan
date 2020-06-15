@@ -85,33 +85,6 @@
 					</block>
 				</view>
 				<!-- 优品推荐 -->
-				<!-- <view class="superior" if='good_list.length' id="past2">
-					<view class="title acea-row row-center-wrapper">
-						<image src="../../static/images/ling.png"></image>
-						<view class="titleTxt">优品推荐</view>
-						<image src="../../static/images/ling.png"></image>
-					</view>
-					<view class="slider-banner banner">
-						<swiper indicator-dots="true" :autoplay="autoplay" :circular="circular" :interval="interval" :duration="duration"
-						 indicator-color="#999" indicator-active-color="#e93323" :style="'height:'+clientHeight+'px'">
-							<swiper-item v-for="(item,indexw) in good_list" :key="indexw">
-								<view class="list acea-row row-middle" :id="'list'+indexw">
-									<view class="item" v-for="(val,indexn) in item.list" :key="indexn" @click="goDetail(val)">
-										<view class="pictrue">
-											<image :src="val.image"></image>
-											<span class="pictrue_log pictrue_log_class" v-if="val.activity && val.activity.type === '1'">秒杀</span>
-											<span class="pictrue_log pictrue_log_class" v-if="val.activity && val.activity.type === '2'">砍价</span>
-											<span class="pictrue_log pictrue_log_class" v-if="val.activity && val.activity.type === '3'">拼团</span>
-										</view>
-										<view class="name line1">{{val.store_name}}</view>
-										<view class="money font-color">¥{{val.price}}</view>
-									</view>
-								</view>
-							</swiper-item>
-							<view class="swiper-pagination" slot="pagination"></view>
-						</swiper>
-					</view>
-				</view> -->
 				<view class='product-intro' id="past3">
 					<view class='title'>产品介绍</view>
 					<view class='conter'>
@@ -148,8 +121,6 @@
 		<productWindow :attr="attr" :isShow='1' :iSplus='1' @myevent="onMyEvent" @ChangeAttr="ChangeAttr" @ChangeCartNum="ChangeCartNum"
 		 @attrVal="attrVal" @iptCartNum="iptCartNum" id='product-window'></productWindow>
 		<home></home>
-		<couponListWindow :coupon='coupon' @ChangCouponsClone="ChangCouponsClone" @ChangCoupons="ChangCoupons"
-		 @ChangCouponsUseState="ChangCouponsUseState"></couponListWindow>
 		<!-- 分享按钮 -->
 		<view class="generate-posters acea-row row-middle" :class="posters ? 'on' : ''">
 			<!-- #ifndef MP -->
@@ -205,9 +176,6 @@
 		getUserInfo,
 		userShare
 	} from '@/api/user.js';
-	import {
-		getCoupons
-	} from '@/api/api.js';
 	import {
 		getCartCounts
 	} from '@/api/order.js';
@@ -354,7 +322,6 @@
 			if (options.spid) app.globalData.spid = options.spid;
 			// #endif
 			this.getGoodsDetails();
-			this.getCouponList();
 			//#ifdef H5
 			this.isLogin && silenceBindingSpread();
 			//#endif
@@ -474,15 +441,11 @@
 			},
 			// 微信登录回调
 			onLoadFun: function(e) {
-				this.getCouponList();
 				this.getCartCount();
 				this.downloadFilePromotionCode();
 				// this.getUserInfo();
 
 				// this.get_product_collect();
-			},
-			ChangCouponsClone: function() {
-				this.$set(this.coupon, 'coupon', false)
 			},
 			/*
 			 * 获取用户信息
@@ -549,17 +512,6 @@
 					this.$set(this, "attrValue", "");
 					this.$set(this, "attrTxt", "请选择");
 				}
-			},
-			/**
-			 * 领取完毕移除当前页面领取过的优惠券展示
-			 */
-			ChangCoupons: function(e) {
-				let coupon = e;
-				console.log(e);
-				let couponList = this.$util.ArrayRemove(this.couponList, 'id', coupon.id);
-				this.$set(this, 'couponList', couponList);
-				console.log(couponList);
-				this.getCouponList();
 			},
 
 			setClientHeight: function() {
@@ -751,32 +703,6 @@
 					this.$set(this, "attrTxt", "请选择");
 				}
 			},
-			/**
-			 * 获取优惠券
-			 * 
-			 */
-			getCouponList() {
-				let that = this;
-				getCoupons({
-					page: 1,
-					limit: 40,
-					type: 1,
-					product_id: that.id
-				}).then(res => {
-					that.$set(that.coupon, 'list', res.data);
-					let couponList = [];
-					for (let i = 0; i < that.coupon.list.length; i++) {
-						if (!res.data[i].is_use && couponList.length < 2) couponList.push(res.data[i]);
-					}
-					that.$set(that, 'couponList', couponList);
-				});
-			},
-			ChangCouponsUseState(index) {
-				let that = this;
-				that.coupon.list[index].is_use = true;
-				that.$set(that.coupon, 'list', that.coupon.list);
-				that.$set(that.coupon, 'coupon', false);
-			},
 			/** 
 			 * 
 			 * 
@@ -825,7 +751,6 @@
 					that.$set(that, 'isShowAuth', true);
 					// #endif
 				} else {
-					that.getCouponList();
 					that.$set(that.coupon, 'coupon', true);
 				}
 			},

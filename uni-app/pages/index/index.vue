@@ -235,8 +235,6 @@
 	import {
 		getSeckillIndexTime,
 		getSeckillList,
-		getBargainList,
-		getCombinationList
 	} from '@/api/activity.js';
 	import countDown from '@/components/countDown';
 	import {
@@ -374,8 +372,7 @@
 			this.navH = 0;
 			// #endif
 			this.isLogin && silenceBindingSpread();
-			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.getSeckillIndexTime(), this.getBargainList(), this.getCombinationList(),
-				this.pink(), this.setVisit()
+			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.getSeckillIndexTime(), this.pink(), this.setVisit()
 			]);
 			// #ifdef MP
 			this.getLiveList()
@@ -578,61 +575,6 @@
 						this.spikeList = data
 					})
 				})
-			},
-			// 砍价列表
-			getBargainList() {
-				getBargainList({
-					page: 1,
-					limit: 20
-				}).then(res => {
-					this.bargList = res.data
-				})
-			},
-			// 拼团列表
-			getCombinationList: function() {
-				var that = this;
-				var data = {
-					page: 1,
-					limit: 6
-				};
-				getCombinationList(data).then(function(res) {
-					var combinationList = that.combinationList;
-					that.combinationList = combinationList.concat(res.data);
-				}).catch(() => {
-					that.loading = false
-				})
-			},
-			// 拼团数据
-			pink: function() {
-				pink().then(res => {
-					this.pinkInfo = res.data
-				})
-			},
-			// 砍价详情
-			bargDetail(item) {
-				if (!this.isLogin) {
-					// #ifdef H5
-					uni.showModal({
-						title: '提示',
-						content: '您未登陆，请登陆！',
-						success: function(res) {
-							if (res.confirm) {
-								uni.navigateTo({
-									url: '/pages/users/login/index'
-								})
-							} else if (res.cancel) {}
-						}
-					})
-					// #endif
-					// #ifdef MP
-					this.$set(this, 'isAuto', true);
-					this.$set(this, 'isShowAuth', true);
-					// #endif
-				} else {
-					uni.navigateTo({
-						url: `/pages/activity/goods_bargain_details/index?id=${item.id}&bargain=${this.uid}`
-					})
-				}
 			},
 			// 授权关闭
 			authColse: function(e) {
