@@ -10,21 +10,6 @@ export function getProductDetail(id){
 }
 
 /**
- * 产品分享二维码 推广员
- * @param int id
-*/
-// #ifndef MP
-export function getProductCode(id){
-  return request.get('product/code/' + id, {});
-}
-// #endif
-// #ifdef MP
-export function getProductCode(id){
-  return request.get('product/code/' + id, {user_type:'routine'});
-}
-// #endif
-
-/**
  * 添加收藏
  * @param int id
  * @param string category product=普通产品,product_seckill=秒杀产品
@@ -128,13 +113,4 @@ export function getReplyConfig(id){
 export function getSearchKeyword(){
   return request.get('search/keyword',{},{noAuth:true});
 }
-
-/**
- * 门店列表
- * @returns {*}
- */
-export function storeListApi(data) {
-  return request.get("store_list", data);
-}
-
 

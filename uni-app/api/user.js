@@ -65,14 +65,6 @@ export function registerReset(data) {
 
 
 /**
- * 检查用户是否可以成为会员
- * 
-*/
-export function userLevelDetection(){
-  return request.get('user/level/detection');
-}
-
-/**
  * 
  * 地址列表
  * @param object data
@@ -144,11 +136,3 @@ export function setVisit(data)
   return request.post('user/set_visit', {...data}, { noAuth:true});
 }
 
-/**
- * 静默绑定推广人
- * @param {Object} puid
- */
-export function spread(puid)
-{
-	return request.post("user/spread",{puid:puid});
-}
