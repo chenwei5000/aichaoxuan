@@ -4,7 +4,6 @@
 			<view class="allAddress" :style="store_self_mention ? '':'padding-top:10rpx'">
 				<view class="nav acea-row">
 					<view class="item font-color" :class="shippingType == 0 ? 'on' : 'on2'" @tap="addressType(0)" v-if='store_self_mention'></view>
-					<view class="item font-color" :class="shippingType == 1 ? 'on' : 'on2'" @tap="addressType(1)" v-if='store_self_mention'></view>
 				</view>
 				<view class='address acea-row row-between-wrapper' @tap='onAddress' v-if='shippingType == 0'>
 					<view class='addressCon' v-if="addressInfo.real_name">
@@ -40,23 +39,6 @@
 			</view>
 			<orderGoods :cartInfo="cartInfo"></orderGoods>
 			<view class='wrapper'>
-				<view class='item acea-row row-between-wrapper' @tap='couponTap' v-if="!pinkId && !BargainId && !combinationId && !seckillId">
-					<view>优惠券</view>
-					<view class='discount'>{{couponTitle}}
-						<text class='iconfont icon-jiantou'></text>
-					</view>
-				</view>
-				<view class='item acea-row row-between-wrapper' v-if="!pinkId && !BargainId && !combinationId && !seckillId">
-					<view>积分抵扣</view>
-					<view class='discount acea-row row-middle'>
-						<view> {{useIntegral ? "剩余积分":"当前积分"}}
-							<text class='num font-color'>{{integral || 0}}</text>
-						</view>
-						<checkbox-group @change="ChangeIntegral">
-							<checkbox :checked='useIntegral ? true : false' />
-						</checkbox-group>
-					</view>
-				</view>
 				<view class='item acea-row row-between-wrapper' v-if="priceGroup.vipPrice > 0 && userInfo.vip && !pinkId && !BargainId && !combinationId && !seckillId">
 					<view>会员优惠</view>
 					<view class='discount'>-￥{{priceGroup.vipPrice}}</view>
@@ -80,10 +62,6 @@
 						</view>
 					</view>
 				</view>
-				<!-- <view class='item acea-row row-between-wrapper' wx:else>
-		      <view>自提门店</view>
-		      <view class='discount'>{{system_store.name}}</view>
-		    </view> -->
 				<view class='item' v-if="textareaStatus">
 					<view>备注信息</view>
 					<textarea v-if="coupon.coupon===false" placeholder-class='placeholder' @input='bindHideKeyboard' value="" name="mark"
@@ -120,14 +98,6 @@
 					<view>商品总价：</view>
 					<view class='money'>￥{{priceGroup.totalPrice}}</view>
 				</view>
-				<view class='item acea-row row-between-wrapper' v-if="coupon_price > 0">
-					<view>优惠券抵扣：</view>
-					<view class='money'>-￥{{coupon_price}}</view>
-				</view>
-				<view class='item acea-row row-between-wrapper' v-if="integral_price > 0">
-					<view>积分抵扣：</view>
-					<view class='money'>-￥{{integral_price}}</view>
-				</view>
 				<view class='item acea-row row-between-wrapper' v-if="priceGroup.storePostage > 0">
 					<view>运费：</view>
 					<view class='money'>+￥{{priceGroup.storePostage}}</view>
@@ -141,8 +111,6 @@
 				<view class='settlement' style='z-index:100' @tap="SubOrder">立即结算</view>
 			</view>
 		</view>
-		<couponListWindow :coupon='coupon' @ChangCouponsClone="ChangCouponsClone" :openType='openType' :cartId='cartId'
-		 @ChangCoupons="ChangCoupons"></couponListWindow>
 		<addressWindow ref="addressWindow" @changeTextareaStatus="changeTextareaStatus" :address='address' :pagesUrl="pagesUrl"
 		 @OnChangeAddress="OnChangeAddress" @changeClose="changeClose"></addressWindow>
 		<!-- #ifdef MP -->
@@ -172,7 +140,6 @@
 		CACHE_LONGITUDE,
 		CACHE_LATITUDE
 	} from '@/config/cache.js';
-	import couponListWindow from '@/components/couponListWindow';
 	import addressWindow from '@/components/addressWindow';
 	import orderGoods from '@/components/orderGoods';
 	import home from '@/components/home';
@@ -187,7 +154,6 @@
 	// #endif
 	export default {
 		components: {
-			couponListWindow,
 			addressWindow,
 			orderGoods,
 			home,
@@ -206,23 +172,9 @@
 						title: '微信快捷支付',
 						payStatus: 1,
 					},
-					{
-						"name": "余额支付",
-						"icon": "icon-icon-test",
-						value: 'yue',
-						title: '可用余额:',
-						payStatus: 1,
-					},
-					{
-						"name": "线下支付",
-						"icon": "icon-yinhangqia",
-						value: 'offline',
-						title: '线下支付',
-						payStatus: 2,
-					},
 				],
 				payType: 'weixin', //支付方式
-				openType: 1, //优惠券打开方式 1=使用
+				openType: 0, //优惠券打开方式 1=使用
 				active: 0, //支付方式切换
 				coupon: {
 					coupon: false,
@@ -436,47 +388,7 @@
 				this.status = 0;
 				this.$set(this.coupon, 'list', this.coupon.list);
 			},
-			/**
-			 * 处理点击优惠券后的事件
-			 * 
-			 */
-			ChangCoupons: function(e) {
-				// this.usableCoupon = e
-				// this.coupon.coupon = false
-				let index = e,
-					list = this.coupon.list,
-					couponTitle = '请选择',
-					couponId = 0;
-				for (let i = 0, len = list.length; i < len; i++) {
-					if (i != index) {
-						list[i].use_title = '';
-						list[i].is_use = 0;
-					}
-				}
-				if (list[index].is_use) {
-					//不使用优惠券
-					list[index].use_title = '';
-					list[index].is_use = 0;
-				} else {
-					//使用优惠券
-					list[index].use_title = '不使用';
-					list[index].is_use = 1;
-					couponTitle = list[index].coupon_title;
-					couponId = list[index].id;
-				}
-				this.couponTitle = couponTitle;
-				this.couponId = couponId;
-				this.$set(this.coupon, 'coupon', false);
-				this.$set(this.coupon, 'list', list);
-				this.computedPrice();
-			},
-			/**
-			 * 使用积分抵扣
-			 */
-			ChangeIntegral: function() {
-				this.useIntegral = !this.useIntegral;
-				this.computedPrice();
-			},
+			
 			/**
 			 * 选择地址后改变事件
 			 * @param object e
@@ -531,8 +443,6 @@
 					
 					// that.$set(that, 'cartArr', that.cartArr);
 					that.$set(that, 'ChangePrice', that.totalPrice);
-					that.getBargainId();
-					that.getCouponList();
 				}).catch(err => {
 					console.log(err,'err')
 					// return this.$util.Tips({
@@ -541,39 +451,6 @@
 					// 	tab: 3,
 					// 	url: 1
 					// });
-				});
-			},
-			/*
-			 * 提取砍价和拼团id
-			 */
-			getBargainId: function() {
-				let that = this;
-				let cartINfo = that.cartInfo;
-				let BargainId = 0;
-				let combinationId = 0;
-				cartINfo.forEach(function(value, index, cartINfo) {
-					BargainId = cartINfo[index].bargain_id,
-						combinationId = cartINfo[index].combination_id
-				})
-				that.$set(that, 'BargainId', parseInt(BargainId));
-				that.$set(that, 'combinationId', parseInt(combinationId));
-				if (that.cartArr.length == 3 && (BargainId || combinationId || that.seckillId)) {
-					that.cartArr[2].payStatus = 0;
-					that.$set(that, 'cartArr', that.cartArr);
-				}
-			},
-			/**
-			 * 获取当前金额可用优惠券
-			 * 
-			 */
-			getCouponList: function() {
-				let that = this;
-				let data = {
-					cartId: this.cartId
-				}
-				getCouponsOrderPrice(this.totalPrice, data).then(res => {
-					that.$set(that.coupon, 'list', res.data);
-					that.openType = 1;
 				});
 			},
 			/*

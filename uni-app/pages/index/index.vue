@@ -51,7 +51,7 @@
 			<!-- 直播 -->
 			<!-- #ifdef MP -->
 			<block v-if="liveList.length>0">
-				<navigator :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id='+liveList[0].roomid" class="live-wrapper"
+				<navigator :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+liveList[0].roomid" class="live-wrapper"
 				 v-if="liveList.length==1" hover-class="none">
 					<view class="live-top" :class="liveList[0].live_status == 101?'pictrue_log_xl':liveList[0].live_status == 103?'pictrue_log_xl_gray':'pictrue_log_xl_blue'">
 						<block v-if="liveList[0].live_status == 101">
@@ -72,7 +72,7 @@
 				</navigator>
 				<view class="live-wrapper mores" v-else>
 					<scroll-view scroll-x="true" style="white-space: nowrap; display: flex">
-						<navigator hover-class="none" class="item" v-for="(item,index) in liveList" :key="index" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id='+item.roomid">
+						<navigator hover-class="none" class="item" v-for="(item,index) in liveList" :key="index" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">
 							<view class="live-top" :class="item.type == 1?'pictrue_log_xl':item.type == 2?'pictrue_log_xl_gray':'pictrue_log_xl_blue'">
 								<block v-if="item.live_status == 101">
 									<image src="/static/images/live-01.png" mode=""></image>
@@ -87,7 +87,7 @@
 									<text>未开始</text>
 								</block>
 							</view>
-							<image :src="item.anchor_img"></image>
+							<image :src="item.cover_img"></image>
 							<view class="live-title">{{item.name}}</view>
 						</navigator>
 					</scroll-view>
@@ -203,8 +203,6 @@
 	let app = getApp();
 	import {
 		getIndexData,
-		getCoupons,
-		pink
 	} from '@/api/api.js';
 	// #ifdef MP-WEIXIN
 	import {
@@ -224,7 +222,6 @@
 	// #endif
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
-	import couponWindow from '@/components/couponWindow';
 	import {
 		goShopDetail
 	} from '@/libs/order.js'
@@ -259,7 +256,6 @@
 			tabNav,
 			goodList,
 			promotionGood,
-			couponWindow,
 			countDown,
 			recommend,
 			// #ifdef MP
@@ -340,7 +336,8 @@
 				isFixed: false,
 				goodType: 0, //精品推荐Type
 				goodScroll: true, //精品推荐开关
-				params: { //精品推荐分页
+				params: { 
+				    //精品推荐分页
 					page: 1,
 					limit: 10,
 				},
@@ -372,7 +369,7 @@
 			this.navH = 0;
 			// #endif
 			this.isLogin && silenceBindingSpread();
-			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.getSeckillIndexTime(), this.pink(), this.setVisit()
+			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.getSeckillIndexTime(), this.setVisit()
 			]);
 			// #ifdef MP
 			this.getLiveList()
@@ -383,6 +380,10 @@
 			uni.setNavigationBarTitle({
 				title: self.site_name
 			})
+			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
+			    this.setData({
+			        customParams
+			 })
 		},
 		methods: {
 			// 记录会员访问

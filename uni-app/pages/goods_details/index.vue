@@ -32,38 +32,6 @@
 							<!-- <view>库存:{{storeInfo.stock}}{{storeInfo.unit_name}}</view> -->
 							<view>销量:{{storeInfo.fsales}}{{storeInfo.unit_name}}</view>
 						</view>
-						<!-- <view class='coupon acea-row row-between-wrapper' v-if="storeInfo.give_integral > 0">
-							<view class='hide line1 acea-row'>
-								赠积分：
-								<view class='activity'>赠送 {{storeInfo.give_integral}} 积分</view>
-							</view>
-						</view> -->
-						<view class='coupon acea-row row-between-wrapper' @click='couponTap' style="margin-top: 20rpx;">
-							<view class='hide line1 acea-row'>
-								优惠券：
-								<view class='activity' v-for="(item,index) in couponList" :key="index">满{{item.use_min_price}}减{{item.coupon_price}}</view>
-							</view>
-							<view class='iconfont icon-jiantou'></view>
-						</view>
-						<view class="coupon acea-row row-between-wrapper" v-if="activity.length">
-							<view class="line1 acea-row">
-								<text>活&nbsp;&nbsp;&nbsp;动：</text>
-								<view v-for='(item,index) in activity' :key='index' @click="goActivity(item)">
-									<view v-if="item.type === '1'" :class="index==0?'activity_pin':'' || index==1?'activity_miao':'' || index==2?'activity_kan':''">
-										<text class="iconfonts iconfont icon-pintuan"></text>
-										<text class="activity_title"> 参与秒杀</text>
-									</view>
-									<view :class="index==0?'activity_pin':'' || index==1?'activity_miao':'' || index==2?'activity_kan':''" v-if="item.type === '2'">
-										<text class="iconfonts iconfont icon-shenhezhong"></text>
-										<text class="activity_title"> 参与砍价</text>
-									</view>
-									<view :class="index==0?'activity_pin':'' || index==1?'activity_miao':'' || index==2?'activity_kan':''" v-if="item.type === '3'">
-										<text class="iconfonts iconfont icon-kanjia"></text>
-										<text class="activity_title"> 参与拼团</text>
-									</view>
-								</view>
-							</view>
-						</view>
 					</view>
 					<view class='attribute acea-row row-between-wrapper' @click="selecAttr">
 						<view>{{attrTxt}}：
@@ -189,7 +157,6 @@
 		imageBase64
 	} from "@/api/public";
 	import productConSwiper from '@/components/productConSwiper';
-	import couponListWindow from '@/components/couponListWindow';
 	import productWindow from '@/components/productWindow';
 	import userEvaluation from '@/components/userEvaluation';
 	import shareRedPackets from '@/components/shareRedPackets';
@@ -203,7 +170,6 @@
 	export default {
 		components: {
 			productConSwiper,
-			couponListWindow,
 			productWindow,
 			userEvaluation,
 			shareRedPackets,
@@ -229,7 +195,6 @@
 				reply: [], //评论列表
 				storeInfo: {}, //商品详情
 				productValue: [], //系统属性
-				couponList: [], //优惠券
 				cart_num: 1, //购买数量
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
@@ -736,23 +701,6 @@
 			selecAttr: function() {
 				this.$set(this.attr, 'cartAttr', true);
 				this.$set(this, 'isOpen', true);
-			},
-			/**
-			 * 打开优惠券插件
-			 */
-			couponTap: function() {
-				let that = this;
-				if (that.isLogin === false) {
-					// #ifdef H5 || APP-PLUS
-					toLogin();
-					// #endif
-					// #ifdef MP
-					that.$set(that, 'isAuto', true);
-					that.$set(that, 'isShowAuth', true);
-					// #endif
-				} else {
-					that.$set(that.coupon, 'coupon', true);
-				}
 			},
 			onMyEvent: function() {
 				this.$set(this.attr, 'cartAttr', false);
