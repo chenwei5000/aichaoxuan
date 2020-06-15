@@ -53,33 +53,15 @@
 		
 		<!-- 会员菜单 -->
 		<view class="user-menus" style="margin-top: 20rpx;">
-			<block v-for="(item,index) in MyMenus" :key="index">
+			<block v-for="(item,index) in userMenu" :key="index">
 				<navigator class="item" :url="item.url" hover-class="none" v-if="item.url!='#' && item.url!='/pages/service/index'">
 					<view class="left">
-						<image :src="item.pic"></image>
-						<text>{{item.name}}</text>
+						<image :src="item.icon"></image>
+						<text>{{item.title}}</text>
 					</view>
 					<view class="iconfont icon-xiangyou"></view>
 				</navigator>
 			</block>
-			<!-- #ifdef H5 -->
-			<navigator class="item" url="/pages/customer_list/index" hover-class="none">
-				<view class="left">
-					<image src="/static/images/user_menu08.png"></image>
-					<text>联系客服</text>
-				</view>
-				<view class="iconfont icon-xiangyou"></view>
-			</navigator>
-			<!-- #endif -->
-			<!-- #ifdef MP -->
-			<button class="item" open-type='contact' hover-class='none'>
-				<view class="left">
-					<image src="/static/images/user_menu08.png"></image>
-					<text>联系客服</text>
-				</view>
-				<view class="iconfont icon-xiangyou"></view>
-			</button>
-			<!-- #endif -->
 		</view>
 		<view style="height: 50rpx;"></view>
 		<!-- #ifdef MP -->
@@ -89,7 +71,6 @@
 </template>
 <script>
 	import {
-		getMenuList,
 		getUserInfo,
 		setVisit
 	} from '@/api/user.js';
@@ -140,31 +121,6 @@
 				],
 				imgUrls: [],
 				userMenu: [
-					// {
-					// 	icon: '/static/images/user_menu01.png',
-					// 	title: '会员中心',
-					// 	url: '/pages/users/user_vip/index'
-					// },
-					// {
-					// 	icon: '/static/images/user_menu02.png',
-					// 	title: '我的推广',
-					// 	url: '/pages/users/user_spread_user/index'
-					// },
-					// {
-					// 	icon: '/static/images/user_menu03.png',
-					// 	title: '优惠券',
-					// 	url: '/pages/users/user_coupon/index'
-					// },
-					// {
-					// 	icon: '/static/images/user_menu04.png',
-					// 	title: '砍价记录',
-					// 	url: '/pages/activity/bargain/index'
-					// },
-					// {
-					// 	icon: '/static/images/user_menu05.png',
-					// 	title: '我的余额',
-					// 	url: '/pages/users/user_money/index'
-					// },
 					{
 						icon: '/static/images/user_menu06.png',
 						title: '我的收藏',
@@ -200,7 +156,6 @@
 			let that = this;
 			if (that.isLogin) {
 				this.getUserInfo();
-				this.getMyMenus();
 				this.setVisit();
 			}
 		},
@@ -219,9 +174,9 @@
 			// 授权回调
 			onLoadFun() {
 				this.getUserInfo();
-				this.getMyMenus();
 				this.setVisit();
 			},
+
 			Setting: function() {
 				uni.openSetting({
 					success: function(res) {
@@ -266,18 +221,6 @@
 								break
 						}
 					})
-				});
-			},
-			/**
-			 * 
-			 * 获取个人中心图标
-			 */
-			getMyMenus: function() {
-				let that = this;
-				if (this.MyMenus.length) return;
-				getMenuList().then(res => {
-					that.$set(that, 'MyMenus', res.data.routine_my_menus);
-					this.imgUrls = res.data.routine_my_banner
 				});
 			},
 			// 编辑页面
