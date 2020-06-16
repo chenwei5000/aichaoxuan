@@ -4,7 +4,6 @@
 		<view class="header">
 			<view class="serch-wrapper flex">
 				<view class="logo">
-					<!-- <image v-if="!logoUrl" class="logo" src="/static/images/crmeb.png"></image> -->
 					<image :src="logoUrl" mode=""></image>
 				</view>
 				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
@@ -20,7 +19,6 @@
 			<view class="serch-box" view style="height: 43px;">
 				<view class="serch-wrapper flex">
 					<view class="logo">
-						<!-- <image class="logo" src="/static/images/crmeb.png"></image> -->
 						<image :src="logoUrl" mode=""></image>
 					</view>
 					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>

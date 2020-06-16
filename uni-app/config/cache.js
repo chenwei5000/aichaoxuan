@@ -24,7 +24,7 @@ module.exports = {
 
 	TIPS_KEY: 'TIPS_KEY',
 
-	SPREAD: 'spread',
+	SHOP_KEY: 'shopKey',
 	//缓存经度
 	CACHE_LONGITUDE: 'LONGITUDE',
 	//缓存纬度

@@ -12,36 +12,22 @@ Vue.config.productionTip = false
 // #ifdef H5
 import { parseQuery } from "./utils";
 import Auth from './libs/wechat';
-import { SPREAD } from './config/cache';
+import { SHOP_KEY } from './config/cache';
 Vue.prototype.$wechat = Auth;
-let cookieName = "VCONSOLE",
-	query = parseQuery(),
-	urlSpread = query["spread"],
-	vconsole = query[cookieName.toLowerCase()],
-	md5Crmeb = "b14d1e9baeced9bb7525ab19ee35f2d2", //CRMEB MD5 加密开启vconsole模式
-	md5UnCrmeb = "3dca2162c4e101b7656793a1af20295c"; //UN_CREMB MD5 加密关闭vconsole模式
+query = parseQuery(),
+urlShopKey = query["shop_key"],
 
-if (urlSpread !== undefined) {
-	var spread = Cache.get(SPREAD);
-	urlSpread = parseInt(urlSpread);
-	if (!Number.isNaN(urlSpread) && spread !== urlSpread) {
-		Cache.set("spread", urlSpread || 0);
-	} else if (spread === 0 || typeof spread !== "number") {
-		Cache.set("spread", urlSpread || 0);
-	}
+
+
+    // 如果是url中带shop_key,且与本地不一致，则更新本地SHOP_KEy
+if (urlShopKey !== undefined) {
+	var LastShopKey = Cache.get(SHOP_KEY);
+	//urlShopKey = parseInt(urlShopKey);
+	if (LastShopKey !== urlShopKey) {
+		Cache.set(SHOP_KEY, urlShopKey || 0);
+	} 
 }
 
-if (vconsole !== undefined) {
-  if (vconsole === md5UnCrmeb && Cache.has(cookieName))
-	  Cache.clear(cookieName);
-} else vconsole = Cache.get(cookieName);
-
-import VConsole from './components/vconsole.min.js'
-
-if (vconsole !== undefined && vconsole === md5Crmeb) {
-	Cache.set(cookieName, md5Crmeb, 3600);
-	let vConsole = new VConsole();
-}
 
 Auth.isWeixin() && Auth.oAuth();
 
