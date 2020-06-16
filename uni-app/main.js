@@ -26,7 +26,16 @@ if (urlShopKey !== undefined) {
 	if (LastShopKey !== urlShopKey) {
 		Cache.set(SHOP_KEY, urlShopKey || 0);
 	} 
+}else
+{
+	var LastShopKey = Cache.get(SHOP_KEY);
+	// 既没有参数，也没有缓存，则默认shop_key=0
+	if(LastShopKey ==='')
+	{
+		Cache.set(SHOP_KEY, '0' || 0);
+	}
 }
+
 
 
 Auth.isWeixin() && Auth.oAuth();
