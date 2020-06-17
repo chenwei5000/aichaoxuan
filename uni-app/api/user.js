@@ -1,4 +1,5 @@
 import request from "@/utils/request.js";
+import request_new from "@/utils/request_new.js";
 
 /**
  * 获取用户信息
@@ -21,7 +22,8 @@ export function userShare(){
  * @param data object 用户账号密码
  */
 export function loginH5(data) {
-  return request.post("/login", data, { noAuth : true });
+  //return request.post("/login", data, { noAuth : true });
+  return request_new.post("Login.Login", data, { noAuth : true });
 }
 
 /**
@@ -29,7 +31,8 @@ export function loginH5(data) {
  * @param data object 用户手机号 也只能
  */
 export function loginMobile(data) {
-  return request.post("/login/mobile", data, { noAuth : true });
+  //return request.post("/login/mobile", data, { noAuth : true });
+  return request_new.post("/login/mobile", data, { noAuth : true });
 }
 
 /**
