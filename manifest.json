@@ -1,5 +1,5 @@
 {
-    "name" : "crmeb",
+    "name" : "小店铺",
     "appid" : "__UNI__06E0263",
     "description" : "",
     "versionName" : "1.0.0",
@@ -65,7 +65,7 @@
         },
         "permission" : {
             "scope.userLocation" : {
-                "desc" : "你的位置信息将用于和门店的距离长度"
+                "desc" : "为了更好的给您提供推荐服务"
             }
         },
         "usingComponents" : true
@@ -95,6 +95,6 @@
                 }
             }
         },
-        "title" : "CRMEB"
+        "title" : "小店铺"
     }
 }
