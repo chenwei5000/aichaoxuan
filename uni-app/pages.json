@@ -459,8 +459,9 @@
 				"query": "" //启动参数，在页面的onLoad函数里面得到
 			}
 		]
-	},
+	}
 	// #ifdef MP
+	,
 	"plugins": {
 	    "live-player-plugin": {
 	        "version": "1.0.13", 

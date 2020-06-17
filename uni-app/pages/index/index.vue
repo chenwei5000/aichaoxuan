@@ -378,10 +378,12 @@
 			uni.setNavigationBarTitle({
 				title: self.site_name
 			})
+			// #ifdef MP						
 			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
 			    this.setData({
 			        customParams
 			 })
+			 // #endif
 		},
 		methods: {
 			// 记录会员访问

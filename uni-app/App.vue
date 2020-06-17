@@ -50,6 +50,7 @@
 		mounted() {
 		},
 		onShow(options) {
+			// #ifdef MP	
 		    // 分享卡片入口场景才调用getShareParams接口获取以下参数
 		    if (options.scene == 1007 || options.scene == 1008 || options.scene == 1044) {
 		        livePlayer.getShareParams()
@@ -62,6 +63,7 @@
 		                console.log('get share params', err)
 		            })
 		    }
+			// #endif
 		  },
 		onHide: function() {
 			//console.log('App Hide')

@@ -14,8 +14,8 @@ import { parseQuery } from "./utils";
 import Auth from './libs/wechat';
 import { SHOP_KEY } from './config/cache';
 Vue.prototype.$wechat = Auth;
-query = parseQuery(),
-urlShopKey = query["shop_key"],
+let query = parseQuery(),
+urlShopKey = query["shop_key"];
 
 
 
