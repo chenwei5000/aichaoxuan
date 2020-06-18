@@ -15,6 +15,7 @@ const state = {
 	backgroundColor: "#fff",
 	userInfo: null,
 	uid: Cache.get(UID) || null,
+	shopKey: Cache.get(SHOP_KEY) || null,
 	homeActive: false,
 };
 

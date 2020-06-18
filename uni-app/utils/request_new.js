@@ -8,7 +8,7 @@ import store from '../store';
  */
 function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
 {
-  let Url = HTTP_REQUEST_URL_NEW, header = HEADER;
+  let Url = HTTP_REQUEST_URL_NEW, header = HEADER,nowtoken='',shop_key='0';
   
   if (!noAuth) {
     //登录过期自动登录
@@ -18,11 +18,15 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
 	}
   }
   
-  if (store.state.app.token) header[TOKENNAME] = 'Bearer ' + store.state.app.token;
+  if (store.state.app.token) 
+    nowtoken= store.state.app.token;
+
+  if (store.state.app.shopKey) 
+    shop_key = store.state.app.shopKey;
 
   return new Promise((reslove, reject) => {
     uni.request({
-      url: Url + '/h5api/web?r=' + url,
+      url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,
       method: method || 'GET',
       header: header,
       data: data || {},

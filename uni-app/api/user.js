@@ -6,7 +6,8 @@ import request_new from "@/utils/request_new.js";
  * 
 */
 export function getUserInfo(){
-  return request.get('user');
+//  return request.get('user');
+  return request_new.get('User.MemberInfo');
 }
 
 /**
