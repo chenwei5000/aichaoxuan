@@ -4,8 +4,8 @@
 			<view class="user-card">
 				<view class="bg"></view>
 				<view class="user-info">
-					<image class="avatar" :src='userInfo.avatar' v-if="userInfo.avatar" @click="goEdit()"></image>
-					<image v-else class="avatar" src="/static/images/f.png" mode="" @click="goEdit()"></image>
+					<image class="avatar" :src='userInfo.avatar' v-if="userInfo.avatar"></image>
+					<image v-else class="avatar" src="/static/images/f.png" mode=""></image>
 					<view class="info">
 						<!-- #ifdef MP -->
 						<view class="name" v-if="!userInfo.uid" @tap="openAuto">
@@ -14,16 +14,8 @@
 						<!-- #endif -->
 						<view class="name" v-if="userInfo.uid">
 							{{userInfo.nickname}}
-							<view class="vip" v-if="userInfo.vip">
-								<image :src="userInfo.vip_icon" alt="">
-									<view style="margin-left: 10rpx;" class="vip-txt">{{userInfo.vip_name}}</view>
-							</view>
 						</view>
-						<view class="num" v-if="userInfo.phone" @click="goEdit()">
-							<view class="num-txt">ID：{{userInfo.uid}}</view>
-							<view class="icon">
-								<image src="/static/images/edit.png" mode=""></image>
-							</view>
+						<view class="num" v-if="userInfo.phone" >{{userInfo.phone}}
 						</view>
 						<view class="phone" v-if="!userInfo.phone && isLogin" @tap="bindPhone">绑定手机号</view>
 					</view>
@@ -223,18 +215,6 @@
 					})
 				});
 			},
-			// 编辑页面
-			goEdit() {
-				uni.navigateTo({
-					url: '/pages/users/user_info/index'
-				})
-			},
-			// 签到
-			goSignIn() {
-				uni.navigateTo({
-					url: '/pages/users/user_sgin/index'
-				})
-			},
 			// goMenuPage
 			goMenuPage(url){
 				if(this.isLogin){
@@ -260,7 +240,6 @@
 			.user-card {
 				position: relative;
 				width: 710rpx;
-				height: 340rpx;
 				margin: 0 auto;
 				padding: 35rpx 28rpx;
 				background: linear-gradient(90deg, $bg-star 0%, $bg-end 100%);

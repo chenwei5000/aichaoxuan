@@ -255,7 +255,6 @@
 					if (userInfo !== undefined) {
 						userInfo.avatar = res.data.url;
 					}
-					that.switchUserInfo[that.userIndex] = userInfo;
 					that.$set(that,'switchUserInfo',that.switchUserInfo);
 				});
 			},

@@ -7,7 +7,7 @@ import request_new from "@/utils/request_new.js";
 */
 export function getUserInfo(){
 //  return request.get('user');
-  return request_new.get('User.MemberInfo');
+  return request_new.get('User.GetProfile');
 }
 
 /**
@@ -26,47 +26,6 @@ export function loginH5(data) {
   //return request.post("/login", data, { noAuth : true });
   return request_new.post("Login.Login", data, { noAuth : true });
 }
-
-/**
- * h5用户手机号登录
- * @param data object 用户手机号 也只能
- */
-export function loginMobile(data) {
-  //return request.post("/login/mobile", data, { noAuth : true });
-  return request_new.post("/login/mobile", data, { noAuth : true });
-}
-
-/**
- * 验证码key
- */
-export function getCodeApi() {
-  return request.get("verify_code", {}, { noAuth: true });
-}
-
-/**
- * h5用户发送验证码
- * @param data object 用户手机号
- */
-export function registerVerify(data) {
-  return request.post("/register/verify", data, { noAuth : true });
-}
-
-/**
- * h5用户手机号注册
- * @param data object 用户手机号 验证码 密码
- */
-export function register(data) {
-  return request.post("/register", data, { noAuth : true });
-}
-
-/**
- * 用户手机号修改密码
- * @param data object 用户手机号 验证码 密码
- */
-export function registerReset(data) {
-  return request.post("/register/reset", data, { noAuth: true });
-}
-
 
 /**
  * 

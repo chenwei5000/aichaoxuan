@@ -3,6 +3,7 @@ import {
 } from "../../api/user.js";
 import {
 	LOGIN_STATUS,
+	SHOP_KEY,
 	UID
 } from '../../config/cache';
 import Cache from '../../utils/cache';
