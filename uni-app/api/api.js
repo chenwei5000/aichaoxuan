@@ -66,15 +66,6 @@ export function phoneRegisterReset(data){
 }
 
 /**
- * 手机号+密码登录
- * @param object data
- * 
-*/
-export function phoneLogin(data){
-  return request.post('login',data,{noAuth:true})
-}
-
-/**
  * 切换H5登录
  * @param object data
 */
