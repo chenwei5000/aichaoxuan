@@ -1,18 +1,21 @@
 import request from "@/utils/request.js";
+import request_new from "@/utils/request_new.js";
 
 /**
  * 获取购物车列表
  * @param numType boolean true 购物车数量,false=购物车产品数量
  */
 export function getCartCounts(numType) {
-  return request.get("cart/count", { numType: numType === undefined ? true : numType });
+  //return request.get("cart/count", { numType: numType === undefined ? true : numType });
+  return request_new.get("Cart.GetCartNum", { numType: numType === undefined ? true : numType });
 }
 /**
  * 获取购物车列表
  * 
  */
 export function getCartList() {
-  return request.get("cart/list");
+  //return request.get("cart/list");
+  return request_new.get("Cart.ListCart");
 }
 
 /**
