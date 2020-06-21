@@ -6,7 +6,8 @@ import request_new from "@/utils/request_new.js";
  * 
 */
 export function getProductDetail(id){
-  return request.get('product/detail/' + id, {}, { noAuth : true });
+  //return request.get('product/detail/' + id, {}, { noAuth : true });
+  return request_new.get('Goods.GetDetail', {}, { noAuth : true });
 }
 
 /**
@@ -49,7 +50,7 @@ export function getCategoryList(){
  * @param object data
 */
 export function getProductslist(data){
-  return request.get('products',data,{noAuth:true});
+  return request_new.get('Goods.ListGoods',data,{noAuth:true});
 }
 
 /**

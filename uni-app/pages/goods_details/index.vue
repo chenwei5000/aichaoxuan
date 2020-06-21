@@ -56,7 +56,7 @@
 				<view class='product-intro' id="past3">
 					<view class='title'>产品介绍</view>
 					<view class='conter'>
-						<jyf-parser :html="description" ref="article" :tag-style="tagStyle"></jyf-parser>
+						<jyf-parser :html="description" ref="article"></jyf-parser>
 					</view>
 					<!-- <rich-text :nodes="description" class="conter"></rich-text> -->
 				</view>

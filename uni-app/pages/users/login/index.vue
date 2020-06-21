@@ -21,6 +21,12 @@
 					<div class="item">
 						<div class="acea-row row-middle">
 							<image src="/static/images/code_2.png"></image>
+							<input type="text" placeholder="填写短信验证码" v-model="verify_code" required />
+						</div>
+					</div>
+					<div class="item">
+						<div class="acea-row row-middle">
+							<image src="/static/images/code_2.png"></image>
 							<input type="password" placeholder="填写登录密码" v-model="password" required />
 						</div>
 					</div>
@@ -57,6 +63,7 @@
 				current: 0,
 				account: "",
 				password: "",
+				verify_code:'',
 				captcha: "",
 				type: "login",
 				logoUrl: "",
@@ -76,6 +83,9 @@
 				if (!that.account) return that.$util.Tips({
 					title: '请填写账号'
 				});
+				if (!that.verify_code) return that.$util.Tips({
+					title: '请填写短信验证码'
+				});
 				if (!/^[\w\d]{5,16}$/i.test(that.account)) return that.$util.Tips({
 					title: '请输入正确的账号'
 				});
@@ -84,7 +94,8 @@
 				});
 				loginH5({
 						account: that.account,
-						password: that.password
+						password: that.password,
+						verify_code: that.verify_code
 					})
 					.then(({
 						data
