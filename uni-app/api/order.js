@@ -150,7 +150,8 @@ export function orderRefundVerify(data){
  * @param string cartId
 */
 export function orderConfirm(cartId){
-  return request.post('order/confirm', { cartId: cartId});
+  //return request.post('order/confirm', { cartId: cartId});
+  return request_new.post('Order.Confirm', { cartId: cartId});
 }
 
 /**

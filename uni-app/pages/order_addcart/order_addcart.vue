@@ -91,9 +91,6 @@
 					</form>
 				</view>
 				<view class='button acea-row row-middle' v-else>
-					<form @submit="subCollect" report-submit='true'>
-						<button class='bnt cart-color' formType="submit">收藏</button>
-					</form>
 					<form @submit="subDel" report-submit='true'>
 						<button class='bnt' formType="submit">删除</button>
 					</form>

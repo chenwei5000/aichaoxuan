@@ -33,7 +33,8 @@ export function loginH5(data) {
  * @param object data
 */
 export function getAddressList(data){
-  return request.get('address/list',data);
+  //return request.get('address/list',data);
+  return request_new.get('Address.ListAll',data);
 }
 
 /**
@@ -88,7 +89,8 @@ export function getLogout() {
  * 
 */
 export function getAddressDefault(){
-  return request.get('address/default');
+  //return request.get('address/default');
+  return request_new.get('Address.GetDefault');
 }
 
 /**
