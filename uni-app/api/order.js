@@ -24,16 +24,18 @@ export function getCartList() {
  * @param int number 修改数量
  */
 export function changeCartNum(cartId, number) {
-  return request.post("cart/num", { id: cartId, number: number });
+  //return request.post("cart/num", { id: cartId, number: number });
+  return request_new.post("Cart.EditGoodsQuantity", { id: cartId, number: number });
 }
 /**
  * 清除购物车
  * @param object ids join(',') 切割成字符串
 */
 export function cartDel(ids){
-  if (typeof id === 'object') 
+  if (typeof ids === 'object') 
     ids = ids.join(',');
-  return request.post('cart/del', { ids: ids});
+  //return request.post('cart/del', { ids: ids});
+  return request_new.post('Cart.DeleteCart', { ids: ids});
 }
 /**
  * 订单列表

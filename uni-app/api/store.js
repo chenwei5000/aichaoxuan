@@ -1,5 +1,5 @@
 import request from "@/utils/request.js";
-
+import request_new from "@/utils/request_new.js";
 /**
  * 获取产品详情
  * @param int id
@@ -32,7 +32,8 @@ export function collectDel(id, category) {
  * 
 */
 export function postCartAdd(data) {
-  return request.post('cart/add', data);
+  //return request.post('cart/add', data);
+  return request_new.post('Cart.AddCart', data);
 }
 
 /**
