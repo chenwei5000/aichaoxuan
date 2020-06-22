@@ -15,13 +15,7 @@
 					<div class="item">
 						<div class="acea-row row-middle">
 							<image src="/static/images/phone_1.png"></image>
-							<input type="text" placeholder="输入手机号码" v-model="account" required />
-						</div>
-					</div>
-					<div class="item">
-						<div class="acea-row row-middle">
-							<image src="/static/images/code_2.png"></image>
-							<input type="text" placeholder="填写短信验证码" v-model="verify_code" required />
+							<input type="text" placeholder="输入用户名" v-model="account" required />
 						</div>
 					</div>
 					<div class="item">
@@ -83,9 +77,6 @@
 				if (!that.account) return that.$util.Tips({
 					title: '请填写账号'
 				});
-				if (!that.verify_code) return that.$util.Tips({
-					title: '请填写短信验证码'
-				});
 				if (!/^[\w\d]{5,16}$/i.test(that.account)) return that.$util.Tips({
 					title: '请输入正确的账号'
 				});
@@ -94,8 +85,7 @@
 				});
 				loginH5({
 						account: that.account,
-						password: that.password,
-						verify_code: that.verify_code
+						password: that.password
 					})
 					.then(({
 						data

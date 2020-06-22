@@ -50,7 +50,7 @@ export function getCategoryList(){
  * @param object data
 */
 export function getProductslist(data){
-  return request_new.get('Goods.ListGoods',data,{noAuth:true});
+  return request_new.get('Goods.ListGoods', data,{noAuth:true});
 }
 
 /**
