@@ -7,7 +7,7 @@ import request_new from "@/utils/request_new.js";
 */
 export function getProductDetail(id){
   //return request.get('product/detail/' + id, {}, { noAuth : true });
-  return request_new.get('Goods.GetDetail', {}, { noAuth : true });
+  return request_new.get('Goods.GetDetail', {'goods_id':id}, { noAuth : true });
 }
 
 /**
