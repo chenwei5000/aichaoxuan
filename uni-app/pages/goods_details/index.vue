@@ -495,9 +495,11 @@
 			 */
 			getGoodsDetails: function() {
 				let that = this;
+				console.log(that.id);
 				getProductDetail(that.id).then(res => {
-					let storeInfo = res.data.storeInfo;
-					let good_list = res.data.good_list || [];
+					let data = res.data[0];
+					let storeInfo = data.storeInfo;
+					let good_list = data.good_list || [];
 					let count = Math.ceil(good_list.length / 6);
 					let goodArray = new Array();
 					for (let i = 0; i < count; i++) {
@@ -508,17 +510,17 @@
 					}
 					that.$set(that, 'storeInfo', storeInfo);
 					that.$set(that, 'description', storeInfo.description);
-					that.$set(that, 'reply', res.data.reply ? [res.data.reply] : []);
-					that.$set(that, 'replyCount', res.data.replyCount);
-					that.$set(that, 'replyChance', res.data.replyChance);
-					that.$set(that.attr, 'productAttr', res.data.productAttr);
-					that.$set(that, 'productValue', res.data.productValue);
-					that.$set(that.sharePacket, 'priceName', res.data.priceName);
-					that.$set(that, 'systemStore', res.data.system_store);
-					that.$set(that, 'storeSelfMention', res.data.store_self_mention);
+					that.$set(that, 'reply', data.reply ? [data.reply] : []);
+					that.$set(that, 'replyCount', data.replyCount);
+					that.$set(that, 'replyChance', data.replyChance);
+					that.$set(that.attr, 'productAttr', data.productAttr);
+					that.$set(that, 'productValue', data.productValue);
+					that.$set(that.sharePacket, 'priceName', data.priceName);
+					that.$set(that, 'systemStore', data.system_store);
+					that.$set(that, 'storeSelfMention', data.store_self_mention);
 					that.$set(that, 'good_list', goodArray);
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
-					that.$set(that, 'activity', res.data.activity ? res.data.activity : []);
+					that.$set(that, 'activity', data.activity ? data.activity : []);
 					uni.setNavigationBarTitle({
 						title: storeInfo.store_name.substring(0, 7) + "..."
 					})
