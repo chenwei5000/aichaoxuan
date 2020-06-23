@@ -24,7 +24,7 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
   if (store.state.app.shopKey) {
     shop_key = encodeURIComponent(store.state.app.shopKey);
 	}
-
+	//shop_key = '5pSMIG2RFGPfzcz5KeCUhQ=='
   return new Promise((reslove, reject) => {
     uni.request({
       url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,
@@ -32,11 +32,15 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
       header: header,
       data: data || {},
       success: (res) => {
+		  
         if (noVerify)
           reslove(res.data, res);
         else if (res.data.status == 200)
           reslove(res.data, res);
         else if ([410000, 410001, 410002].indexOf(res.data.status) !== -1) {
+		  toLogin();
+          reject(res.data);
+        } else if (res.data.status == 1000) {
 		  toLogin();
           reject(res.data);
         } else
