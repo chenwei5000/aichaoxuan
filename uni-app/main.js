@@ -25,7 +25,7 @@ if (urlShopKey !== undefined) {
 	console.log(LastShopKey);
 	//urlShopKey = parseInt(urlShopKey);
 	if (LastShopKey !== urlShopKey) {
-		console.log('set shop_key');
+		//console.log('set shop_key');
 		Cache.set(SHOP_KEY, urlShopKey || 0);
 	} 
 }else
