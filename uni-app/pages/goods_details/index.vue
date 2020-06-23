@@ -464,7 +464,7 @@
 					this.$set(this.attr.productSelect, "image", productSelect.image);
 					this.$set(this.attr.productSelect, "price", productSelect.price);
 					this.$set(this.attr.productSelect, "stock", productSelect.stock);
-					this.$set(this.attr.productSelect, "unique", productSelect.unique);
+					this.$set(this.attr.productSelect, "unique", productSelect.product_id);
 					this.$set(this.attr.productSelect, "cart_num", 1);
 					this.$set(this, "attrValue", res);
 					this.$set(this, "attrTxt", "已选择");

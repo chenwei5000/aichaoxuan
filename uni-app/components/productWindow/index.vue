@@ -112,7 +112,6 @@
 				this.$set(this.attr.productAttr[indexw], 'index', this.attr.productAttr[indexw].attr_values[indexn]);
 				let value = that
 					.getCheckedValue()
-					.sort()
 					.join(",");
 				that.$emit("ChangeAttr", value);
 
