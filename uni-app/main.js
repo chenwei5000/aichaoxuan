@@ -34,7 +34,7 @@ if (urlShopKey !== undefined) {
 	// 既没有参数，也没有缓存，则默认shop_key=0
 	if(LastShopKey === null)
 	{
-		Cache.set(SHOP_KEY, '0' || 0);
+		Cache.set(SHOP_KEY, '5pSMIG2RFGPfzcz5KeCUhQ==' || 0);
 	}
 }
 
