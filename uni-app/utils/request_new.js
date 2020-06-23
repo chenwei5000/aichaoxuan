@@ -21,8 +21,11 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
   if (store.state.app.token) 
     nowtoken= store.state.app.token;
 
-  if (store.state.app.shopKey) 
-    shop_key = store.state.app.shopKey;
+  if (store.state.app.shopKey) {
+    shop_key = encodeURIComponent(store.state.app.shopKey);
+	console.log(shop_key);
+	console.log(encodeURIComponent(shop_key));
+	}
 
   return new Promise((reslove, reject) => {
     uni.request({

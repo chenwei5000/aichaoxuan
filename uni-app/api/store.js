@@ -78,8 +78,9 @@ export function collectAll(id, category) {
  * @param int type 
  * 
 */
-export function getGroomList(type,data){
-  return request.get('groom/list/'+type,data,{noAuth:true});
+export function getIndexProductList(data){
+  //return request.get('groom/list/1',data,{noAuth:true});
+  return request_new.get('Goods.ListGoods',data,{noAuth:true});
 }
 
 /**

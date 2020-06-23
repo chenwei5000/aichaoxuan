@@ -236,7 +236,7 @@
 		getCategoryList,
 		getProductslist,
 		getProductHot,
-		getGroomList
+		getIndexProductList
 	} from '@/api/store.js';
 	import {
 		setVisit
@@ -301,13 +301,7 @@
 				liveList: [],
 				spikeList: [],
 				combinationList: [],
-				hotList: [{
-					pic: '/static/images/hot_001.png'
-				}, {
-					pic: '/static/images/hot_002.png'
-				}, {
-					pic: '/static/images/hot_003.png'
-				}],
+				hotList: [],
 				bargList: [],
 				ProductNavindex: 0,
 				marTop: 0,
@@ -340,7 +334,6 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				pageInfo: '', // 精品推荐全数据
 				site_name: '' //首页title
 			}
 		},
@@ -502,17 +495,6 @@
 					that.$set(that, "logoUrl", res.data.logoUrl);
 					that.$set(that, "site_name", res.data.site_name);
 					that.$set(that, "imgUrls", res.data.banner);
-					that.$set(that, "menus", res.data.menus);
-					that.$set(that, "activityList", res.data.activity);
-					that.lovely = res.data.lovely
-					that.$set(that, "pageInfo", res.data)
-					that.$set(that, "firstList", res.data.info.firstList);
-					that.$set(that, "bastList", res.data.info.bastList);
-					that.$set(that, "likeInfo", res.data.likeInfo);
-					that.$set(that, "benefit", res.data.benefit);
-					that.$set(that, "bastBanner", res.data.info.bastBanner);
-					that.explosiveMoney = res.data.explosive_money
-					that.goodType = res.data.explosive_money[0].type
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;
 					that.setOpenShare();
@@ -537,7 +519,7 @@
 						that.window = that.couponList.length ? true : false;
 					}
 					// #endif
-					this.getGroomList();
+					this.getIndexProductList();
 				})
 			},
 			// 微信分享；
@@ -592,7 +574,7 @@
 				this.tempArr = []
 				this.params.page = 1
 				this.goodScroll = true
-				this.getGroomList()
+				this.getIndexProductList()
 			},
 			// 首发新品详情
 			goDetail(item) {
@@ -639,12 +621,11 @@
 
 				})
 			},
-			// 精品推荐
-			getGroomList() {
+			// 店铺商品推荐
+			getIndexProductList() {
 				this.loading = true
-				let type = this.goodType;
 				if (!this.goodScroll) return
-				getGroomList(type, this.params).then(({
+				getIndexProductList(this.params).then(({
 					data
 				}) => {
 					this.loading = false
@@ -670,7 +651,7 @@
 			if (this.navIndex == 0) {
 				// 首页加载更多
 				if (this.params.page != 1) {
-					this.getGroomList();
+					this.getIndexProductList();
 				}
 			} else {
 				// 分类栏目加载更多
