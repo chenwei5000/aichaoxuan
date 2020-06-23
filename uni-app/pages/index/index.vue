@@ -4,7 +4,7 @@
 		<view class="header">
 			<view class="serch-wrapper flex">
 				<view class="logo">
-					<image :src="logoUrl" mode=""></image>
+					<image :src="shopAvatar" mode=""></image>
 				</view>
 				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
 					搜索商品</navigator>
@@ -19,7 +19,7 @@
 			<view class="serch-box" view style="height: 43px;">
 				<view class="serch-wrapper flex">
 					<view class="logo">
-						<image :src="logoUrl" mode=""></image>
+						<image :src="shopAvatar" mode=""></image>
 					</view>
 					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
 						搜索商品</navigator>
@@ -272,7 +272,7 @@
 				followUrl: "",
 				followHid: true,
 				followCode: false,
-				logoUrl: "",
+				shopAvatar: "",
 				imgUrls: [],
 				itemNew: [],
 				activityList: [],
@@ -334,7 +334,7 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				site_name: '' //首页title
+				shopName: '' //首页title
 			}
 		},
 		onLoad() {
@@ -369,7 +369,7 @@
 		onShow() {
 			let self = this
 			uni.setNavigationBarTitle({
-				title: self.site_name
+				title: self.shopName
 			})
 			// #ifdef MP						
 			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
@@ -490,10 +490,10 @@
 				let that = this;
 				getIndexData().then(res => {
 					uni.setNavigationBarTitle({
-						title: res.data.site_name
+						title: res.data.shopName
 					})
-					that.$set(that, "logoUrl", res.data.logoUrl);
-					that.$set(that, "site_name", res.data.site_name);
+					that.$set(that, "shopAvatar", res.data.shopAvatar);
+					that.$set(that, "shopName", res.data.shopName);
 					that.$set(that, "imgUrls", res.data.banner);
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;

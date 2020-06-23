@@ -1,4 +1,5 @@
 import request from "@/utils/request.js";
+import request_new from "@/utils/request_new.js";
 /**
  * 公共接口 ，优惠券接口 , 行业此讯 , 手机号码注册
  * 
@@ -11,7 +12,8 @@ import request from "@/utils/request.js";
 
 export function getIndexData()
 {
-  return request.get("index",{},{ noAuth : true});
+  //return request.get("index",{},{ noAuth : true});
+  return request_new.get("Home.index",{},{ noAuth : true});
 }
 
 /**
