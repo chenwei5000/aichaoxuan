@@ -42,7 +42,8 @@ export function postCartAdd(data) {
  * 
 */
 export function getCategoryList(){
-  return request.get('category', {}, { noAuth:true});
+  //return request.get('category', {}, { noAuth:true});
+  return request_new.get('Category.ListCategory', {}, { noAuth:true});
 }
 
 /**
