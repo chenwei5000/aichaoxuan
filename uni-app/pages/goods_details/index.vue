@@ -756,7 +756,7 @@
 					});
 					console.log( that.attr.productSelect)
 				let q = {
-					productId: that.id,
+					productId: that.storeInfo.spu_id,
 					cartNum: that.attr.productSelect.cart_num,
 					new: news === undefined ? 0 : 1,
 					uniqueId: that.attr.productSelect !== undefined ?
