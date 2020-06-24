@@ -348,22 +348,23 @@
 			},
 			computedPrice: function() {
 				let shippingType = this.shippingType;
-				postOrderComputed(this.orderKey, {
-					addressId: this.addressId,
-					useIntegral: this.useIntegral ? 1 : 0,
-					couponId: this.couponId,
-					shipping_type: parseInt(shippingType) + 1,
-					payType: this.payType
-				}).then(res => {
-					let result = res.data.result;
-					if (result) {
-						this.totalPrice = result.pay_price;
-						this.integral_price = result.deduction_price;
-						this.coupon_price = result.coupon_price;
-						this.integral = this.useIntegral ? result.SurplusIntegral : this.userInfo.integral;
-						this.$set(this.priceGroup, 'storePostage', shippingType == 1 ? 0 : result.pay_postage);
-					}
-				})
+				//需要重新计算运费
+				// postOrderComputed(this.orderKey, {
+				// 	addressId: this.addressId,
+				// 	useIntegral: this.useIntegral ? 1 : 0,
+				// 	couponId: this.couponId,
+				// 	shipping_type: parseInt(shippingType) + 1,
+				// 	payType: this.payType
+				// }).then(res => {
+				// 	let result = res.data.result;
+				// 	if (result) {
+				// 		this.totalPrice = result.pay_price;
+				// 		this.integral_price = result.deduction_price;
+				// 		this.coupon_price = result.coupon_price;
+				// 		this.integral = this.useIntegral ? result.SurplusIntegral : this.userInfo.integral;
+				// 		this.$set(this.priceGroup, 'storePostage', shippingType == 1 ? 0 : result.pay_postage);
+				// 	}
+				// })
 			},
 			addressType: function(e) {
 				let index = e;

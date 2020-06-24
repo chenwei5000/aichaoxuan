@@ -20,19 +20,17 @@ urlShopKey = query["shop_key"];
 
 //console.log(urlShopKey);
     // 如果是url中带shop_key,且与本地不一致，则更新本地SHOP_KEy
-if (urlShopKey !== undefined) {
+if (urlShopKey !== undefined && urlShopKey.length>10) {
 	var LastShopKey = Cache.get(SHOP_KEY);
-	console.log(LastShopKey);
-	//urlShopKey = parseInt(urlShopKey);
-	if (LastShopKey !== urlShopKey) {
-		//console.log('set shop_key');
+	if (LastShopKey !== urlShopKey ) {
 		Cache.set(SHOP_KEY, urlShopKey || 0);
 	} 
 }else
 {
 	var LastShopKey = Cache.get(SHOP_KEY);
-	// 既没有参数，也没有缓存，则默认shop_key=0
-	if(LastShopKey === null)
+	console.log(LastShopKey);
+	// 既没有参数，也没有缓存，则默认shop_key
+	if(LastShopKey === undefined)
 	{
 		Cache.set(SHOP_KEY, '5pSMIG2RFGPfzcz5KeCUhQ==' || 0);
 	}

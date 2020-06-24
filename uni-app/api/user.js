@@ -67,7 +67,8 @@ export function delAddress(id){
  * @param int id 
 */
 export function getAddressDetail(id){
-  return request.get('address/detail/'+id);
+  //return request.get('address/detail/'+id);
+  return request_new.get('Address.GetDetail/',{address_id:id});
 }
 
 /**
