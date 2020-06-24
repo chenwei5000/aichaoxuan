@@ -42,7 +42,8 @@ export function getAddressList(data){
  * @param int id
 */
 export function setAddressDefault(id){
-  return request.post('address/default/set',{id:id})
+  //return request.post('address/default/set',{id:id})
+  return request_new.post('Address.SaveAsDefault',{address_id:id})
 }
 
 /**
@@ -50,7 +51,8 @@ export function setAddressDefault(id){
  * @param object data
 */
 export function editAddress(data){
-  return request.post('address/edit',data);
+  //return request.post('address/edit',data);
+  return request_new.post('Address.UpdateAddress',data);
 }
 
 /**
@@ -59,7 +61,8 @@ export function editAddress(data){
  * 
 */
 export function delAddress(id){
-  return request.post('address/del',{id:id})
+  //return request.post('address/del',{id:id})
+  return request_new.post('Address.DeleteAddress',{address_id:id})
 }
 
 /**
@@ -68,7 +71,7 @@ export function delAddress(id){
 */
 export function getAddressDetail(id){
   //return request.get('address/detail/'+id);
-  return request_new.get('Address.GetDetail/',{address_id:id});
+  return request_new.get('Address.GetDetail',{address_id:id});
 }
 
 /**
