@@ -170,7 +170,7 @@ export function getCouponsOrderPrice(price, data){
  * 
 */
 export function orderCreate(key,data){
-  return request.post('order/create/'+key,data);
+  return request_new.post('Order.Create',data);
 }
 
 /**

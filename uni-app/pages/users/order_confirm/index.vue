@@ -680,6 +680,7 @@
 					mark: that.mark,
 					store_id: that.system_store.id || 0,
 					'from': that.from,
+					'buy_type': 1,
 					shipping_type: that.$util.$h.Add(that.shippingType, 1)
 				};
 				console.log(data);
