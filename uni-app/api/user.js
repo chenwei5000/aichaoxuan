@@ -102,6 +102,7 @@ export function getAddressDefault(){
  */
 export function setVisit(data)
 {
-  return request.post('user/set_visit', {...data}, { noAuth:true});
+  //return request.post('user/set_visit', {...data}, { noAuth:true});
+  return request_new.post('Site.LogVisit', {...data}, { noAuth:true});
 }
 

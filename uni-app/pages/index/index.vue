@@ -227,10 +227,6 @@
 		mapGetters
 	} from "vuex";
 	import tabNav from '@/components/tabNav.vue'
-	import {
-		getSeckillIndexTime,
-		getSeckillList,
-	} from '@/api/activity.js';
 	import countDown from '@/components/countDown';
 	import {
 		getCategoryList,
@@ -360,7 +356,7 @@
 			this.navH = 0;
 			// #endif
 			this.isLogin && silenceBindingSpread();
-			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.getSeckillIndexTime(), this.setVisit()
+			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.setVisit()
 			]);
 			// #ifdef MP
 			this.getLiveList()
@@ -537,27 +533,6 @@
 						that.$wechat.wechatEvevt(["updateAppMessageShareData", "updateTimelineShareData"], configAppMessage);
 					})
 				}
-			},
-			// 秒杀
-			getSeckillIndexTime() {
-				let params = {
-					page: 1,
-					limit: 6,
-					type: 'index'
-				}
-				getSeckillIndexTime().then(res => {
-					this.datatime = res.data.seckillTime[res.data.seckillTimeIndex].stop
-					let id = res.data.seckillTime[res.data.seckillTimeIndex].id
-					getSeckillList(id, params).then(({
-						data
-					}) => {
-						data.forEach((item) => {
-							let num = ((parseFloat(item.price) / parseFloat(item.ot_price)).toFixed(2))
-							item.discountNum = this.$util.$h.Mul(num, 10)
-						})
-						this.spikeList = data
-					})
-				})
 			},
 			// 授权关闭
 			authColse: function(e) {
