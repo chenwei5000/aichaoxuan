@@ -37,7 +37,6 @@ if (urlShopKey !== undefined && urlShopKey.length>10) {
 }
 
 
-
 Auth.isWeixin() && Auth.oAuth();
 
 // #endif

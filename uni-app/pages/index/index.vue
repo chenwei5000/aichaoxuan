@@ -369,9 +369,10 @@
 			})
 			// #ifdef MP						
 			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
-			    this.setData({
-			        customParams
-			 })
+			console.log(customParams)
+			 //    this.setData({
+			 //        customParams
+			 // })
 			 // #endif
 		},
 		methods: {

@@ -1,7 +1,8 @@
 import { HTTP_REQUEST_URL_NEW, HEADER, TOKENNAME} from '@/config/app';
 import { toLogin, checkLogin } from '../libs/login';
 import store from '../store';
-
+import Cache from '../utils/cache'
+import { SHOP_KEY } from '../config/cache';
 
 /**
  * 发送请求
@@ -24,7 +25,6 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
   if (store.state.app.shopKey) {
     shop_key = encodeURIComponent(store.state.app.shopKey);
 	}
-	//shop_key = '5pSMIG2RFGPfzcz5KeCUhQ=='
   return new Promise((reslove, reject) => {
     uni.request({
       url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,
