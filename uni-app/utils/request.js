@@ -18,7 +18,7 @@ function baseRequest(url, method, data, {noAuth = false, noVerify = false})
 	}
   }
   
-  if (store.state.app.token) header[TOKENNAME] = 'Bearer ' + store.state.app.token;
+  if (store.state.app.token) header[TOKENNAME] = '' + store.state.app.token;
 
   return new Promise((reslove, reject) => {
     uni.request({

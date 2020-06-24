@@ -59,9 +59,14 @@ export function getProductslist(data){
  * 
  */
 export function getProductHot(page,limit) {
-  return request.get("product/hot", { 
+//  return request.get("product/hot", { 
+//    page: page === undefined ? 1 : page, 
+//    limit:limit === undefined ? 4 :limit
+//  },{noAuth:true});
+  return request_new.get("Goods.ListGoods", { 
     page: page === undefined ? 1 : page, 
-    limit:limit === undefined ? 4 :limit
+    limit:limit === undefined ? 4 :limit,
+    type:'hot'
   },{noAuth:true});
 }
 /**

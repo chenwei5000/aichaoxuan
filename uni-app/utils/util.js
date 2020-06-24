@@ -275,7 +275,7 @@ import {
 						// #ifdef MP
 						"Content-Type": "multipart/form-data",
 						// #endif
-						[TOKENNAME]: 'Bearer ' + store.state.app.token
+						[TOKENNAME]: '' + store.state.app.token
 					},
 					success: function(res) {
 						uni.hideLoading();

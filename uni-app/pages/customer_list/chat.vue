@@ -303,7 +303,7 @@
 			return {
 				url: `${HTTP_REQUEST_URL}/api/upload/image`,
 				headers: {
-					"Authori-zation": "Bearer " + this.$store.state.app.token
+					"Authori-zation": "" + this.$store.state.app.token
 				},
 				emojiGroup: chunk(emojiList, 20),
 				active: false,
