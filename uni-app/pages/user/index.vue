@@ -88,22 +88,22 @@
 				orderMenu: [{
 						img: '/static/images/order1.png',
 						title: '待付款',
-						url: '/pages/users/order_list/index?status=0'
+						url: '/pages/users/order_list/index?status=10'
 					},
 					{
 						img: '/static/images/order2.png',
 						title: '待发货',
-						url: '/pages/users/order_list/index?status=1'
+						url: '/pages/users/order_list/index?status=20'
 					},
 					{
 						img: '/static/images/order3.png',
 						title: '待收货',
-						url: '/pages/users/order_list/index?status=2'
+						url: '/pages/users/order_list/index?status=30'
 					},
 					{
 						img: '/static/images/order4.png',
 						title: '待评价',
-						url: '/pages/users/order_list/index?status=3'
+						url: '/pages/users/order_list/index?status=40'
 					},
 					{
 						img: '/static/images/order5.png',
@@ -114,12 +114,7 @@
 				imgUrls: [],
 				userMenu: [
 					{
-						icon: '/static/images/user_menu06.png',
-						title: '我的收藏',
-						url: '/pages/users/user_goods_collection/index'
-					},
-					{
-						icon: '/static/images/user_menu07.png',
+						icon: '/static/images/address.png',
 						title: '地址管理',
 						url: '/pages/users/user_address_list/index'
 					},

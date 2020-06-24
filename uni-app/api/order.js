@@ -42,7 +42,8 @@ export function cartDel(ids){
  * @param object data
 */
 export function getOrderList(data){
-  return request.get('order/list',data);
+  //return request.get('order/list',data);
+  return request_new.get('Order.ListOrder',data);
 }
 
 /**
@@ -74,7 +75,8 @@ export function orderPay(data){
  * 订单统计数据
 */
 export function orderData(){
-  return request.get('order/data')
+  //return request.get('order/data')
+  return request_new.get('Order.GetOrderCount');
 }
 
 /**

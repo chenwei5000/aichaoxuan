@@ -13,23 +13,19 @@
 				</view>
 			</view>
 			<view class='nav acea-row row-around'>
-				<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(0)">
+				<view class='item' :class='orderStatus==10 ? "on": ""' @click="statusClick(10)">
 					<view>待付款</view>
 					<view class='num'>{{orderData.unpaid_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(1)">
+				<view class='item' :class='orderStatus==20 ? "on": ""' @click="statusClick(20)">
 					<view>待发货</view>
 					<view class='num'>{{orderData.unshipped_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(2)">
+				<view class='item' :class='orderStatus==30 ? "on": ""' @click="statusClick(30)">
 					<view>待收货</view>
 					<view class='num '>{{orderData.received_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==3 ? "on": ""' @click="statusClick(3)">
-					<view>待评价</view>
-					<view class='num'>{{orderData.evaluated_count || 0}}</view>
-				</view>
-				<view class='item' :class='orderStatus==4 ? "on": ""' @click="statusClick(4)">
+				<view class='item' :class='orderStatus==40 ? "on": ""' @click="statusClick(40)">
 					<view>已完成</view>
 					<view class='num'>{{orderData.complete_count || 0}}</view>
 				</view>
@@ -150,13 +146,6 @@
 						icon: "icon-weixinzhifu",
 						value: 'weixin',
 						title: '微信快捷支付'
-					},
-					{
-						name: "余额支付",
-						icon: "icon-yuezhifu",
-						value: 'yue',
-						title: '可用余额:',
-						number: 0
 					}
 				],
 				pay_close: false,
