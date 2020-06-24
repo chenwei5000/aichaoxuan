@@ -22,7 +22,7 @@
 								<!-- #ifdef MP -->
 								<checkbox :value="item.id" :checked="item.checked" />
 								<!-- #endif -->
-								<navigator :url='"/pages/goods_details/index?id="+item.product_id' hover-class='none' class='picTxt acea-row row-between-wrapper'>
+								<navigator :url='"/pages/goods_details/index?id="+item.product_attr_unique' hover-class='none' class='picTxt acea-row row-between-wrapper'>
 									<view class='pictrue'>
 										<image v-if="item.productInfo.attrInfo" :src='item.productInfo.attrInfo.image'></image>
 										<image v-else :src='item.productInfo.image'></image>

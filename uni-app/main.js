@@ -28,7 +28,7 @@ if (urlShopKey !== undefined && urlShopKey.length>10) {
 }else
 {
 	var LastShopKey = Cache.get(SHOP_KEY);
-	console.log(LastShopKey);
+	//console.log(LastShopKey);
 	// 既没有参数，也没有缓存，则默认shop_key
 	if(LastShopKey === undefined)
 	{
