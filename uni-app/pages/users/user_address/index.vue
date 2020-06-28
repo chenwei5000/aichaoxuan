@@ -5,11 +5,11 @@
 				<view class='list'>
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>姓名</view>
-						<input type='text' placeholder='请输入姓名' name='real_name' :value="userAddress.real_name" placeholder-class='placeholder'></input>
+						<input type='text' placeholder='请输入姓名' name='receiver_fullname' :value="userAddress.receiver_fullname" placeholder-class='placeholder'></input>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>联系电话</view>
-						<input type='text' placeholder='请输入联系电话' name="phone" :value='userAddress.phone' placeholder-class='placeholder'></input>
+						<input type='text' placeholder='请输入联系电话' name="receiver_phone" :value='userAddress.receiver_phone' placeholder-class='placeholder'></input>
 					</view>
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>所在地区</view>
@@ -35,10 +35,10 @@
 
 				<button class='keepBnt bg-color' form-type="submit">立即保存</button>
 				<!-- #ifdef MP -->
-				<view class="wechatAddress" v-if="!id" @click="getWxAddress">导入微信地址</view>
+				<!-- <view class="wechatAddress" v-if="!id" @click="getWxAddress">导入微信地址</view> -->
 				<!-- #endif -->
 				<!-- #ifdef H5 -->
-				<view class="wechatAddress" v-if="this.$wechat.isWeixin() && !id" @click="getAddress">导入微信地址</view>
+				<!-- <view class="wechatAddress" v-if="this.$wechat.isWeixin() && !id" @click="getAddress">导入微信地址</view> -->
 				<!-- #endif -->
 			</view>
 		</form>
@@ -86,12 +86,27 @@
 				valueRegion: [0, 0, 0],
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
+				province:[],
+				city:[],
 				district: [],
 				multiArray: [],
 				multiIndex: [0, 0, 0],
 				cityId: 0,
 				defaultRegion: ['广东省', '广州市', '番禺区'],
-				defaultRegionCode: '440113'
+				defaultRegionCode: '440113',
+				currnetProvinceKey:'',
+				currnetCityKey:'',
+				currnetAreaKey:'',
+				provinceList:{},
+				provinceArr:[],
+				cityList:{},
+				cityArr:[],
+				areaList:{},
+				areaArr:[],
+				pid:0,
+				cid:0,
+				aid:0,
+				areastr:'',
 			};
 		},
 		computed: mapGetters(['isLogin']),
@@ -105,7 +120,7 @@
 					title: options.id ? '修改地址' : '添加地址'
 				})
 				this.getUserAddress();
-				this.getCityList();
+				this.getCityList(0);
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();
@@ -120,30 +135,29 @@
 			// 回去地址数据
 			getCityList: function() {
 				let that = this;
-				getCity().then(res => {
-					this.district = res.data
-					that.initialize();
+				getCity(0).then(res => {
+					
 				})
 			},
 			initialize: function() {
 				let that = this,
-					province = [],
-					city = [],
-					area = [];
-				if (that.district.length) {
-					let cityChildren = that.district[0].c || [];
-					let areaChildren = cityChildren.length ? (cityChildren[0].c || []) : [];
-					that.district.forEach(function(item) {
-						province.push(item.n);
-					});
-					cityChildren.forEach(function(item) {
-						city.push(item.n);
-					});
-					areaChildren.forEach(function(item) {
-						area.push(item.n);
-					});
-					this.multiArray = [province, city, area]
-				}
+					// province = [],
+					// city = [],
+					// area = [];
+				// if (that.district.length) {
+				// 	let cityChildren = that.district[0].c || [];
+				// 	let areaChildren = cityChildren.length ? (cityChildren[0].c || []) : [];
+				// 	that.district.forEach(function(item) {
+				// 		province.push(item.n);
+				// 	});
+				// 	cityChildren.forEach(function(item) {
+				// 		city.push(item.n);
+				// 	});
+				// 	areaChildren.forEach(function(item) {
+				// 		area.push(item.n);
+				// 	});
+				// 	this.multiArray = [province, city, area]
+				// }
 			},
 			bindRegionChange: function(e) {
 				let multiIndex = this.multiIndex,
@@ -205,8 +219,6 @@
 				this.multiArray = multiArray;
 				// #endif
 
-
-
 				this.multiIndex = multiIndex
 				// this.setData({ multiArray: multiArray, multiIndex: multiIndex});
 			},
@@ -238,119 +250,57 @@
 					that.city_id = res.data.city_id
 				});
 			},
-			// 导入共享地址（小程序）
-			getWxAddress: function() {
-				let that = this;
-				uni.authorize({
-					scope: 'scope.address',
-					success: function(res) {
-						uni.chooseAddress({
-							success: function(res) {
-								let addressP = {};
-								addressP.province = res.provinceName;
-								addressP.city = res.cityName;
-								addressP.district = res.countyName;
-								editAddress({
-									address: addressP,
-									is_default: 1,
-									real_name: res.userName,
-									post_code: res.postalCode,
-									phone: res.telNumber,
-									detail: res.detailInfo,
-									id: 0,
-									type: 1,
-								}).then(res => {
-									setTimeout(function() {
-										if (that.cartId) {
-											let cartId = that.cartId;
-											let pinkId = that.pinkId;
-											let couponId = that.couponId;
-											that.cartId = '';
-											that.pinkId = '';
-											that.couponId = '';
-											uni.navigateTo({
-												url: '/pages/users/order_confirm/index?cartId=' + cartId + '&addressId=' + (that.id ? that.id :
-													res.data
-													.id) + '&pinkId=' + pinkId + '&couponId=' + couponId
-											});
-										} else {
-											uni.navigateBack({
-												delta: 1
-											});
-										}
-									}, 1000);
-									return that.$util.Tips({
-										title: "添加成功",
-										icon: 'success'
-									});
-								}).catch(err => {
-									return that.$util.Tips({
-										title: err
-									});
-								});
-							},
-							fail: function(res) {
-								if (res.errMsg == 'chooseAddress:cancel') return that.$util.Tips({
-									title: '取消选择'
-								});
-							},
-						})
-					},
-					fail: function(res) {
-						uni.showModal({
-							title: '您已拒绝导入微信地址权限',
-							content: '是否进入权限管理，调整授权？',
-							success(res) {
-								if (res.confirm) {
-									uni.openSetting({
-										success: function(res) {}
-									});
-								} else if (res.cancel) {
-									return that.$util.Tips({
-										title: '已取消！'
-									});
-								}
-							}
-						})
-					},
+			getProvince(){ // 获取省
+				var t = this;
+				getCity(0).then(res => {
+					console.log(e);
+					e = e.data.data;
+					var provinceList = e.list;
+					var provinceArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
+					t.multiArray = [provinceArr, [], []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
+					t.provinceList = provinceList;   // 省级原始数据
+					t.provinceArr = provinceArr;   // 省级所有的名称
+					//   })
+					var defaultCode = provinceList[0].area_id  // 使用第一项当作参数获取市级数据
+					console.log(defaultCode)
+					if (defaultCode){
+						t.currnetProvinceKey = defaultCode;
+						t.getCity(defaultCode)  // 获取市级数据
+					}
 				})
 			},
-			// 导入共享地址（微信）；
-			getAddress() {
-				let that = this;
-				that.$wechat.openAddress().then(userInfo => {
-					open();
-					editAddress({
-							id: this.id,
-							real_name: userInfo.userName,
-							phone: userInfo.telNumber,
-							address: {
-								province: userInfo.provinceName,
-								city: userInfo.cityName,
-								district: userInfo.countryName
-							},
-							detail: userInfo.detailInfo,
-							is_default: 1,
-							post_code: userInfo.postalCode
-						})
-						.then(() => {
-							that.$util.Tips({
-								title: "添加成功",
-								icon: 'success'
-							}, function() {
-								close();
-								return history.go(-1);
-							});
-						})
-						.catch(err => {
-							close();
-							return that.$util.Tips({
-								title: err || "添加失败"
-							});
-						});
-				}).catch(err => {
-					console.log(err);
-				});
+			getCity(code){ // 获取市级数据
+				var t = this;
+				getCity(code).then(res => {
+					console.log(e);
+					e = e.data.data
+					var cityList = e.list;
+					var cityArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
+					t.multiArray = [t.provinceArr, cityArr, []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
+					t.multiIndex[1] = '0';
+					t.cityList = cityList;
+					t.cityArr = cityArr;
+					var defaultCode = cityList[0].area_id  // 使用第一项当作参数获取市级数据
+					console.log(defaultCode)
+					if (defaultCode){
+						t.currnetCityKey = defaultCode;
+						t.getArea(defaultCode)  // 获取市级数据
+					}
+				})
+			},
+			getArea(code){
+				var t = this;
+				getCity(code).then(res => {
+					console.log(e);
+					e = e.data.data
+					var areaList = e.list;
+					var areaArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
+					t.multiArray = [t.provinceArr, t.cityArr, areaArr]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
+					t.multiIndex[2] = '0';
+					t.areaList = areaList;
+					t.areaArr = areaArr;
+					console.log('multiIndex',t.multiIndex);
+				})
 			},
 			/**
 			 * 提交用户添加地址
@@ -359,29 +309,32 @@
 			formSubmit: function(e) {
 				let that = this,
 					value = e.detail.value;
-				if (!value.real_name) return that.$util.Tips({
+				if (!value.receiver_fullname) return that.$util.Tips({
 					title: '请填写收货人姓名'
 				});
-				if (!value.phone) return that.$util.Tips({
+				if (!value.receiver_receiver_phone) return that.$util.Tips({
 					title: '请填写联系电话'
 				});
-				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(value.phone)) return that.$util.Tips({
+				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(value.receiver_receiver_phone)) return that.$util.Tips({
 					title: '请输入正确的手机号码'
 				});
 				if (that.region == '省-市-区') return that.$util.Tips({
 					title: '请选择所在地区'
 				});
-				if (!value.detail) return that.$util.Tips({
+				if (!value.detail_address) return that.$util.Tips({
 					title: '请填写详细地址'
 				});
-				value.id = that.id;
+				value.address_id = that.id;
 				let regionArray = that.region;
-				value.address = {
-					province: regionArray[0],
-					city: regionArray[1],
-					district: regionArray[2],
-					city_id: that.cityId,
-				};
+				// value.address = {
+				// 	province: regionArray[0],
+				// 	city: regionArray[1],
+				// 	district: regionArray[2],
+				// 	city_id: that.cityId,
+				// };
+				value.province_id = 1;
+				value.city_id = 36;
+				value.area_id = 37;
 				value.is_default = that.userAddress.is_default ? 1 : 0;
 
 				uni.showLoading({

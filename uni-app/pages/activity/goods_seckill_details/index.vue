@@ -259,7 +259,8 @@
 		},
 		computed: mapGetters(['isLogin']),
 		onLoad(options) {
-			
+			console.log('options',options)
+			console.log('isLogin',this.isLogin)
 			let that = this
 			let statusBarHeight = ''
 			//设置商品列表高度

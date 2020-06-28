@@ -1,4 +1,5 @@
 import request from "@/utils/request.js";
+import request_new from "@/utils/request_new.js";
 
 /**
  * 获取微信sdk配置
@@ -38,7 +39,7 @@ export function getLogo()
  * @param data object 小程序用户登陆信息
  */
 export function login(data) {
-  return request.post("wechat/mp_auth", data, { noAuth : true });
+  return request_new.post("Weixin.MiniappAuth", data, { noAuth : true });
 }
 /**
  * 分享

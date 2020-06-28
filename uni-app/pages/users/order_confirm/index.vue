@@ -124,7 +124,9 @@
 		orderConfirm,
 		getCouponsOrderPrice,
 		orderCreate,
-		postOrderComputed
+		postOrderComputed,
+		WxJsapiPay,
+		WxH5Pay
 	} from '@/api/order.js';
 	import {
 		getAddressDefault,
@@ -511,9 +513,45 @@
 				let that = this;
 				orderCreate(that.orderKey, data).then(res => {
 					let status = res.data.status,
-						orderId = res.data.result.orderId,
-						jsConfig = res.data.result.jsConfig,
+					    ua = '',
+					    orderId = res.data.order_id,
+					    jsConfig = '',
 						goPages = '/pages/order_pay_status/index?order_id=' + orderId + '&msg=' + res.msg;
+					// #ifdef  MP
+					status = 'WECHAT_PAY';
+					let data = {
+						pay_code:res.data.pay_code
+					}
+					WxJsapiPay(data).then(res => {
+						console.log(res)
+					}).catch(err => {
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: err
+						});
+					});
+					// #endif
+					// #ifdef  H5
+					console.log('h5')
+					ua = window.navigator.userAgent.toLowerCase();
+					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+					    status = 'WECHAT_PAY'
+					}else{
+						status = "WECHAT_H5_PAY"
+					}
+					let data = {
+						pay_code:res.data.pay_code
+					}
+					WxH5Pay(data).then(res => {
+						console.log(res)
+					}).catch(err => {
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: err
+						});
+					});
+					// #endif
+					return;
 					switch (status) {
 						case 'ORDER_EXIST':
 						case 'EXTEND_ORDER':

@@ -114,8 +114,8 @@ export function getTemlIds()
 /**
  * 获取城市信息
  */
-export function getCity() {
-  return request.get('city_list', { }, { noAuth: true });
+export function getCity(id) {
+  return request_new.get('Site.ListArea', {parent_id:id}, { noAuth: true });
 }
 
 /**

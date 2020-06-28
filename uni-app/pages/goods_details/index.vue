@@ -247,6 +247,8 @@
 		},
 		computed: mapGetters(['isLogin']),
 		onLoad(options) {
+			console.log('options',options);
+			console.log('isLogin',this.isLogin);
 			let that = this
 			var pages = getCurrentPages();
 			if (pages.length <= 1) {
@@ -888,6 +890,7 @@
 			 */
 			downloadFilePromotionCode: function(successFn) {
 				let that = this;
+				return;
 				getProductCode(that.id).then(res => {
 					console.log(res, 'res')
 					uni.downloadFile({
