@@ -188,7 +188,9 @@ export function postOrderComputed(key, data) {
 export function WxJsapiPay(data){
   return request_new.post('Billing.WxJsapiPay',data);
 }
-
 export function WxH5Pay(data){
   return request_new.post('Billing.WxJsapiPay',data);
+}
+export function WxWxaPay(data){
+  return request_new.post('Billing.WxWxaPay',data);
 }

@@ -126,7 +126,8 @@
 		orderCreate,
 		postOrderComputed,
 		WxJsapiPay,
-		WxH5Pay
+		WxH5Pay,
+		WxWxaPay
 	} from '@/api/order.js';
 	import {
 		getAddressDefault,
@@ -522,7 +523,8 @@
 					let data = {
 						pay_code:res.data.pay_code
 					}
-					WxJsapiPay(data).then(res => {
+					console.log('WxWxaPay')
+					WxWxaPay(data).then(res => {
 						console.log(res)
 					}).catch(err => {
 						uni.hideLoading();

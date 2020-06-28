@@ -37,17 +37,17 @@
 				</view>
 			</view>
 			<view style='height:120rpx;'></view>
-			<view class='footer acea-row row-between-wrapper'>
+			<view class='footer acea-row row-between-wrapper' style="display: flex;justify-content: center;">
 				<!-- #ifdef APP-PLUS -->
 				<view class='addressBnt bg-color on' @click='addAddress'><text class='iconfont icon-tianjiadizhi'></text>添加新地址</view>
 				<!-- #endif -->
 				<!-- #ifdef MP-->
 				<view class='addressBnt bg-color' @click='addAddress'><text class='iconfont icon-tianjiadizhi'></text>添加新地址</view>
-				<view class='addressBnt wxbnt' @click='getWxAddress'><text class='iconfont icon-weixin2'></text>导入微信地址</view>
+				<!-- <view class='addressBnt wxbnt' @click='getWxAddress'><text class='iconfont icon-weixin2'></text>导入微信地址</view> -->
 				<!-- #endif -->
 				<!-- #ifdef H5-->
 				<view class='addressBnt bg-color' :class="this.$wechat.isWeixin()?'':'on'" @click='addAddress'><text class='iconfont icon-tianjiadizhi'></text>添加新地址</view>
-				<view class='addressBnt wxbnt' @click='getAddress' v-if="this.$wechat.isWeixin()"><text class='iconfont icon-weixin2'></text>导入微信地址</view>
+				<!-- <view class='addressBnt wxbnt' @click='getAddress' v-if="this.$wechat.isWeixin()"><text class='iconfont icon-weixin2'></text>导入微信地址</view> -->
 				<!-- #endif -->
 			</view>
 		</view>

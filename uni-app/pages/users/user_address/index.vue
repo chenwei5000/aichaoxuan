@@ -25,7 +25,7 @@
 					</view>
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>详细地址</view>
-						<input type='text' placeholder='请填写具体地址' name='detail' placeholder-class='placeholder' :value='userAddress.detail'></input>
+						<input type='text' placeholder='请填写具体地址' name='detail_address' placeholder-class='placeholder' :value='userAddress.detail'></input>
 					</view>
 				</view>
 				<view class='default acea-row row-middle'>
@@ -140,7 +140,7 @@
 				})
 			},
 			initialize: function() {
-				let that = this,
+				let that = this;
 					// province = [],
 					// city = [],
 					// area = [];
@@ -312,10 +312,10 @@
 				if (!value.receiver_fullname) return that.$util.Tips({
 					title: '请填写收货人姓名'
 				});
-				if (!value.receiver_receiver_phone) return that.$util.Tips({
+				if (!value.receiver_phone) return that.$util.Tips({
 					title: '请填写联系电话'
 				});
-				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(value.receiver_receiver_phone)) return that.$util.Tips({
+				if (!/^1(3|4|5|7|8|9|6)\d{9}$/i.test(value.receiver_phone)) return that.$util.Tips({
 					title: '请输入正确的手机号码'
 				});
 				if (that.region == '省-市-区') return that.$util.Tips({
