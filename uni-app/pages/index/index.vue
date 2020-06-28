@@ -136,7 +136,6 @@
 						</view>
 						<view class="text-info">
 							<view class="title line1">{{item.store_name}}</view>
-							<view class="old-price"><text>¥</text>{{item.ot_price}}</view>
 							<view class="price">
 								<text>￥</text>{{item.price}}
 								<view class="txt" v-if="item.checkCoupon">券</view>

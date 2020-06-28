@@ -21,16 +21,10 @@
 							<view class='money font-color'>
 								￥
 								<text class='num'>{{storeInfo.price}}</text>
-								<text class='vip-money' v-if="storeInfo.vip_price && storeInfo.vip_price > 0">￥{{storeInfo.vip_price}}</text>
-								<image v-if="storeInfo.vip_price && storeInfo.vip_price > 0" src="../../static/images/vip.png"></image>
 							</view>
-							<view class='iconfont icon-fenxiang' @click="listenerActionSheet"></view>
 						</view>
 						<view class='introduce'>{{storeInfo.store_name}}</view>
 						<view class='label acea-row row-between-wrapper'>
-							<view>原价:￥{{storeInfo.ot_price}}</view>
-							<!-- <view>库存:{{storeInfo.stock}}{{storeInfo.unit_name}}</view> -->
-							<view>销量:{{storeInfo.fsales}}{{storeInfo.unit_name}}</view>
 						</view>
 					</view>
 					<view class='attribute acea-row row-between-wrapper' @click="selecAttr">
