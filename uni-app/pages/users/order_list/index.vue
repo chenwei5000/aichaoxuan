@@ -3,13 +3,6 @@
 		<view class='my-order'>
 			<view class='header bg-color'>
 				<view class='picTxt acea-row row-between-wrapper'>
-					<view class='text'>
-						<view class='name'>订单信息</view>
-						<view>消费订单：{{orderData.order_count || 0}} 总消费：￥{{orderData.sum_price || 0}}</view>
-					</view>
-					<view class='pictrue'>
-						<image src='../../../static/images/orderTime.png'></image>
-					</view>
 				</view>
 			</view>
 			<view class='nav acea-row row-around'>
@@ -160,7 +153,7 @@
 			if (this.isLogin) {
 				this.getOrderData();
 				this.getOrderList();
-				this.getUserInfo();
+				//this.getUserInfo();
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();
@@ -198,7 +191,7 @@
 			getUserInfo: function() {
 				let that = this;
 				getUserInfo().then(res => {
-					that.payMode[1].number = res.data.now_money;
+					//that.payMode[1].number = res.data.now_money;
 					that.$set(that, 'payMode', that.payMode);
 				});
 			},
@@ -374,7 +367,7 @@
 
 <style scoped lang="scss">
 	.my-order .header {
-		height: 260rpx;
+		height: 130rpx;
 		padding: 0 30rpx;
 	}
 
