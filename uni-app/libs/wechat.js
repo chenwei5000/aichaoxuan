@@ -158,7 +158,7 @@ class AuthWechat {
 					expires_time = new Date(expires_time).getTime();
 					let newTime = Math.round(new Date() / 1000);
 					store.commit("LOGIN", {
-						token: data.token,
+						token: data.login_token,
 						time: expires_time - newTime
 					});
 					Cache.set(WX_AUTH, code);

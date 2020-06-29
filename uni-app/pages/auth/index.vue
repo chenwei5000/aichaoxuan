@@ -1,7 +1,7 @@
 <template>
 	<view class="lottie-bg">
 		<view id="lottie">
-			<image src="/static/img/live-logo.gif" rel="preload" />
+			登录中...
 		</view>
 	</view>
 </template>
