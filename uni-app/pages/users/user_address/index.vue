@@ -14,8 +14,7 @@
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>所在地区</view>
 						<view class="address">
-							<picker mode="multiSelector" @change="bindRegionChange" @columnchange="bindMultiPickerColumnChange" :value="valueRegion"
-							 :range="multiArray">
+							<picker mode="multiSelector" @change="bindRegionChange" @columnchange="bindMultiPickerColumnChange" :value="valueRegion" :range="multiArray">
 								<view class='acea-row'>
 									<view class="picker">{{region[0]}}，{{region[1]}}，{{region[2]}}</view>
 									<view class='iconfont icon-dizhi font-color'></view>
@@ -80,6 +79,7 @@
 				couponId: 0, //优惠券id
 				id: 0, //地址id
 				userAddress: {
+					address_id:0,
 					is_default: false
 				}, //地址详情
 				region: ['省', '市', '区'],
@@ -103,10 +103,9 @@
 				cityArr:[],
 				areaList:{},
 				areaArr:[],
-				pid:0,
-				cid:0,
-				aid:0,
-				areastr:'',
+				province_id:0,
+				city_id:0,
+				area_id:0
 			};
 		},
 		computed: mapGetters(['isLogin']),
@@ -120,7 +119,8 @@
 					title: options.id ? '修改地址' : '添加地址'
 				})
 				this.getUserAddress();
-				this.getCityList(0);
+				//this.getCityList(0);
+				this.getProvince();
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();
@@ -132,33 +132,6 @@
 			}
 		},
 		methods: {
-			// 回去地址数据
-			getCityList: function() {
-				let that = this;
-				getCity(0).then(res => {
-					
-				})
-			},
-			initialize: function() {
-				let that = this;
-					// province = [],
-					// city = [],
-					// area = [];
-				// if (that.district.length) {
-				// 	let cityChildren = that.district[0].c || [];
-				// 	let areaChildren = cityChildren.length ? (cityChildren[0].c || []) : [];
-				// 	that.district.forEach(function(item) {
-				// 		province.push(item.n);
-				// 	});
-				// 	cityChildren.forEach(function(item) {
-				// 		city.push(item.n);
-				// 	});
-				// 	areaChildren.forEach(function(item) {
-				// 		area.push(item.n);
-				// 	});
-				// 	this.multiArray = [province, city, area]
-				// }
-			},
 			bindRegionChange: function(e) {
 				let multiIndex = this.multiIndex,
 					province = this.district[multiIndex[0]] || {
@@ -169,57 +142,48 @@
 					},
 					multiArray = this.multiArray,
 					value = e.detail.value;
-
+					this.province_id = this.provinceList[multiIndex[0]].area_id;
+					this.city_id = this.cityList[multiIndex[1]].area_id;
+					this.area_id = this.areaList[multiIndex[2]].area_id;
 				this.region = [multiArray[0][value[0]], multiArray[1][value[1]], multiArray[2][value[2]]]
 				// this.$set(this.region,0,multiArray[0][value[0]]);
 				// this.$set(this.region,1,multiArray[1][value[1]]);
 				// this.$set(this.region,2,multiArray[2][value[2]]);
 				this.cityId = city.v
 				this.valueRegion = [0, 0, 0]
-				this.initialize();
+				//this.initialize();
 			},
 			bindMultiPickerColumnChange: function(e) {
-				let that = this,
-					column = e.detail.column,
-					value = e.detail.value,
-					currentCity = this.district[value] || {
-						c: []
-					},
-					multiArray = that.multiArray,
-					multiIndex = that.multiIndex;
-				multiIndex[column] = value;
-				switch (column) {
-					case 0:
-						let areaList = currentCity.c[0] || {
-							c: []
-						};
-						multiArray[1] = currentCity.c.map((item) => {
-							return item.n;
-						});
-						multiArray[2] = areaList.c.map((item) => {
-							return item.n;
-						});
-						break;
-					case 1:
-						let cityList = that.district[multiIndex[0]].c[multiIndex[1]].c || [];
-						multiArray[2] = cityList.map((item) => {
-							return item.n;
-						});
-						break;
-					case 2:
-
-						break;
+				var t = this;
+				console.log(e.detail)   // {column: 2, value: 1}
+				switch (e.detail.column)  { // 此时的改变列数
+				  case 0:
+				      // 处理逻辑
+				  		var code = t.provinceList[e.detail.value].area_id
+				  		t.multiIndex[0] = e.detail.value;
+				  		t.getCity(code)
+				  break;
+				  case 1:
+				      //  处理逻辑
+				  		var code = t.cityList[e.detail.value].area_id
+				  		t.multiIndex[1] = e.detail.value;
+				  		t.getArea(code)
+				  break;
+				  case 2:
+				      t.multiIndex[2] = e.detail.value;
+					   console.log('multiIndex',t.multiIndex);
+				  break;
 				}
-				// #ifdef MP
-				this.$set(this.multiArray, 0, multiArray[0]);
-				this.$set(this.multiArray, 1, multiArray[1]);
-				this.$set(this.multiArray, 2, multiArray[2]);
-				// #endif
-				// #ifdef H5
-				this.multiArray = multiArray;
-				// #endif
+				// // #ifdef MP
+				// this.$set(this.multiArray, 0, multiArray[0]);
+				// this.$set(this.multiArray, 1, multiArray[1]);
+				// this.$set(this.multiArray, 2, multiArray[2]);
+				// // #endif
+				// // #ifdef H5
+				// this.multiArray = multiArray;
+				// // #endif
 
-				this.multiIndex = multiIndex
+				// this.multiIndex = multiIndex
 				// this.setData({ multiArray: multiArray, multiIndex: multiIndex});
 			},
 			// 授权回调
@@ -244,17 +208,32 @@
 				let that = this;
 				getAddressDetail(this.id).then(res => {
 					// let region = [res.data.province, res.data.city, res.data.district];
-					let region = [res.data.province, res.data.city, res.data.district];
-					that.$set(that, 'userAddress', res.data);
+					//let region = [res.data.province, res.data.city, res.data.district];
+					let region = res.data.district.split('/');
+					var userAddress = {
+						receiver_fullname: res.data.real_name,
+						receiver_phone: res.data.phone,
+						address_id: res.data.id,
+						is_default: res.data.is_default,
+						detail: res.data.detail,
+						province_id: res.data.province_id,
+						city_id: res.data.city_id,
+						area_id: res.data.area_id
+					}
+					that.$set(that, 'province_id', res.data.province_id);
+					that.$set(that, 'city_id', res.data.city_id);
+					that.$set(that, 'area_id', res.data.area_id);
+					that.$set(that, 'userAddress', userAddress);
 					that.$set(that, 'region', region);
 					that.city_id = res.data.city_id
 				});
 			},
 			getProvince(){ // 获取省
 				var t = this;
-				getCity(0).then(res => {
+				console.log('this.getProvince();');
+				getCity(0).then(e => {
 					console.log(e);
-					e = e.data.data;
+					e = e.data;
 					var provinceList = e.list;
 					var provinceArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
 					t.multiArray = [provinceArr, [], []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
@@ -271,9 +250,9 @@
 			},
 			getCity(code){ // 获取市级数据
 				var t = this;
-				getCity(code).then(res => {
+				getCity(code).then(e => {
 					console.log(e);
-					e = e.data.data
+					e = e.data
 					var cityList = e.list;
 					var cityArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
 					t.multiArray = [t.provinceArr, cityArr, []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
@@ -290,9 +269,9 @@
 			},
 			getArea(code){
 				var t = this;
-				getCity(code).then(res => {
+				getCity(code).then(e => {
 					console.log(e);
-					e = e.data.data
+					e = e.data
 					var areaList = e.list;
 					var areaArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
 					t.multiArray = [t.provinceArr, t.cityArr, areaArr]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
@@ -324,7 +303,8 @@
 				if (!value.detail_address) return that.$util.Tips({
 					title: '请填写详细地址'
 				});
-				value.address_id = that.id;
+				console.log(that.userAddress)
+				value.address_id = that.userAddress.address_id;
 				let regionArray = that.region;
 				// value.address = {
 				// 	province: regionArray[0],
@@ -332,9 +312,9 @@
 				// 	district: regionArray[2],
 				// 	city_id: that.cityId,
 				// };
-				value.province_id = 1;
-				value.city_id = 36;
-				value.area_id = 37;
+				value.province_id = that.province_id;
+				value.city_id = that.city_id;
+				value.area_id = that.area_id;
 				value.is_default = that.userAddress.is_default ? 1 : 0;
 
 				uni.showLoading({

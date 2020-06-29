@@ -87,7 +87,7 @@
         },
         "router" : {
             "mode" : "history",
-            "base" : ""
+            "base" : "/store/"
         },
         "domain" : "",
         "sdkConfigs" : {
