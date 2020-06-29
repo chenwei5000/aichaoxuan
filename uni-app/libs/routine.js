@@ -127,7 +127,7 @@ class Routine
 				let time = res.data.expires_time - Cache.time();
 				store.commit('UPDATE_USERINFO', res.data.sns_userinfo);
 				store.commit('LOGIN', {token:res.data.login_token, time:time});
-				store.commit('SETUID', res.data.userInfo.unionId);
+				store.commit('SETUID', res.data.sns_userinfo.unionId);
 				Cache.set(EXPIRES_TIME,res.data.expires_time,time);
 				Cache.set(USER_INFO,res.data.sns_userinfo,time);
 				return resolve(res);

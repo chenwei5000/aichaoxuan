@@ -518,14 +518,17 @@
 					    orderId = res.data.order_id,
 					    jsConfig = '',
 						goPages = '/pages/order_pay_status/index?order_id=' + orderId + '&msg=' + res.msg;
-					// #ifdef  MP
-					status = 'WECHAT_PAY';
 					let data = {
 						pay_code:res.data.pay_code
 					}
+					// #ifdef  MP
+					status = 'WECHAT_PAY';
 					console.log('WxWxaPay')
-					WxWxaPay(data).then(res => {
-						console.log(res)
+					WxWxaPay(data).then(e => {
+						console.log(e)
+						jsConfig = e.data.jsApiParams;
+						console.log('jsConfig',jsConfig);
+						that.topay(status,jsConfig,goPages,res)
 					}).catch(err => {
 						uni.hideLoading();
 						return that.$util.Tips({
@@ -538,103 +541,92 @@
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
-					}else{
-						status = "WECHAT_H5_PAY"
-					}
-					let data = {
-						pay_code:res.data.pay_code
-					}
-					WxH5Pay(data).then(res => {
-						console.log(res)
-					}).catch(err => {
-						uni.hideLoading();
-						return that.$util.Tips({
-							title: err
-						});
-					});
-					// #endif
-					return;
-					switch (status) {
-						case 'ORDER_EXIST':
-						case 'EXTEND_ORDER':
-						case 'PAY_ERROR':
+						WxJsapiPay(data).then(e => {
+							console.log(e)
+							//that.topay(status,jsConfig,goPages,res)
+						}).catch(err => {
 							uni.hideLoading();
 							return that.$util.Tips({
-								title: res.msg
-							}, {
-								tab: 5,
-								url: goPages
+								title: err
 							});
-							break;
-						case 'SUCCESS':
+						});
+					}else{
+						status = "WECHAT_H5_PAY"
+						WxH5Pay(data).then(e => {
+							console.log(e)
+							that.topay(status,jsConfig,goPages,res)
+						}).catch(err => {
 							uni.hideLoading();
-							if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
-								return that.$util.Tips({
-									title: res.msg,
-									icon: 'success'
-								}, {
-									tab: 4,
-									url: goPages
-								});
+							return that.$util.Tips({
+								title: err
+							});
+						});
+					}
+					// #endif
+					
+				}).catch(err => {
+					uni.hideLoading();
+					return that.$util.Tips({
+						title: err
+					});
+				});
+			},
+			topay(status,jsConfig,goPages,res){
+				let that = this;
+				switch (status) {
+					case 'ORDER_EXIST':
+					case 'EXTEND_ORDER':
+					case 'PAY_ERROR':
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: res.msg
+						}, {
+							tab: 5,
+							url: goPages
+						});
+						break;
+					case 'SUCCESS':
+						uni.hideLoading();
+						if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
 							return that.$util.Tips({
 								title: res.msg,
 								icon: 'success'
 							}, {
-								tab: 5,
+								tab: 4,
 								url: goPages
 							});
-							break;
-						case 'WECHAT_PAY':
-							// #ifdef MP
-							that.toPay = true;
-							uni.requestPayment({
-								timeStamp: jsConfig.timestamp,
-								nonceStr: jsConfig.nonceStr,
-								package: jsConfig.package,
-								signType: jsConfig.signType,
-								paySign: jsConfig.paySign,
-								success: function(res) {
-									uni.hideLoading();
-									if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
-										return that.$util.Tips({
-											title: '支付成功',
-											icon: 'success'
-										}, {
-											tab: 4,
-											url: goPages
-										});
+						return that.$util.Tips({
+							title: res.msg,
+							icon: 'success'
+						}, {
+							tab: 5,
+							url: goPages
+						});
+						break;
+					case 'WECHAT_PAY':
+						// #ifdef MP
+						that.toPay = true;
+						console.log('jsConfig',jsConfig);
+						jsConfig = JSON.parse(jsConfig)
+						console.log('timeStamp',jsConfig.timeStamp);
+						console.log('paySign',jsConfig.paySign);
+						uni.requestPayment({
+							timeStamp: jsConfig.timeStamp,
+							nonceStr: jsConfig.nonceStr,
+							package: jsConfig.package,
+							signType: jsConfig.signType,
+							paySign: jsConfig.paySign,
+							success: function(res) {
+								console.log(res);
+								uni.hideLoading();
+								if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
 									return that.$util.Tips({
 										title: '支付成功',
 										icon: 'success'
 									}, {
-										tab: 5,
+										tab: 4,
 										url: goPages
 									});
-								},
-								fail: function(e) {
-									uni.hideLoading();
-									return that.$util.Tips({
-										title: '取消支付'
-									}, {
-										tab: 5,
-										url: goPages + '&status=0'
-									});
-								},
-								complete: function(e) {
-									uni.hideLoading();
-									//关闭当前页面跳转至订单状态
-									if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
-										title: '取消支付'
-									}, {
-										tab: 5,
-										url: goPages + '&status=0'
-									});
-								},
-							})
-							// #endif
-							// #ifdef H5
-							console.log('公众号支付')
-							this.$wechat.pay(res.data.result.jsConfig).then(res => {
 								return that.$util.Tips({
 									title: '支付成功',
 									icon: 'success'
@@ -642,38 +634,62 @@
 									tab: 5,
 									url: goPages
 								});
-							}).cache(res => {
-								if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
+							},
+							fail: function(e) {
+								console.log(e);
+								uni.hideLoading();
+								return that.$util.Tips({
 									title: '取消支付'
 								}, {
 									tab: 5,
 									url: goPages + '&status=0'
 								});
-							})
-							// #endif
-							break;
-						case 'PAY_DEFICIENCY':
-							uni.hideLoading();
-							//余额不足
+							},
+							complete: function(e) {
+								console.log(e);
+								//关闭当前页面跳转至订单状态
+								if (e.errMsg == 'requestPayment:cancel') return that.$util.Tips({
+									title: '取消支付'
+								});
+							},
+						})
+						// #endif
+						// #ifdef H5
+						console.log('公众号支付')
+						this.$wechat.pay(jsConfig).then(res => {
 							return that.$util.Tips({
-								title: res.msg
+								title: '支付成功',
+								icon: 'success'
 							}, {
 								tab: 5,
-								url: goPages + '&status=1'
+								url: goPages
 							});
-							break;
-						case "WECHAT_H5_PAY": //gongzhonghao
-							setTimeout(() => {
-								location.href = res.data.result.jsConfig.mweb_url;
-							}, 100);
-							break;
-					}
-				}).catch(err => {
-					uni.hideLoading();
-					return that.$util.Tips({
-						title: err
-					});
-				});
+						}).cache(res => {
+							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
+								title: '取消支付'
+							}, {
+								tab: 5,
+								url: goPages + '&status=0'
+							});
+						})
+						// #endif
+						break;
+					case 'PAY_DEFICIENCY':
+						uni.hideLoading();
+						//余额不足
+						return that.$util.Tips({
+							title: res.msg
+						}, {
+							tab: 5,
+							url: goPages + '&status=1'
+						});
+						break;
+					case "WECHAT_H5_PAY": //gongzhonghao
+						setTimeout(() => {
+							location.href = jsConfig.mweb_url;
+						}, 100);
+						break;
+				}
 			},
 			SubOrder: function(e) {
 				

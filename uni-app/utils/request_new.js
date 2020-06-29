@@ -15,7 +15,7 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
     //登录过期自动登录
 	if(!store.state.app.token && !checkLogin()){
 		toLogin();
-		return Promise.reject({msg:'未登陆'});
+		return Promise.reject({msg:'未登录'});
 	}
   }
   
@@ -24,7 +24,9 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
 
   if (store.state.app.shopKey) {
     shop_key = encodeURIComponent(store.state.app.shopKey);
-	}
+  }else{
+	shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
+  }
   return new Promise((reslove, reject) => {
     uni.request({
       url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,

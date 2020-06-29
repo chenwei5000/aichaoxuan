@@ -71,7 +71,6 @@
 			},
 			getUserInfo(code){
 				Routine.getUserInfo().then(res=>{
-					console.log('getUserInfo');
 					let userInfo = res.userInfo
 					userInfo.encrypted_data = userInfo.encryptedData;
 					userInfo.code = code;
@@ -79,7 +78,6 @@
 					userInfo.spread_code = app.globalData.code;//获取推广人分享二维码ID
 					Routine.authUserInfo(userInfo).then(res=>{
 						uni.hideLoading();
-						console.log('authColse');
 						this.$emit('authColse',false);
 						this.$emit('onLoadFun',this.userInfo);
 					}).catch(res=>{
@@ -95,9 +93,8 @@
 				})
 			},
 			setUserInfo(){
-				uni.showLoading({title:'正在登陆中'});
+				uni.showLoading({title:'正在登录中'});
 				Routine.getCode().then(code=>{
-					console.log('getCode');
 					this.getUserInfo(code);
 				}).catch(res=>{
 					uni.hideLoading();
