@@ -176,7 +176,7 @@ class AuthWechat {
 	 */
 	getAuthUrl(appId) {
 		const redirect_uri = encodeURIComponent(
-			`${location.origin}/pages/auth/index?back_url=` +
+			`${location.origin}/store/pages/auth/index?back_url=` +
 			encodeURIComponent(
 				encodeURIComponent(
 					uni.getStorageSync(BACK_URL) ?

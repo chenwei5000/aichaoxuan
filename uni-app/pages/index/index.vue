@@ -333,15 +333,6 @@
 			}
 		},
 		onLoad() {
-			uni.getLocation({
-				type: 'wgs84',
-				success: function(res) {
-					try {
-						uni.setStorageSync('user_latitude', res.latitude);
-						uni.setStorageSync('user_longitude', res.longitude);
-					} catch {}
-				}
-			});
 			let self = this
 			// #ifdef MP
 			// 获取小程序头部高度

@@ -1,7 +1,6 @@
 <template>
 	<view>
 		<view class='Popup' v-if='isShowAuth'>
-		   <image :src='logoUrl'></image>
 		   <view class='title'>授权提醒</view>
 		   <view class='tip'>请授权头像等信息，以便为您提供更好的服务</view>
 		   <view class='bottom flex'>
@@ -20,9 +19,6 @@
 
 <script>
 	const app = getApp();
-	import Cache from '../utils/cache';
-	import { getLogo } from '../api/public';
-	import { LOGO_URL } from '../config/cache';
 	import { mapGetters } from 'vuex';
 	import Routine from '../libs/routine';
 	
@@ -54,7 +50,6 @@
 			}
 		},
 		created() {
-			this.getLogoUrl();
 			this.setAuthStatus();
 		},
 		methods:{
@@ -74,8 +69,7 @@
 					let userInfo = res.userInfo
 					userInfo.encrypted_data = userInfo.encryptedData;
 					userInfo.code = code;
-					userInfo.spread_spid = app.globalData.spid;//获取推广人ID
-					userInfo.spread_code = app.globalData.code;//获取推广人分享二维码ID
+
 					Routine.authUserInfo(userInfo).then(res=>{
 						uni.hideLoading();
 						this.$emit('authColse',false);
@@ -98,17 +92,6 @@
 					this.getUserInfo(code);
 				}).catch(res=>{
 					uni.hideLoading();
-				})
-			},
-			getLogoUrl(){
-				let that = this;
-				if (Cache.has(LOGO_URL)) {
-					this.logoUrl = Cache.get(LOGO_URL);
-					return;
-				}
-				getLogo().then(res=>{
-					that.logoUrl = res.data.logo_url
-					Cache.set(LOGO_URL,that.logoUrl);
 				})
 			},
 			close(){

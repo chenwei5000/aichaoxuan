@@ -18,8 +18,13 @@ export function getWechatConfig() {
  * @returns {*}
  */
 export function wechatAuth(code, spread, login_type) {
-  return request.get(
-    "wechat/auth",
+  //return request.get(
+  //  "wechat/auth",
+  //  { code, spread, login_type },
+  //  { noAuth: true }
+  //);
+  return request_new.get(
+    "Weixin.MpAuth",
     { code, spread, login_type },
     { noAuth: true }
   );
