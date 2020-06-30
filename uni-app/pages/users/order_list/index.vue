@@ -131,7 +131,7 @@
 				loadTitle: '加载更多', //提示语
 				orderList: [], //订单数组
 				orderData: {}, //订单详细统计
-				orderStatus: 0, //订单状态
+				orderStatus: 99, //订单状态
 				page: 1,
 				limit: 20,
 				payMode: [{
@@ -322,7 +322,7 @@
 				that.loading = true;
 				that.loadTitle = "加载更多";
 				getOrderList({
-					type: that.orderStatus,
+					order_state: that.orderStatus,
 					page: that.page,
 					limit: that.limit,
 				}).then(res => {
