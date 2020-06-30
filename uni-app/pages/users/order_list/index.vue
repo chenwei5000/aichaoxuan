@@ -25,7 +25,7 @@
 			</view>
 			<view class='list'>
 				<view class='item' v-for="(item,index) in orderList" :key="index">
-					<view @click='goOrderDetails(item.order_id)'>
+					<view @click='goOrderDetails(item.id)'>
 						<view class='title acea-row row-between-wrapper'>
 							<view class="acea-row row-middle">
 								<text class="sign cart-color acea-row row-center-wrapper" v-if="item.bargain_id != 0">砍价</text>
@@ -58,14 +58,14 @@
 						</view>
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
-						<view class='bnt cancelBnt' v-if="item._status._type==0 || item._status._type == 9" @click='cancelOrder(index,item.order_id)'>取消订单</view>
-						<view class='bnt bg-color' v-if="item._status._type == 0" @click='goPay(item.pay_price,item.order_id)'>立即付款</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 1 || item._status._type == 9" @click='goOrderDetails(item.order_id)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 2 && item.delivery_type" @click='goOrderDetails(item.order_id)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 3" @click='goOrderDetails(item.order_id)'>去评价</view>
+						<view class='bnt cancelBnt' v-if="item._status._type==0 || item._status._type == 9" @click='cancelOrder(index,item.id)'>取消订单</view>
+						<view class='bnt bg-color' v-if="item._status._type == 0" @click='goPay(item.pay_price,item.id,item.pay_code)'>立即付款</view>
+						<view class='bnt bg-color' v-else-if="item._status._type == 1 || item._status._type == 9" @click='goOrderDetails(item.id)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="item._status._type == 2 && item.delivery_type" @click='goOrderDetails(item.id)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="item._status._type == 3" @click='goOrderDetails(item.id)'>去评价</view>
 						<view class='bnt bg-color' v-else-if="item.seckill_id < 1 && item.bargain_id < 1 && item.combination_id < 1 && item._status._type == 4"
-						 @click='goOrderDetails(item.order_id)'>再次购买</view>
-						<view class='bnt cancelBnt' v-if="item._status._type == 4" @click='delOrder(item.order_id,index)'>删除订单</view>
+						 @click='goOrderDetails(item.id)'>再次购买</view>
+						<view class='bnt cancelBnt' v-if="item._status._type == 4" @click='delOrder(item.id,index)'>删除订单</view>
 					</view>
 				</view>
 			</view>
@@ -85,7 +85,7 @@
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse"></authorize>
 		<!-- #endif -->
 		<home></home>
-		<payment :payMode='payMode' :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id" :totalPrice='totalPrice'></payment>
+		<payment :payMode='payMode' :pay_code="pay_code" :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id" :totalPrice='totalPrice'></payment>
 	</view>
 </template>
 
@@ -144,6 +144,7 @@
 				pay_close: false,
 				pay_order_id: '',
 				totalPrice: '0',
+				pay_code:'',
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
@@ -247,10 +248,11 @@
 			 * 打开支付组件
 			 * 
 			 */
-			goPay: function(pay_price, order_id) {
+			goPay: function(pay_price, order_id, pay_code) {
 				this.$set(this, 'pay_close', true);
 				this.$set(this, 'pay_order_id', order_id);
 				this.$set(this, 'totalPrice', pay_price);
+				this.$set(this, 'pay_code', pay_code);
 			},
 			/**
 			 * 支付成功回调

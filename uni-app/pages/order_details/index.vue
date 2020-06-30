@@ -223,9 +223,412 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse"></authorize>
 		<!-- #endif -->
-		<payment :payMode='payMode' :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id" :totalPrice='totalPrice'></payment>
+		<payment :payMode='payMode' :pay_code="pay_code" :pay_close="pay_close" @onChangeFun='onChangeFun' :order_id="pay_order_id" :totalPrice='totalPrice'></payment>
 	</view>
 </template>
+
+
+<script>
+	import {
+		getOrderDetail,
+		orderAgain,
+		orderTake,
+		orderDel,
+		orderCancel
+	} from '@/api/order.js';
+	import {
+		openOrderRefundSubscribe
+	} from '@/utils/SubscribeMessage.js';
+	import {
+		getUserInfo
+	} from '@/api/user.js';
+	import home from '@/components/home';
+	import payment from '@/components/payment';
+	import orderGoods from "@/components/orderGoods";
+	import ClipboardJS from "@/plugin/clipboard/clipboard.js";
+	import {
+		toLogin
+	} from '@/libs/login.js';
+	import {
+		mapGetters
+	} from "vuex";
+	// #ifdef MP
+	import authorize from '@/components/Authorize';
+	// #endif
+	export default {
+		components: {
+			payment,
+			home,
+			orderGoods,
+			// #ifdef MP
+			authorize
+			// #endif
+		},
+		data() {
+			return {
+				order_id: '',
+				evaluate: 0,
+				cartInfo: [], //购物车产品
+				orderInfo: {
+					system_store: {},
+					_status: {}
+				}, //订单详情
+				system_store: {},
+				isGoodsReturn: false, //是否为退款订单
+				status: {}, //订单底部按钮状态
+				isClose: false,
+				payMode: [{
+						name: "微信支付",
+						icon: "icon-weixinzhifu",
+						value: 'weixin',
+						title: '微信快捷支付'
+					},
+					{
+						name: "余额支付",
+						icon: "icon-yuezhifu",
+						value: 'yue',
+						title: '可用余额:',
+						number: 0
+					},
+				],
+				pay_close: false,
+				pay_order_id: '',
+				totalPrice: '0',
+				pay_code:'',
+				isAuto: false, //没有授权的不会自动授权
+				isShowAuth: false //是否隐藏授权
+			};
+		},
+		computed: mapGetters(['isLogin']),
+		onLoad: function(options) {
+			if (options.order_id) {
+				this.$set(this, 'order_id', options.order_id);
+			}
+		},
+		onShow() {
+			if (this.isLogin) {
+				this.getOrderInfo();
+				this.getUserInfo();
+			} else {
+				// #ifdef H5 || APP-PLUS
+				toLogin();
+				// #endif 
+				// #ifdef MP
+				console.log('isShowAuth')
+				return;
+				this.isAuto = true;
+				this.$set(this, 'isShowAuth', true);
+				// #endif
+			}
+		},
+		onHide: function() {
+			this.isClose = true;
+		},
+		onReady: function() {
+			// #ifdef H5
+			this.$nextTick(function() {
+				const clipboard = new ClipboardJS(".copy-data");
+				clipboard.on("success", () => {
+					this.$util.Tips({
+						title: '复制成功'
+					});
+				});
+			});
+			// #endif
+		},
+		methods: {
+			goGoodCall() {
+				let self = this
+				uni.navigateTo({
+					url: `/pages/customer_list/index?orderId=${self.order_id}`
+				})
+			},
+			openSubcribe: function(e) {
+				let page = e;
+				uni.showLoading({
+					title: '正在加载',
+				})
+				openOrderRefundSubscribe().then(res => {
+					uni.hideLoading();
+					uni.navigateTo({
+						url: page,
+					});
+				}).catch(() => {
+					uni.hideLoading();
+				});
+			},
+			/**
+			 * 事件回调
+			 * 
+			 */
+			onChangeFun: function(e) {
+				let opt = e;
+				let action = opt.action || null;
+				let value = opt.value != undefined ? opt.value : null;
+				(action && this[action]) && this[action](value);
+			},
+			/**
+			 * 拨打电话
+			 */
+			makePhone: function() {
+				uni.makePhoneCall({
+					phoneNumber: this.system_store.phone
+				})
+			},
+			/**
+			 * 打开地图
+			 * 
+			 */
+			showMaoLocation: function() {
+				if (!this.system_store.latitude || !this.system_store.longitude) return this.$util.Tips({
+					title: '缺少经纬度信息无法查看地图！'
+				});
+				uni.openLocation({
+					latitude: parseFloat(this.system_store.latitude),
+					longitude: parseFloat(this.system_store.longitude),
+					scale: 8,
+					name: this.system_store.name,
+					address: this.system_store.address + this.system_store.detailed_address,
+					success: function() {
+
+					},
+				});
+			},
+			/**
+			 * 关闭支付组件
+			 * 
+			 */
+			payClose: function() {
+				this.pay_close = false;
+			},
+			/**
+			 * 打开支付组件
+			 * 
+			 */
+			pay_open: function() {
+				this.pay_close = true;
+				this.pay_order_id = this.orderInfo.order_id;
+				this.totalPrice = this.orderInfo.pay_price;
+				this.pay_code = this.orderInfo.pay_code;
+			},
+			/**
+			 * 支付成功回调
+			 * 
+			 */
+			pay_complete: function() {
+				this.pay_close = false;
+				this.pay_order_id = '';
+				this.getOrderInfo();
+			},
+			/**
+			 * 支付失败回调
+			 * 
+			 */
+			pay_fail: function() {
+				this.pay_close = false;
+				this.pay_order_id = '';
+			},
+			/**
+			 * 登录授权回调
+			 * 
+			 */
+			onLoadFun: function() {
+				this.getOrderInfo();
+				this.getUserInfo();
+			},
+			/**
+			 * 获取用户信息
+			 * 
+			 */
+			getUserInfo: function() {
+				let that = this;
+				getUserInfo().then(res => {
+					that.payMode[1].number = res.data.now_money;
+					that.$set(that, 'payMode', that.payMode);
+				})
+			},
+			/**
+			 * 获取订单详细信息
+			 * 
+			 */
+			getOrderInfo: function() {
+				let that = this;
+				uni.showLoading({
+					title: "正在加载中"
+				});
+				getOrderDetail(this.order_id).then(res => {
+					let data = res.data[0]
+					let _type = data._status._type;
+					uni.hideLoading();
+					that.$set(that, 'orderInfo', data);
+					that.$set(that, 'cartInfo', data.cartInfo);
+					that.$set(that, 'evaluate', _type == 3 ? 3 : 0);
+					that.$set(that, 'system_store', data.system_store);
+					if (this.orderInfo.refund_status != 0) {
+						this.isGoodsReturn = true;
+					}
+					that.getOrderStatus();
+				}).catch(err => {
+					uni.hideLoading();
+					that.$util.Tips({
+						title: err
+					}, '/pages/users/order_list/index');
+				});
+			},
+			/**
+			 * 
+			 * 剪切订单号
+			 */
+			// #ifndef H5
+			copy: function() {
+				let that = this;
+				uni.setClipboardData({
+					data: this.orderInfo.order_id
+				});
+			},
+			// #endif
+			/**
+			 * 打电话
+			 */
+			goTel: function() {
+				uni.makePhoneCall({
+					phoneNumber: this.orderInfo.delivery_id
+				})
+			},
+			/**
+			 * 设置底部按钮
+			 * 
+			 */
+			getOrderStatus: function() {
+				let orderInfo = this.orderInfo || {},
+					_status = orderInfo._status || {
+						_type: 0
+					},
+					status = {};
+				let type = parseInt(_status._type),
+					delivery_type = orderInfo.delivery_type,
+					seckill_id = orderInfo.seckill_id ? parseInt(orderInfo.seckill_id) : 0,
+					bargain_id = orderInfo.bargain_id ? parseInt(orderInfo.bargain_id) : 0,
+					combination_id = orderInfo.combination_id ? parseInt(orderInfo.combination_id) : 0;
+				status = {
+					type: type == 9 ? -9 : type,
+					class_status: 0
+				};
+				if (type == 1 && combination_id > 0) status.class_status = 1; //查看拼团
+				if (type == 2 && delivery_type == 'express') status.class_status = 2; //查看物流
+				if (type == 2) status.class_status = 3; //确认收货
+				if (type == 4 || type == 0) status.class_status = 4; //删除订单
+				if (!seckill_id && !bargain_id && !combination_id && (type == 3 || type == 4)) status.class_status = 5; //再次购买
+				this.$set(this, 'status', status);
+			},
+			/**
+			 * 去拼团详情
+			 * 
+			 */
+			goJoinPink: function() {
+				uni.navigateTo({
+					url: '/pages/activity/goods_combination_status/index?id=' + this.orderInfo.pink_id,
+				});
+			},
+			/**
+			 * 再此购买
+			 * 
+			 */
+			goOrderConfirm: function() {
+				let that = this;
+				orderAgain(that.orderInfo.id).then(res => {
+					return uni.navigateTo({
+						url: '/pages/users/order_confirm/index?cartId=' + res.data.cateId
+					});
+				});
+			},
+			confirmOrder: function() {
+				let that = this;
+				uni.showModal({
+					title: '确认收货',
+					content: '为保障权益，请收到货确认无误后，再确认收货',
+					success: function(res) {
+						if (res.confirm) {
+							orderTake(that.order_id).then(res => {
+								return that.$util.Tips({
+									title: '操作成功',
+									icon: 'success'
+								}, function() {
+									that.getOrderInfo();
+								});
+							}).catch(err => {
+								return that.$util.Tips({
+									title: err
+								});
+							})
+						}
+					}
+				})
+			},
+			/**
+			 * 
+			 * 删除订单
+			 */
+			delOrder: function() {
+				let that = this;
+				orderDel(this.order_id).then(res => {
+					return that.$util.Tips({
+						title: '删除成功',
+						icon: 'success'
+					}, {
+						tab: 3,
+						url: 1
+					});
+				}).catch(err => {
+					return that.$util.Tips({
+						title: err
+					});
+				});
+			},
+			cancelOrder() {
+				let self = this
+				uni.showModal({
+					title: '提示',
+					content: '确认取消该订单?',
+					success: function(res) {
+						if (res.confirm) {
+							orderCancel(self.orderInfo.id)
+								.then((data) => {
+									console.log(data)
+									self.$util.Tips({
+										title: data.msg
+									}, {
+										tab: 3
+									})
+								})
+								.catch(() => {
+									self.getDetail();
+								});
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});
+			},
+		}
+	}
+</script>
+
+<style>
+	.qs-btn {
+		width: auto;
+		height: 60rpx;
+		text-align: center;
+		line-height: 60rpx;
+		border-radius: 50rpx;
+		color: #fff;
+		font-size: 27rpx;
+		padding: 0 3%;
+		color: #aaa;
+		border: 1px solid #ddd;
+		margin-right: 20rpx;
+	}
+</style>
 <style scoped lang="scss">
 	.goodCall {
 		color: #e93323;
@@ -577,402 +980,5 @@
 			font-size: 28rpx;
 			color: #868686;
 		}
-	}
-</style>
-
-<script>
-	import {
-		getOrderDetail,
-		orderAgain,
-		orderTake,
-		orderDel,
-		orderCancel
-	} from '@/api/order.js';
-	import {
-		openOrderRefundSubscribe
-	} from '@/utils/SubscribeMessage.js';
-	import {
-		getUserInfo
-	} from '@/api/user.js';
-	import home from '@/components/home';
-	import payment from '@/components/payment';
-	import orderGoods from "@/components/orderGoods";
-	import ClipboardJS from "@/plugin/clipboard/clipboard.js";
-	import {
-		toLogin
-	} from '@/libs/login.js';
-	import {
-		mapGetters
-	} from "vuex";
-	// #ifdef MP
-	import authorize from '@/components/Authorize';
-	// #endif
-	export default {
-		components: {
-			payment,
-			home,
-			orderGoods,
-			// #ifdef MP
-			authorize
-			// #endif
-		},
-		data() {
-			return {
-				order_id: '',
-				evaluate: 0,
-				cartInfo: [], //购物车产品
-				orderInfo: {
-					system_store: {},
-					_status: {}
-				}, //订单详情
-				system_store: {},
-				isGoodsReturn: false, //是否为退款订单
-				status: {}, //订单底部按钮状态
-				isClose: false,
-				payMode: [{
-						name: "微信支付",
-						icon: "icon-weixinzhifu",
-						value: 'weixin',
-						title: '微信快捷支付'
-					},
-					{
-						name: "余额支付",
-						icon: "icon-yuezhifu",
-						value: 'yue',
-						title: '可用余额:',
-						number: 0
-					},
-				],
-				pay_close: false,
-				pay_order_id: '',
-				totalPrice: '0',
-				isAuto: false, //没有授权的不会自动授权
-				isShowAuth: false //是否隐藏授权
-			};
-		},
-		computed: mapGetters(['isLogin']),
-		onLoad: function(options) {
-			if (options.order_id) {
-				this.$set(this, 'order_id', options.order_id);
-			}
-		},
-		onShow() {
-			if (this.isLogin) {
-				this.getOrderInfo();
-				this.getUserInfo();
-			} else {
-				// #ifdef H5 || APP-PLUS
-				toLogin();
-				// #endif 
-				// #ifdef MP
-				this.isAuto = true;
-				this.$set(this, 'isShowAuth', true);
-				// #endif
-			}
-		},
-		onHide: function() {
-			this.isClose = true;
-		},
-		onReady: function() {
-			// #ifdef H5
-			this.$nextTick(function() {
-				const clipboard = new ClipboardJS(".copy-data");
-				clipboard.on("success", () => {
-					this.$util.Tips({
-						title: '复制成功'
-					});
-				});
-			});
-			// #endif
-		},
-		methods: {
-			goGoodCall() {
-				let self = this
-				uni.navigateTo({
-					url: `/pages/customer_list/index?orderId=${self.order_id}`
-				})
-			},
-			openSubcribe: function(e) {
-				let page = e;
-				uni.showLoading({
-					title: '正在加载',
-				})
-				openOrderRefundSubscribe().then(res => {
-					uni.hideLoading();
-					uni.navigateTo({
-						url: page,
-					});
-				}).catch(() => {
-					uni.hideLoading();
-				});
-			},
-			/**
-			 * 事件回调
-			 * 
-			 */
-			onChangeFun: function(e) {
-				let opt = e;
-				let action = opt.action || null;
-				let value = opt.value != undefined ? opt.value : null;
-				(action && this[action]) && this[action](value);
-			},
-			/**
-			 * 拨打电话
-			 */
-			makePhone: function() {
-				uni.makePhoneCall({
-					phoneNumber: this.system_store.phone
-				})
-			},
-			/**
-			 * 打开地图
-			 * 
-			 */
-			showMaoLocation: function() {
-				if (!this.system_store.latitude || !this.system_store.longitude) return this.$util.Tips({
-					title: '缺少经纬度信息无法查看地图！'
-				});
-				uni.openLocation({
-					latitude: parseFloat(this.system_store.latitude),
-					longitude: parseFloat(this.system_store.longitude),
-					scale: 8,
-					name: this.system_store.name,
-					address: this.system_store.address + this.system_store.detailed_address,
-					success: function() {
-
-					},
-				});
-			},
-			/**
-			 * 关闭支付组件
-			 * 
-			 */
-			payClose: function() {
-				this.pay_close = false;
-			},
-			/**
-			 * 打开支付组件
-			 * 
-			 */
-			pay_open: function() {
-				this.pay_close = true;
-				this.pay_order_id = this.orderInfo.order_id;
-				this.totalPrice = this.orderInfo.pay_price;
-			},
-			/**
-			 * 支付成功回调
-			 * 
-			 */
-			pay_complete: function() {
-				this.pay_close = false;
-				this.pay_order_id = '';
-				this.getOrderInfo();
-			},
-			/**
-			 * 支付失败回调
-			 * 
-			 */
-			pay_fail: function() {
-				this.pay_close = false;
-				this.pay_order_id = '';
-			},
-			/**
-			 * 登录授权回调
-			 * 
-			 */
-			onLoadFun: function() {
-				this.getOrderInfo();
-				this.getUserInfo();
-			},
-			/**
-			 * 获取用户信息
-			 * 
-			 */
-			getUserInfo: function() {
-				let that = this;
-				getUserInfo().then(res => {
-					that.payMode[1].number = res.data.now_money;
-					that.$set(that, 'payMode', that.payMode);
-				})
-			},
-			/**
-			 * 获取订单详细信息
-			 * 
-			 */
-			getOrderInfo: function() {
-				let that = this;
-				uni.showLoading({
-					title: "正在加载中"
-				});
-				getOrderDetail(this.order_id).then(res => {
-					let _type = res.data._status._type;
-					uni.hideLoading();
-					that.$set(that, 'orderInfo', res.data);
-					that.$set(that, 'cartInfo', res.data.cartInfo);
-					that.$set(that, 'evaluate', _type == 3 ? 3 : 0);
-					that.$set(that, 'system_store', res.data.system_store);
-					if (this.orderInfo.refund_status != 0) {
-						this.isGoodsReturn = true;
-					}
-					that.getOrderStatus();
-				}).catch(err => {
-					uni.hideLoading();
-					that.$util.Tips({
-						title: err
-					}, '/pages/users/order_list/index');
-				});
-			},
-			/**
-			 * 
-			 * 剪切订单号
-			 */
-			// #ifndef H5
-			copy: function() {
-				let that = this;
-				uni.setClipboardData({
-					data: this.orderInfo.order_id
-				});
-			},
-			// #endif
-			/**
-			 * 打电话
-			 */
-			goTel: function() {
-				uni.makePhoneCall({
-					phoneNumber: this.orderInfo.delivery_id
-				})
-			},
-			/**
-			 * 设置底部按钮
-			 * 
-			 */
-			getOrderStatus: function() {
-				let orderInfo = this.orderInfo || {},
-					_status = orderInfo._status || {
-						_type: 0
-					},
-					status = {};
-				let type = parseInt(_status._type),
-					delivery_type = orderInfo.delivery_type,
-					seckill_id = orderInfo.seckill_id ? parseInt(orderInfo.seckill_id) : 0,
-					bargain_id = orderInfo.bargain_id ? parseInt(orderInfo.bargain_id) : 0,
-					combination_id = orderInfo.combination_id ? parseInt(orderInfo.combination_id) : 0;
-				status = {
-					type: type == 9 ? -9 : type,
-					class_status: 0
-				};
-				if (type == 1 && combination_id > 0) status.class_status = 1; //查看拼团
-				if (type == 2 && delivery_type == 'express') status.class_status = 2; //查看物流
-				if (type == 2) status.class_status = 3; //确认收货
-				if (type == 4 || type == 0) status.class_status = 4; //删除订单
-				if (!seckill_id && !bargain_id && !combination_id && (type == 3 || type == 4)) status.class_status = 5; //再次购买
-				this.$set(this, 'status', status);
-			},
-			/**
-			 * 去拼团详情
-			 * 
-			 */
-			goJoinPink: function() {
-				uni.navigateTo({
-					url: '/pages/activity/goods_combination_status/index?id=' + this.orderInfo.pink_id,
-				});
-			},
-			/**
-			 * 再此购买
-			 * 
-			 */
-			goOrderConfirm: function() {
-				let that = this;
-				orderAgain(that.orderInfo.order_id).then(res => {
-					return uni.navigateTo({
-						url: '/pages/users/order_confirm/index?cartId=' + res.data.cateId
-					});
-				});
-			},
-			confirmOrder: function() {
-				let that = this;
-				uni.showModal({
-					title: '确认收货',
-					content: '为保障权益，请收到货确认无误后，再确认收货',
-					success: function(res) {
-						if (res.confirm) {
-							orderTake(that.order_id).then(res => {
-								return that.$util.Tips({
-									title: '操作成功',
-									icon: 'success'
-								}, function() {
-									that.getOrderInfo();
-								});
-							}).catch(err => {
-								return that.$util.Tips({
-									title: err
-								});
-							})
-						}
-					}
-				})
-			},
-			/**
-			 * 
-			 * 删除订单
-			 */
-			delOrder: function() {
-				let that = this;
-				orderDel(this.order_id).then(res => {
-					return that.$util.Tips({
-						title: '删除成功',
-						icon: 'success'
-					}, {
-						tab: 3,
-						url: 1
-					});
-				}).catch(err => {
-					return that.$util.Tips({
-						title: err
-					});
-				});
-			},
-			cancelOrder() {
-				let self = this
-				uni.showModal({
-					title: '提示',
-					content: '确认取消该订单?',
-					success: function(res) {
-						if (res.confirm) {
-							orderCancel(self.orderInfo.order_id)
-								.then((data) => {
-									console.log(data)
-									self.$util.Tips({
-										title: data.msg
-									}, {
-										tab: 3
-									})
-								})
-								.catch(() => {
-									self.getDetail();
-								});
-						} else if (res.cancel) {
-							console.log('用户点击取消');
-						}
-					}
-				});
-			},
-		}
-	}
-</script>
-
-<style>
-	.qs-btn {
-		width: auto;
-		height: 60rpx;
-		text-align: center;
-		line-height: 60rpx;
-		border-radius: 50rpx;
-		color: #fff;
-		font-size: 27rpx;
-		padding: 0 3%;
-		color: #aaa;
-		border: 1px solid #ddd;
-		margin-right: 20rpx;
 	}
 </style>

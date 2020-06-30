@@ -122,10 +122,11 @@
 					title: '正在加载中'
 				});
 				getOrderDetail(that.orderId).then(res => {
+					let data = res.data[0]
 					uni.hideLoading();
-					that.$set(that, 'order_pay_info', res.data);
+					that.$set(that, 'order_pay_info', data);
 					uni.setNavigationBarTitle({
-						title: res.data.paid ? '支付成功' : '支付失败'
+						title: data.paid ? '支付成功' : '支付失败'
 					});
 				}).catch(err => {
 					uni.hideLoading();

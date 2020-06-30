@@ -2,7 +2,7 @@
 	<view>
 		<view class="payment" :class="pay_close ? 'on' : ''">
 			<view class="title acea-row row-center-wrapper">
-				选择付款方式<text class="iconfont icon-guanbi" @click='close'></text>
+				选择付款方式{{pay_code}}<text class="iconfont icon-guanbi" @click='close'></text>
 			</view>
 			<view class="item acea-row row-between-wrapper" @click='goPay(item.number || 0 , item.value)' v-for="(item,index) in payMode"
 			 :key="index">
@@ -25,7 +25,10 @@
 
 <script>
 	import {
-		orderPay
+		orderPay,
+		WxJsapiPay,
+		WxH5Pay,
+		WxWxaPay
 	} from '@/api/order.js';
 	export default {
 		props: {
@@ -46,7 +49,11 @@
 			totalPrice: {
 				type: String,
 				default: '0'
-			}
+			},
+			pay_code: {
+				type: String,
+				default: ''
+			},
 		},
 		data() {
 			return {
@@ -60,6 +67,175 @@
 				});
 			},
 			goPay: function(number, paytype) {
+				let that = this;
+				let data = {
+					pay_code:that.pay_code
+				},status ='';
+				// #ifdef  MP
+				status = 'WECHAT_PAY';
+				console.log('WxWxaPay')
+				WxWxaPay(data).then(e => {
+					console.log(e)
+					jsConfig = e.data.jsApiParams;
+					console.log('jsConfig',jsConfig);
+					that.topay(status,jsConfig,res)
+				}).catch(err => {
+					uni.hideLoading();
+					return that.$util.Tips({
+						title: err
+					});
+				});
+				// #endif
+				// #ifdef  H5
+				console.log('h5')
+				ua = window.navigator.userAgent.toLowerCase();
+				if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+				    status = 'WECHAT_PAY'
+					WxJsapiPay(data).then(e => {
+						console.log(e)
+						//that.topay(status,jsConfig,res)
+					}).catch(err => {
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: err
+						});
+					});
+				}else{
+					status = "WECHAT_H5_PAY"
+					WxH5Pay(data).then(e => {
+						console.log(e)
+						that.topay(status,jsConfig,res)
+					}).catch(err => {
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: err
+						});
+					});
+				}
+				// #endif
+			},
+			topay(status,jsConfig,res){
+				let goPages = '/pages/order_pay_status/index?order_id=1';
+				let that = this;
+				switch (status) {
+					case 'ORDER_EXIST':
+					case 'EXTEND_ORDER':
+					case 'PAY_ERROR':
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: '支付错误'
+						}, {
+							tab: 5,
+							url: goPages
+						});
+						break;
+					case 'SUCCESS':
+						uni.hideLoading();
+						if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
+							return that.$util.Tips({
+								title: '支付成功',
+								icon: 'success'
+							}, {
+								tab: 4,
+								url: goPages
+							});
+						return that.$util.Tips({
+							title: '支付成功',
+							icon: 'success'
+						}, {
+							tab: 5,
+							url: goPages
+						});
+						break;
+					case 'WECHAT_PAY':
+						// #ifdef MP
+						that.toPay = true;
+						console.log('jsConfig',jsConfig);
+						jsConfig = JSON.parse(jsConfig)
+						console.log('timeStamp',jsConfig.timeStamp);
+						console.log('paySign',jsConfig.paySign);
+						uni.requestPayment({
+							timeStamp: jsConfig.timeStamp,
+							nonceStr: jsConfig.nonceStr,
+							package: jsConfig.package,
+							signType: jsConfig.signType,
+							paySign: jsConfig.paySign,
+							success: function(res) {
+								console.log(res);
+								uni.hideLoading();
+								if (that.BargainId || that.combinationId || that.pinkId || that.seckillId)
+									return that.$util.Tips({
+										title: '支付成功',
+										icon: 'success'
+									}, {
+										tab: 4,
+										url: goPages
+									});
+								return that.$util.Tips({
+									title: '支付成功',
+									icon: 'success'
+								}, {
+									tab: 5,
+									url: goPages
+								});
+							},
+							fail: function(e) {
+								console.log(e);
+								uni.hideLoading();
+								return that.$util.Tips({
+									title: '取消支付'
+								}, {
+									tab: 5,
+									url: goPages + '&status=0'
+								});
+							},
+							complete: function(e) {
+								console.log(e);
+								//关闭当前页面跳转至订单状态
+								if (e.errMsg == 'requestPayment:cancel') return that.$util.Tips({
+									title: '取消支付'
+								});
+							},
+						})
+						// #endif
+						// #ifdef H5
+						console.log('公众号支付')
+						this.$wechat.pay(jsConfig).then(res => {
+							return that.$util.Tips({
+								title: '支付成功',
+								icon: 'success'
+							}, {
+								tab: 5,
+								url: goPages
+							});
+						}).cache(res => {
+							return that.$util.Tips({
+								title: '取消支付'
+							}, {
+								tab: 5,
+								url: goPages + '&status=0'
+							});
+						})
+						// #endif
+						break;
+					case 'PAY_DEFICIENCY':
+						uni.hideLoading();
+						//余额不足
+						return that.$util.Tips({
+							title: '余额不足'
+						}, {
+							tab: 5,
+							url: goPages + '&status=1'
+						});
+						break;
+					case "WECHAT_H5_PAY": //gongzhonghao
+						setTimeout(() => {
+							location.href = jsConfig.mweb_url;
+						}, 100);
+						break;
+				}
+			},
+			goPay1: function(number, paytype) {
 				let that = this;
 				if (!that.order_id) return that.$util.Tips({
 					title: '请选择要支付的订单'

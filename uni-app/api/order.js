@@ -85,7 +85,7 @@ export function orderData(){
  * 
 */
 export function orderCancel(id){
-  return request.post('order/cancel',{id:id});
+  return request_new.post('Order.CancelOrder',{order_id:id});
 }
 
 /**
@@ -94,7 +94,7 @@ export function orderCancel(id){
  * 
 */
 export function orderDel(uni){
-  return request.post('order/del',{uni:uni});
+  return request_new.post('Order.DeleteOrder',{uni:uni});
 }
 
 /**
@@ -102,7 +102,7 @@ export function orderDel(uni){
  * @param string uni 
 */
 export function getOrderDetail(uni){
-  return request.get('order/detail/'+uni);
+  return request_new.get('Order.GetOrderDetail',{order_id:uni});
 }
 
 /**

@@ -17,7 +17,7 @@
 						</view>
 						<view class="num" v-if="userInfo.phone" >{{userInfo.phone}}
 						</view>
-						<view class="phone" v-if="!userInfo.phone && isLogin" @tap="bindPhone">绑定手机号</view>
+						<!-- <view class="phone" v-if="!userInfo.phone && isLogin" @tap="bindPhone">绑定手机号</view> -->
 					</view>
 				</view>
 			</view>
