@@ -3,11 +3,18 @@
 		<!-- #ifdef H5 -->
 		<view class="header">
 			<view class="serch-wrapper flex">
-				<view class="logo">
+				<view class="logo" style="margin-right: 32rpx;">
 					<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
 				</view>
 				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
 					搜索商品</navigator>
+			</view>
+			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
+				<view style="width:120rpx;height:120rpx;background:rgba(216,216,216,1);border-radius: 50%;margin-left: 32rpx;"></view>
+				<text style="font-size:28rpx;color: #fff;">萌宝妈咪的小店</text>
+				<view class="lxdzbox">
+					<text class="lxdztxt">联系店主</text>
+				</view>
 			</view>
 			<tabNav class="tabNav" :class="{'fixed':isFixed}" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
 			 @childTab='childTab'></tabNav>
@@ -18,7 +25,7 @@
 			<view class="sys-head" view :style="{ height: statusBarHeight }"></view>
 			<view class="serch-box" view style="height: 43px;">
 				<view class="serch-wrapper flex">
-					<view class="logo">
+					<view class="logo" style="margin-right: 32rpx;">
 						<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
 					</view>
 					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
@@ -719,12 +726,11 @@
 
 			.serch-wrapper {
 				align-items: center;
-				padding: 20rpx 50rpx 0 53rpx;
+				padding: 20rpx 50rpx 0 32rpx;
 
 				.logo {
-					width: 118rpx;
 					height: 42rpx;
-					margin-right: 30rpx;
+					margin-right: 32rpx;
 				}
 
 				image {
@@ -770,7 +776,7 @@
 			.serch-wrapper {
 				height: 100%;
 				align-items: center;
-				padding: 0 50rpx 0 53rpx;
+				padding: 0 50rpx 0 32rpx;
 
 				image {
 					width: 118rpx;
