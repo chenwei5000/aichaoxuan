@@ -1,72 +1,93 @@
 <template>
 	<view class="page-index" :class="{'bgf':navIndex >0}">
-		<!-- 1.0 头部展示 -->
-		<template name="header">
-			<view class="header">
-			<!-- 在小程序中，系统的显示通信商和信号的部分 -->
-			<view class="sys-head" view :style="{ height: headerData.statusBarHeight }"></view>
-			
-			<!--  1.1 H5 页面顶部搜索栏 -->
+		<!-- #ifdef H5 -->
+		<view class="header">
 			<view class="serch-wrapper flex">
 				<view class="logo">
-					<text>精选宝贝</text>
+					<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
 				</view>
 				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-					搜索你想要的</navigator>
+					搜索商品</navigator>
 			</view>
-			
-			
-			<!-- 1.2 H5 页面店铺信息 -->
-			<view class="store-infomation">
-				<view class="user-img">
-					<view>
-						<img src="" alt="">
-					</view>
-				</view>
-				<view class="store-name">
-					<text>萌宝妈咪的小店</text>
-				</view>
-				<view class="button">
-					<button type="default">联系店主</button>
-				</view>
-			</view>
-			
-			<!-- 1.3 H5 页面导航 -->
-			<tabNav v-if="deviveType === 'H5'" class="tabNav" :class="{ 'fixed': headerData.isFixed }" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
+			<tabNav class="tabNav" :class="{'fixed':isFixed}" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
 			 @childTab='childTab'></tabNav>
-			<tabNav v-else class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
-			 </view>
-		</template>
-		
-		<!-- #ifdef H5 -->
-		<template is="header" :data="headerData" :value="deviveType"></template>
+		</view>
 		<!-- #endif -->
-		
-		<!-- 条件注释 小程序顶部搜索栏 -->
 		<!-- #ifdef MP -->
-		<template is="header" :data="headerData"></template>
-		<!-- #endif -->
-		
-		<!-- 2.0 首页展示 -->
-		<view class="page_content" v-if="navIndex == 0">
-			<view class="mp-bg"></view>
-			<!-- banner -->
-			<view class="swiper">
-				<swiper indicator-dots="true" :autoplay="true" :circular="circular" :interval="interval" :duration="duration"
-				 indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#fff">
-					<block v-for="(item,index) in imgUrls" :key="index">
-						<swiper-item>
-							<navigator :url='item.url' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
-								<image :src="item.pic" class="slide-image"></image>
-							</navigator>
-						</swiper-item>
-					</block>
-				</swiper>
+		<view class="mp-header">
+			<view class="sys-head" view :style="{ height: statusBarHeight }"></view>
+			<view class="serch-box" view style="height: 43px;">
+				<view class="serch-wrapper flex">
+					<view class="logo">
+						<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
+					</view>
+					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
+						搜索商品</navigator>
+				</view>
 			</view>
+			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
+				<view style="width:120rpx;height:120rpx;background:rgba(216,216,216,1);border-radius: 50%;margin-left: 32rpx;"></view>
+				<text style="font-size:28rpx;color: #fff;">萌宝妈咪的小店</text>
+				<view class="lxdzbox">
+					<text class="lxdztxt">联系店主</text>
+				</view>
+			</view>
+			<tabNav class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
+		</view>
+		<!-- #endif -->
+		<!-- banner -->
+		<view class="swiper">
+			<swiper indicator-dots="true" :autoplay="true" :circular="circular" :interval="interval" :duration="duration"
+			 indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#fff">
+				<block v-for="(item,index) in imgUrls" :key="index">
+					<swiper-item>
+						<navigator :url='item.url' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
+							<image :src="item.pic" class="slide-image"></image>
+						</navigator>
+					</swiper-item>
+				</block>
+			</swiper>
+		</view>
+		<!-- 首页展示 -->
+		<view class="page_content" v-if="navIndex == 0">
+			<!-- #ifdef MP -->
+			<!-- <view class="mp-bg"></view> -->
+			<!-- #endif -->
 			<!-- 直播 -->
 			<!-- #ifdef MP -->
 			<block v-if="liveList.length>0">
-				<navigator :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+liveList[0].roomid" class="live-wrapper"
+			<view style="width: 750rpx;background-color: #fff;margin-top: 20rpx;">
+				<view style="width: 718rpx;height: 70rpx;display: flex;align-items: center;justify-content: space-between;">
+					<view style="width: 320rpx;height: 70rpx;display: flex;align-items: center;justify-content: center;background-image: url(../../static/images/livebg.png);background-size: 320rpx 70rpx;">
+						<text style="font-size:28rpx;font-weight:500;color:rgba(255,255,255,1);">好货直播live</text>
+					</view>
+					<view style="height: 70rpx;display: flex;align-items: center;">
+						<text style="font-size:24rpx;color:rgba(255,2,5,1);">全部直播</text>
+						<image style="width: 12rpx;height: 20rpx;margin-left: 26rpx;" src="../../static/images/livemore.png"></image>
+					</view>
+				</view>
+				<block v-for="(item,index) in liveList" :key="index">
+				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">
+					<view style="width: 340rpx;height: 340rpx;border-radius: 16rpx;">
+						<image style="width: 340rpx;height: 340rpx;border-radius: 16rpx;" :src="item.cover_img"></image>
+					</view>
+					
+					<view style="width: 294rpx;margin-left: 32rpx;margin-top: 20rpx;display: flex;flex-direction: column;">
+						<text style="font-size:24rpx;color:rgba(51,51,51,1);line-height:34rpx;">{{item.name}}</text>
+						<view style="height: 80rpx;display: flex;align-items: center;">
+							<view style="width:40rpx;height:40rpx;background:rgba(216,216,216,1);border-radius: 50%;margin-left: 20rpx;margin-right: 20rpx;"></view>
+							<text style="font-size:24rpx;color:rgba(85,85,85,1);">百搭达人</text>
+						</view>
+						<view style="width: 294rpx;display: flex;flex-wrap: wrap;">
+							<view style="width:140rpx;height:140rpx;background:rgba(216,216,216,1);border-radius: 12rpx;margin-right: 14rpx;"></view>
+							<view style="width:140rpx;height:140rpx;background:rgba(216,216,216,1);border-radius: 12rpx;"></view>
+						</view>
+					</view>
+				</navigator>
+				<view style="width: 750rpx;height:10rpx;background:rgba(248,248,248,1)" ></view>
+				</block>
+			</view>
+				<!-- <navigator :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+liveList[0].roomid" class="live-wrapper"
 				 v-if="liveList.length==1" hover-class="none">
 					<view class="live-top" :class="liveList[0].live_status == 101?'pictrue_log_xl':liveList[0].live_status == 103?'pictrue_log_xl_gray':'pictrue_log_xl_blue'">
 						<block v-if="liveList[0].live_status == 101">
@@ -106,7 +127,7 @@
 							<view class="live-title">{{item.name}}</view>
 						</navigator>
 					</scroll-view>
-				</view>
+				</view> -->
 			</block>
 			<!-- #endif -->
 			<!-- 限时秒杀 -->
@@ -140,6 +161,9 @@
 					</scroll-view>
 				</view>
 			</view>
+			<view style="width: 750rpx;display: flex;justify-content: center;margin-top: 40rpx;">
+				<image style="width: 474rpx;height: 40rpx;" src="../../static/images/shoprecomm.png"></image>
+			</view>
 			<!-- 首页推荐 -->
 			<view class="index-product-wrapper">
 				<!-- 首发新品 -->
@@ -154,7 +178,8 @@
 						<view class="text-info">
 							<view class="title line1">{{item.store_name}}</view>
 							<view class="price">
-								<text>￥</text>{{item.price}}
+								秒￥{{item.price}}
+								<text style="margin-left: 16rpx;">零￥{{item.price}}</text>
 								<view class="txt" v-if="item.checkCoupon">券</view>
 							</view>
 						</view>
@@ -182,9 +207,9 @@
 						</view>
 						<view class='text' :class='is_switch==true?"":"on"'>
 							<view class='name line1'>{{item.store_name}}</view>
-							<view class='money font-color' :class='is_switch==true?"":"on"'>￥<text class='num'>{{item.price}}</text></view>
+							<view class='money font-color' :class='is_switch==true?"":"on"'>秒 ￥<text class='num'>{{item.price}}</text></view>
 							<view class='vip acea-row row-between-wrapper' :class='is_switch==true?"":"on"'>
-								<view class='vip-money' v-if="item.vip_price && item.vip_price > 0">￥{{item.vip_price}}
+								<view class='vip-money' v-if="item.vip_price && item.vip_price > 0">秒 ￥{{item.vip_price}}
 									<image src='../../static/images/vip.png'></image>
 								</view>
 								<view>已售{{item.sales}}件</view>
@@ -277,12 +302,14 @@
 				loading: false,
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
+				statusBarHeight: statusBarHeight,
 				navIndex: 0,
 				navTop: [],
 				subscribe: false,
 				followUrl: "",
 				followHid: true,
 				followCode: false,
+				shopAvatar: "",
 				imgUrls: [],
 				itemNew: [],
 				activityList: [],
@@ -318,6 +345,7 @@
 				datatime: 0,
 				childID: 0,
 				loadend: false,
+				loading: false,
 				loadTitle: '加载更多',
 				sortProduct: [],
 				where: {
@@ -334,6 +362,7 @@
 				prodeuctTop: 0,
 				pinkInfo: '',
 				searchH: 0,
+				isFixed: false,
 				goodType: 0, //精品推荐Type
 				goodScroll: true, //精品推荐开关
 				params: { 
@@ -342,14 +371,7 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				shopName: '' ,//首页title，
-				// 头部模板数据
-				headerData: {
-					isFixed: false,
-					type: 'H5',
-					statusBarHeight: statusBarHeight
-				},
-				deviveType: 'H5'
+				shopName: '' //首页title
 			}
 		},
 		onLoad() {
@@ -359,7 +381,7 @@
 			this.navH = app.globalData.navHeight;
 			let info = uni.createSelectorQuery().select(".mp-header");
 			info.boundingClientRect(function(data) {
-				self.marTop = data ? data.height : 0
+				self.marTop = data.height
 			}).exec()
 			// #endif
 			// #ifndef MP
@@ -416,7 +438,7 @@
 							this.navH = app.globalData.navHeight;
 							let info = uni.createSelectorQuery().select(".mp-header");
 							info.boundingClientRect(function(data) {
-								self.prodeuctTop = data ? data.height : 0
+								self.prodeuctTop = data.height
 							}).exec()
 						}, 300)
 						// #endif
@@ -499,6 +521,7 @@
 					uni.setNavigationBarTitle({
 						title: res.data.shopName
 					})
+					that.$set(that, "shopAvatar", res.data.shopAvatar);
 					that.$set(that, "shopName", res.data.shopName);
 					that.$set(that, "imgUrls", res.data.banner);
 					// #ifdef H5
@@ -626,7 +649,7 @@
 			// 获取H5 搜索框高度
 			let appSearchH = uni.createSelectorQuery().select(".serch-wrapper");
 			appSearchH.boundingClientRect(function(data) {
-				self.searchH = data ? data.height : 0
+				self.searchH = data.height
 			}).exec()
 			// #endif
 		},
@@ -651,9 +674,9 @@
 		onPageScroll(e) {
 			let self = this
 			if (e.scrollTop >= self.searchH) {
-				self.headerData.isFixed = true
+				self.isFixed = true
 			} else {
-				self.headerData.isFixed = false
+				self.isFixed = false
 			}
 		}
 	}
@@ -686,23 +709,27 @@
 		min-height: 100%;
 		background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
 
-		/* 1.0 header Site start */ 
+		// &.bgf{
+		// 	background: #fff;
+		// }
 		.header {
 			width: 100%;
-			overflow: hidden;
+			height: 320rpx;
 			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
 
 			.serch-wrapper {
 				align-items: center;
-				padding: 17rpx 32rpx;
+				padding: 20rpx 50rpx 0 53rpx;
 
 				.logo {
-					width: 136rpx;
-					height: 44rpx;
-					line-height: 44rpx;
-					margin-right: 20rpx;
-					color: #fff;
-					font-size: 32rpx;
+					width: 118rpx;
+					height: 42rpx;
+					margin-right: 30rpx;
+				}
+
+				image {
+					width: 118rpx;
+					height: 42rpx;
 				}
 
 				.input {
@@ -723,120 +750,74 @@
 				}
 			}
 
-			.store-infomation {
-				display: flex;
-				height: 160rpx;
-				.user-img {
-					flex: 1;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					view {
-						width: 120rpx;
-						height: 120rpx;
-						background-color: #D8D8D8;
-						border-radius: 50%;
-					}
-				}
-				.store-name {
-					flex: 2;
-					
-					text {
-						font-size: 28rpx;
-						line-height: 160rpx;
-						color: #fff;
-						padding-left: 20rpx;
-						letter-spacing: 2rpx;
-					}
-				}
-				.button {
-					flex: 1.5;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					
-					button {
-						width: 190rpx;
-						height: 62rpx;
-						line-height: 60rpx;
-						background: transparent;
-						border-radius: 31px;
-						border:1px solid rgba(255,255,255,1);
-						padding: 0 31rpx;
-						font-size: 24rpx;
-						color: #fff;
-					}
-				}
-			}
-			
 			.tabNav {
-				padding-top: 14rpx;
+				padding-top: 24rpx;
 			}
 		}
 
 		/* #ifdef MP */
-		.header {
+		.mp-header {
 			z-index: 999;
 			position: fixed;
 			left: 0;
 			top: 0;
-			
-			.serch-wrapper {
-				padding: 10rpx 32rpx;
-				.input {
-					width: 342rpx;
-					margin-left: -5px;
-				}
-			}
-			
-		}
-		.tabNav {
-			position: static;
-		}
-		/* #endif */
-		/* header end */ 
-
-
-		/* 2.0 Content Site */ 
-		.page_content {
-			position: relative;
-			top: -1px;
-			padding: 0 20rpx;
-			/* #ifdef MP */
-			padding-top: 350rpx;
+			width: 100%;
+			/* #ifdef H5 */
+			padding-bottom: 20rpx;
 			/* #endif */
+			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
 
-			.mp-bg {
-				position: absolute;
-				top: 0;
-				/* #ifdef MP */
-				top: 350rpx;
-				/* #endif */
-				left: 0;
-				width: 100%;
-				height: 140rpx;
-				background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-			}
+			.serch-wrapper {
+				height: 100%;
+				align-items: center;
+				padding: 0 50rpx 0 53rpx;
 
-			.swiper {
-				position: relative;
-				width: 710rpx;
-				height: 280rpx;
-				margin: 0 auto;
-				border-radius: 10rpx;
-				overflow: hidden;
-				/* #ifdef MP */
-				z-index: 10;
-
-				/* #endif */
-				swiper,
-				.swiper-item,
 				image {
-					width: 100%;
-					height: 280rpx;
-					border-radius: 10rpx;
+					width: 118rpx;
+					height: 42rpx;
+					margin-right: 30rpx;
+				}
+
+				.input {
+					display: flex;
+					align-items: center;
+					width: 305rpx;
+					height: 58rpx;
+					padding: 0 0 0 30rpx;
+					background: rgba(247, 247, 247, 1);
+					border: 1px solid rgba(241, 241, 241, 1);
+					border-radius: 29rpx;
+					color: #BBBBBB;
+					font-size: 28rpx;
+
+					.iconfont {
+						margin-right: 20rpx;
+					}
 				}
 			}
+		}
+
+		/* #endif */
+		
+		.swiper {
+			margin-top: 400rpx;
+			width: 750rpx;
+			height: 400rpx;
+			swiper,
+			.swiper-item,
+			image {
+				width: 100%;
+				height: 400rpx;
+			}
+		}
+
+		.page_content {
+			/* #ifdef H5 */
+			margin-top: -140rpx !important;
+			/* #endif */
+			// padding: 0 20rpx;
+
+			
 
 			.nav {
 				padding: 0 0rpx 30rpx;
@@ -862,6 +843,7 @@
 				width: 100%;
 				overflow: hidden;
 				border-radius: 16rpx;
+				margin-top: 20rpx;
 
 				image {
 					width: 100%;
@@ -1237,8 +1219,17 @@
 							padding-top: 15rpx;
 
 							.price {
-								font-weight: 700;
-								color: $theme-color;
+								font-size:28rpx;
+								font-family:PingFangSC-Medium,PingFang SC;
+								font-weight:500;
+								color:rgba(221,25,34,1);
+							}
+							
+							.lingtxt {
+								font-size:20rpx;
+								font-family:PingFangSC-Regular,PingFang SC;
+								font-weight:400;
+								color:rgba(136,136,136,1);
 							}
 
 							.txt {
@@ -1429,6 +1420,7 @@
 
 			.index-product-wrapper {
 				margin-top: 40rpx;
+				padding: 0 30rpx;
 
 				.nav-bd {
 					display: flex;
@@ -1476,7 +1468,7 @@
 					margin-top: 30rpx;
 
 					.item {
-						width: 345rpx;
+						width: 340rpx;
 						margin-bottom: 20rpx;
 						background-color: #fff;
 						border-radius: 10px;
@@ -1484,7 +1476,7 @@
 
 						image {
 							width: 100%;
-							height: 345rpx;
+							height: 340rpx;
 						}
 
 						.text-info {
@@ -1509,14 +1501,16 @@
 							.price {
 								display: flex;
 								align-items: flex-end;
-								color: $theme-color;
-								font-size: 34rpx;
-								font-weight: 800;
+								color:rgba(221,25,34,1);
+								font-size: 28rpx;
+								font-weight: 500;
 
 								text {
 									padding-bottom: 4rpx;
-									font-size: 24rpx;
+									font-size: 20rpx;
 									font-weight: normal;
+									color:rgba(136,136,136,1);
+									text-decoration:line-through;
 								}
 
 								.txt {
@@ -1574,8 +1568,8 @@
 
 	.productList .list .item .pictrue {
 		position: relative;
-		width: 100%;
-		height: 345rpx;
+		width: 340rpx;
+		height: 340rpx;
 	}
 
 	.productList .list .item .pictrue.on {
@@ -1671,4 +1665,29 @@
 		color: #454545;
 	}
 
+	.mp-bg {
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 330rpx;
+		background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
+		// border-radius: 0 0 30rpx 30rpx;
+	}
+	.lxdzbox{
+		width:190rpx;
+		height:62rpx;
+		border-radius:32rpx;
+		border:2rpx solid rgba(255,255,255,1);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	.lxdztxt{
+		font-size:24rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(255,255,255,1);
+		line-height:34rpx;
+	}
 </style>

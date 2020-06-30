@@ -65,9 +65,9 @@ class Routine
 	async getCode(){
 		let provider = await this.getProvider();
 		return new Promise((resolve,reject)=>{
-			if(Cache.has(STATE_R_KEY)){
-				return resolve(Cache.get(STATE_R_KEY));
-			}
+			// if(Cache.has(STATE_R_KEY)){
+			// 	return resolve(Cache.get(STATE_R_KEY));
+			// }
 			uni.login({
 				provider:provider,
 				success(res) {
