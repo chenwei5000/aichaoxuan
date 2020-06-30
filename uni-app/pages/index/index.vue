@@ -1,38 +1,55 @@
 <template>
 	<view class="page-index" :class="{'bgf':navIndex >0}">
-		<!-- #ifdef H5 -->
-		<view class="header">
+		<!-- 1.0 头部展示 -->
+		<template name="header">
+			<view class="header">
+			<!-- 在小程序中，系统的显示通信商和信号的部分 -->
+			<view class="sys-head" view :style="{ height: headerData.statusBarHeight }"></view>
+			
+			<!--  1.1 H5 页面顶部搜索栏 -->
 			<view class="serch-wrapper flex">
 				<view class="logo">
-					<image :src="shopAvatar" mode=""></image>
+					<text>精选宝贝</text>
 				</view>
 				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-					搜索商品</navigator>
+					搜索你想要的</navigator>
 			</view>
-			<tabNav class="tabNav" :class="{'fixed':isFixed}" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
-			 @childTab='childTab'></tabNav>
-		</view>
-		<!-- #endif -->
-		<!-- #ifdef MP -->
-		<view class="mp-header">
-			<view class="sys-head" view :style="{ height: statusBarHeight }"></view>
-			<view class="serch-box" view style="height: 43px;">
-				<view class="serch-wrapper flex">
-					<view class="logo">
-						<image :src="shopAvatar" mode=""></image>
+			
+			
+			<!-- 1.2 H5 页面店铺信息 -->
+			<view class="store-infomation">
+				<view class="user-img">
+					<view>
+						<img src="" alt="">
 					</view>
-					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-						搜索商品</navigator>
+				</view>
+				<view class="store-name">
+					<text>萌宝妈咪的小店</text>
+				</view>
+				<view class="button">
+					<button type="default">联系店主</button>
 				</view>
 			</view>
-			<tabNav class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
-		</view>
+			
+			<!-- 1.3 H5 页面导航 -->
+			<tabNav v-if="deviveType === 'H5'" class="tabNav" :class="{ 'fixed': headerData.isFixed }" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
+			 @childTab='childTab'></tabNav>
+			<tabNav v-else class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
+			 </view>
+		</template>
+		
+		<!-- #ifdef H5 -->
+		<template is="header" :data="headerData" :value="deviveType"></template>
 		<!-- #endif -->
-		<!-- 首页展示 -->
-		<view class="page_content" :style="'margin-top:'+(marTop+30)+'px;'" v-if="navIndex == 0">
-			<!-- #ifdef MP -->
+		
+		<!-- 条件注释 小程序顶部搜索栏 -->
+		<!-- #ifdef MP -->
+		<template is="header" :data="headerData"></template>
+		<!-- #endif -->
+		
+		<!-- 2.0 首页展示 -->
+		<view class="page_content" v-if="navIndex == 0">
 			<view class="mp-bg"></view>
-			<!-- #endif -->
 			<!-- banner -->
 			<view class="swiper">
 				<swiper indicator-dots="true" :autoplay="true" :circular="circular" :interval="interval" :duration="duration"
@@ -260,14 +277,12 @@
 				loading: false,
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
-				statusBarHeight: statusBarHeight,
 				navIndex: 0,
 				navTop: [],
 				subscribe: false,
 				followUrl: "",
 				followHid: true,
 				followCode: false,
-				shopAvatar: "",
 				imgUrls: [],
 				itemNew: [],
 				activityList: [],
@@ -303,7 +318,6 @@
 				datatime: 0,
 				childID: 0,
 				loadend: false,
-				loading: false,
 				loadTitle: '加载更多',
 				sortProduct: [],
 				where: {
@@ -320,7 +334,6 @@
 				prodeuctTop: 0,
 				pinkInfo: '',
 				searchH: 0,
-				isFixed: false,
 				goodType: 0, //精品推荐Type
 				goodScroll: true, //精品推荐开关
 				params: { 
@@ -329,7 +342,14 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				shopName: '' //首页title
+				shopName: '' ,//首页title，
+				// 头部模板数据
+				headerData: {
+					isFixed: false,
+					type: 'H5',
+					statusBarHeight: statusBarHeight
+				},
+				deviveType: 'H5'
 			}
 		},
 		onLoad() {
@@ -339,7 +359,7 @@
 			this.navH = app.globalData.navHeight;
 			let info = uni.createSelectorQuery().select(".mp-header");
 			info.boundingClientRect(function(data) {
-				self.marTop = data.height
+				self.marTop = data ? data.height : 0
 			}).exec()
 			// #endif
 			// #ifndef MP
@@ -396,7 +416,7 @@
 							this.navH = app.globalData.navHeight;
 							let info = uni.createSelectorQuery().select(".mp-header");
 							info.boundingClientRect(function(data) {
-								self.prodeuctTop = data.height
+								self.prodeuctTop = data ? data.height : 0
 							}).exec()
 						}, 300)
 						// #endif
@@ -479,7 +499,6 @@
 					uni.setNavigationBarTitle({
 						title: res.data.shopName
 					})
-					that.$set(that, "shopAvatar", res.data.shopAvatar);
 					that.$set(that, "shopName", res.data.shopName);
 					that.$set(that, "imgUrls", res.data.banner);
 					// #ifdef H5
@@ -607,7 +626,7 @@
 			// 获取H5 搜索框高度
 			let appSearchH = uni.createSelectorQuery().select(".serch-wrapper");
 			appSearchH.boundingClientRect(function(data) {
-				self.searchH = data.height
+				self.searchH = data ? data.height : 0
 			}).exec()
 			// #endif
 		},
@@ -632,9 +651,9 @@
 		onPageScroll(e) {
 			let self = this
 			if (e.scrollTop >= self.searchH) {
-				self.isFixed = true
+				self.headerData.isFixed = true
 			} else {
-				self.isFixed = false
+				self.headerData.isFixed = false
 			}
 		}
 	}
@@ -667,27 +686,23 @@
 		min-height: 100%;
 		background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
 
-		// &.bgf{
-		// 	background: #fff;
-		// }
+		/* 1.0 header Site start */ 
 		.header {
 			width: 100%;
-			height: 320rpx;
+			overflow: hidden;
 			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
 
 			.serch-wrapper {
 				align-items: center;
-				padding: 20rpx 50rpx 0 53rpx;
+				padding: 17rpx 32rpx;
 
 				.logo {
-					width: 118rpx;
-					height: 42rpx;
-					margin-right: 30rpx;
-				}
-
-				image {
-					width: 118rpx;
-					height: 42rpx;
+					width: 136rpx;
+					height: 44rpx;
+					line-height: 44rpx;
+					margin-right: 20rpx;
+					color: #fff;
+					font-size: 32rpx;
 				}
 
 				.input {
@@ -708,60 +723,100 @@
 				}
 			}
 
+			.store-infomation {
+				display: flex;
+				height: 160rpx;
+				.user-img {
+					flex: 1;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					view {
+						width: 120rpx;
+						height: 120rpx;
+						background-color: #D8D8D8;
+						border-radius: 50%;
+					}
+				}
+				.store-name {
+					flex: 2;
+					
+					text {
+						font-size: 28rpx;
+						line-height: 160rpx;
+						color: #fff;
+						padding-left: 20rpx;
+						letter-spacing: 2rpx;
+					}
+				}
+				.button {
+					flex: 1.5;
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					
+					button {
+						width: 190rpx;
+						height: 62rpx;
+						line-height: 60rpx;
+						background: transparent;
+						border-radius: 31px;
+						border:1px solid rgba(255,255,255,1);
+						padding: 0 31rpx;
+						font-size: 24rpx;
+						color: #fff;
+					}
+				}
+			}
+			
 			.tabNav {
-				padding-top: 24rpx;
+				padding-top: 14rpx;
 			}
 		}
 
 		/* #ifdef MP */
-		.mp-header {
+		.header {
 			z-index: 999;
 			position: fixed;
 			left: 0;
 			top: 0;
-			width: 100%;
-			/* #ifdef H5 */
-			padding-bottom: 20rpx;
-			/* #endif */
-			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-
+			
 			.serch-wrapper {
-				height: 100%;
-				align-items: center;
-				padding: 0 50rpx 0 53rpx;
-
-				image {
-					width: 118rpx;
-					height: 42rpx;
-					margin-right: 30rpx;
-				}
-
+				padding: 10rpx 32rpx;
 				.input {
-					display: flex;
-					align-items: center;
-					width: 305rpx;
-					height: 58rpx;
-					padding: 0 0 0 30rpx;
-					background: rgba(247, 247, 247, 1);
-					border: 1px solid rgba(241, 241, 241, 1);
-					border-radius: 29rpx;
-					color: #BBBBBB;
-					font-size: 28rpx;
-
-					.iconfont {
-						margin-right: 20rpx;
-					}
+					width: 342rpx;
+					margin-left: -5px;
 				}
 			}
+			
 		}
-
+		.tabNav {
+			position: static;
+		}
 		/* #endif */
+		/* header end */ 
 
+
+		/* 2.0 Content Site */ 
 		.page_content {
-			/* #ifdef H5 */
-			margin-top: -140rpx !important;
-			/* #endif */
+			position: relative;
+			top: -1px;
 			padding: 0 20rpx;
+			/* #ifdef MP */
+			padding-top: 350rpx;
+			/* #endif */
+
+			.mp-bg {
+				position: absolute;
+				top: 0;
+				/* #ifdef MP */
+				top: 350rpx;
+				/* #endif */
+				left: 0;
+				width: 100%;
+				height: 140rpx;
+				background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
+			}
 
 			.swiper {
 				position: relative;
@@ -1616,13 +1671,4 @@
 		color: #454545;
 	}
 
-	.mp-bg {
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 330rpx;
-		background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-		// border-radius: 0 0 30rpx 30rpx;
-	}
 </style>

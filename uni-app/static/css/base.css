@@ -186,7 +186,9 @@
 .start.star0{background-position: 0 -175rpx;}
 
 * {
-	box-sizing: border-box
+	box-sizing: border-box;
+	font-family: "PingFangSC-Regular", "PingFang SC";
+	font-weight: 400;
 }
 
 page {
