@@ -721,7 +721,7 @@
 		// }
 		.header {
 			width: 100%;
-			height: 320rpx;
+			height: 340rpx;
 			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
 
 			.serch-wrapper {
@@ -806,7 +806,12 @@
 		/* #endif */
 		
 		.swiper {
+			/* #ifdef MP */
 			margin-top: 400rpx;
+			/* #endif */
+			/* #ifdef H5 */
+			margin-top: 20rpx;
+			/* #endif */
 			width: 750rpx;
 			height: 400rpx;
 			swiper,
@@ -819,7 +824,7 @@
 
 		.page_content {
 			/* #ifdef H5 */
-			margin-top: -140rpx !important;
+			// margin-top: -140rpx !important;
 			/* #endif */
 			// padding: 0 20rpx;
 
