@@ -120,7 +120,8 @@ export function orderAgain(uni){
  * 
 */
 export function orderTake(uni){
-  return request.post('order/take',{uni:uni});
+  //return request.post('order/take',{uni:uni});
+  return request_new.post('Order.ConfirmReceipt',{order_id:uni});
 }
 
 /**
