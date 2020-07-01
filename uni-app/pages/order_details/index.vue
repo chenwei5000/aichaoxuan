@@ -2,15 +2,6 @@
 	<view>
 		<view class='order-details'>
 			<!-- 给header上与data上加on为退款订单-->
-			<view class='header bg-color acea-row row-middle' :class='isGoodsReturn ? "on":""'>
-				<view class='pictrue' v-if="isGoodsReturn==false">
-					<image :src="orderInfo.status_pic"></image>
-				</view>
-				<view class='data' :class='isGoodsReturn ? "on":""'>
-					<view class='state'>{{orderInfo._status._msg}}</view>
-					<view>{{orderInfo.add_time_y}}<text class='time'>{{orderInfo.add_time_h}}</text></view>
-				</view>
-			</view>
 			<view v-if="isGoodsReturn==false">
 				<view class='nav'>
 					<view class='navCon acea-row row-between-wrapper'>
