@@ -835,7 +835,7 @@
 	.order-submission .allAddress .nav .item.on::before {
 		position: absolute;
 		bottom: 0;
-		content: "快递配送";
+		content: "配送地址";
 		font-size: 28rpx;
 		display: block;
 		height: 0;
@@ -876,7 +876,7 @@
 	}
 
 	.order-submission .allAddress .nav .item:nth-of-type(1).on2::before {
-		content: "快递配送";
+		content: "配送地址";
 		border-width: 0 60rpx 60rpx 0;
 		border-radius: 6rpx 40rpx 0 0;
 	}
