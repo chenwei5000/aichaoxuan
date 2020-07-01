@@ -14,7 +14,7 @@
 					<view class='item acea-row row-between-wrapper'>
 						<view class='name'>所在地区</view>
 						<view class="address">
-							<picker mode="multiSelector" @change="bindRegionChange" @columnchange="bindMultiPickerColumnChange" :value="valueRegion" :range="multiArray">
+							<picker mode="multiSelector" @change="bindRegionChange" @columnchange="bindMultiPickerColumnChange" :value="multiIndex" :range="multiArray">
 								<view class='acea-row'>
 									<view class="picker">{{region[0]}}，{{region[1]}}，{{region[2]}}</view>
 									<view class='iconfont icon-dizhi font-color'></view>
@@ -120,7 +120,7 @@
 				})
 				this.getUserAddress();
 				//this.getCityList(0);
-				this.getProvince();
+				//if (!this.id) this.getProvince();
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();
@@ -142,15 +142,15 @@
 					},
 					multiArray = this.multiArray,
 					value = e.detail.value;
-					this.province_id = this.provinceList[multiIndex[0]].area_id;
-					this.city_id = this.cityList[multiIndex[1]].area_id;
-					this.area_id = this.areaList[multiIndex[2]].area_id;
+					// this.province_id = this.provinceList[multiIndex[0]].area_id;
+					// this.city_id = this.cityList[multiIndex[1]].area_id;
+					// this.area_id = this.areaList[multiIndex[2]].area_id;
 				this.region = [multiArray[0][value[0]], multiArray[1][value[1]], multiArray[2][value[2]]]
 				// this.$set(this.region,0,multiArray[0][value[0]]);
 				// this.$set(this.region,1,multiArray[1][value[1]]);
 				// this.$set(this.region,2,multiArray[2][value[2]]);
 				this.cityId = city.v
-				this.valueRegion = [0, 0, 0]
+				//this.multiIndex = [0, 0, 0]
 				//this.initialize();
 			},
 			bindMultiPickerColumnChange: function(e) {
@@ -159,32 +159,22 @@
 				switch (e.detail.column)  { // 此时的改变列数
 				  case 0:
 				      // 处理逻辑
-				  		var code = t.provinceList[e.detail.value].area_id
-				  		t.multiIndex[0] = e.detail.value;
-				  		t.getCity(code)
+				  		t.province_id = t.provinceList[e.detail.value].area_id;
+						t.currnetProvinceKey = e.detail.value;
+						t.currnetCityKey = 0
+				  		t.getCity()
 				  break;
 				  case 1:
 				      //  处理逻辑
-				  		var code = t.cityList[e.detail.value].area_id
-				  		t.multiIndex[1] = e.detail.value;
-				  		t.getArea(code)
+				  		t.city_id = t.cityList[e.detail.value].area_id;
+						t.currnetCityKey = e.detail.value;
+				  		t.getArea(1)
 				  break;
 				  case 2:
-				      t.multiIndex[2] = e.detail.value;
-					   console.log('multiIndex',t.multiIndex);
+				      //  处理逻辑
+				  		t.area_id = t.areaList[e.detail.value].area_id;
 				  break;
 				}
-				// // #ifdef MP
-				// this.$set(this.multiArray, 0, multiArray[0]);
-				// this.$set(this.multiArray, 1, multiArray[1]);
-				// this.$set(this.multiArray, 2, multiArray[2]);
-				// // #endif
-				// // #ifdef H5
-				// this.multiArray = multiArray;
-				// // #endif
-
-				// this.multiIndex = multiIndex
-				// this.setData({ multiArray: multiArray, multiIndex: multiIndex});
 			},
 			// 授权回调
 			onLoadFun: function() {
@@ -225,59 +215,73 @@
 					that.$set(that, 'area_id', res.data.area_id);
 					that.$set(that, 'userAddress', userAddress);
 					that.$set(that, 'region', region);
-					that.city_id = res.data.city_id
+					that.city_id = res.data.city_id;
+					console.log('city_id', that.city_id)
+					console.log('area_id', that.area_id)
+					this.getProvince(1);
 				});
 			},
-			getProvince(){ // 获取省
+			getProvince(n=0){ // 获取省
 				var t = this;
-				console.log('this.getProvince();');
 				getCity(0).then(e => {
 					console.log(e);
 					e = e.data;
 					var provinceList = e.list;
-					var provinceArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
-					t.multiArray = [provinceArr, [], []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
-					t.provinceList = provinceList;   // 省级原始数据
-					t.provinceArr = provinceArr;   // 省级所有的名称
-					//   })
-					var defaultCode = provinceList[0].area_id  // 使用第一项当作参数获取市级数据
-					console.log(defaultCode)
-					if (defaultCode){
-						t.currnetProvinceKey = defaultCode;
-						t.getCity(defaultCode)  // 获取市级数据
-					}
+					var provinceArr = e.list.map((item) => { return item.area_name })
+					t.multiArray = [provinceArr, [], []];
+					t.provinceList = provinceList;
+					t.provinceArr = provinceArr;
+					if (t.province_id == 0)
+					t.province_id = provinceList[0].area_id;
+					
+					t.getCity(n)
 				})
 			},
-			getCity(code){ // 获取市级数据
+			getCity(n=0){ // 获取市级数据
 				var t = this;
-				getCity(code).then(e => {
+				getCity(t.province_id).then(e => {
 					console.log(e);
 					e = e.data
 					var cityList = e.list;
-					var cityArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
-					t.multiArray = [t.provinceArr, cityArr, []]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
-					t.multiIndex[1] = '0';
+					var cityArr = e.list.map((item) => { return item.area_name })
+					
 					t.cityList = cityList;
 					t.cityArr = cityArr;
-					var defaultCode = cityList[0].area_id  // 使用第一项当作参数获取市级数据
-					console.log(defaultCode)
-					if (defaultCode){
-						t.currnetCityKey = defaultCode;
-						t.getArea(defaultCode)  // 获取市级数据
-					}
+					if (n == 0)
+					t.city_id = cityList[0].area_id; 
+					
+					t.getArea()
 				})
 			},
-			getArea(code){
+			getArea(n=0){
 				var t = this;
-				getCity(code).then(e => {
+				getCity(t.city_id).then(e => {
 					console.log(e);
 					e = e.data
 					var areaList = e.list;
-					var areaArr = e.list.map((item) => { return item.area_name }) // 获取数据里面的value值，就是只用数据的名称 
-					t.multiArray = [t.provinceArr, t.cityArr, areaArr]; // 更新三维数组 更新后长这样 [['江苏省', '福建省'],[],[]]
-					t.multiIndex[2] = '0';
+					var areaArr = e.list.map((item) => { return item.area_name })
+					t.multiArray = [t.provinceArr, t.cityArr, areaArr];
+					t.multiIndex[0] = t.currnetProvinceKey;
+					t.multiIndex[1] = t.currnetCityKey;
 					t.areaList = areaList;
 					t.areaArr = areaArr;
+					
+					if (n==0){
+						for (var i in t.provinceList){
+							if (t.provinceList[i]['area_id'] == t.province_id)
+							t.multiIndex[0] = t.currnetProvinceKey = i;
+						}
+						for (var i in t.cityList){
+							if (t.cityList[i]['area_id'] == t.city_id)
+							t.multiIndex[1] = i;
+						}
+						for (var i in t.areaList){
+							if (t.areaList[i]['area_id'] == t.area_id)
+							t.multiIndex[2] = i;
+						}
+					}else{
+						t.multiIndex[2] = '0';
+					}
 					console.log('multiIndex',t.multiIndex);
 				})
 			},
