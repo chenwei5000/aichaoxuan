@@ -7,7 +7,7 @@
 				<view class='item'><text class='iconfont icon-xuanzhong'></text>售后无忧</view>
 			</view>
 			<view class='nav acea-row row-between-wrapper'>
-				<view>购物数量 <text class='num font-color'>{{cartCount}}</text></view>
+				<view>购物数量： &nbsp;&nbsp;<text class='num font-color'>{{cartCount}}</text></view>
 				<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0" class='administrate acea-row row-center-wrapper'
 				 @click='manage'>{{ footerswitch ? '管理' : '取消'}}</view>
 			</view>
