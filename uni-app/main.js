@@ -19,7 +19,7 @@ urlShopKey = query["shop_key"];
 
 
 //console.log(urlShopKey);
-    // 如果是url中带shop_key,且与本地不一致，则更新本地SHOP_KEy
+// 如果是url中带shop_key,且与本地不一致，则更新本地SHOP_KEy
 if (urlShopKey !== undefined && urlShopKey.length>10) {
 	var LastShopKey = Cache.get(SHOP_KEY);
 	if (LastShopKey !== urlShopKey ) {
