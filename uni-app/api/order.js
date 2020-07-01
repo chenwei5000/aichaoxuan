@@ -136,7 +136,7 @@ export function express(uni) {
  * 
 */
 export function ordeRefundReason(){
-  return request.get('order/refund/reason');
+  return request_new.get('Order.ListRefundReason');
 }
 
 /**
@@ -144,7 +144,7 @@ export function ordeRefundReason(){
  * @param object data
 */
 export function orderRefundVerify(data){
-  return request.post('order/refund/verify',data);
+  return request_new.post('Order.AddAfterSale',data);
 }
 
 /**

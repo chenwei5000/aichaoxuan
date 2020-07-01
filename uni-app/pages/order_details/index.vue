@@ -90,7 +90,7 @@
 			<view class='wrapper'>
 				<view class='item acea-row row-between'>
 					<view>订单编号：</view>
-					<view class='conter acea-row row-middle row-right'>{{orderInfo.order_id}}
+					<view class='conter acea-row row-middle row-right'>{{orderInfo.order_code}}
 						<!-- #ifndef H5 -->
 						<text class='copy' @tap='copy'>复制</text>
 						<!-- #endif -->
