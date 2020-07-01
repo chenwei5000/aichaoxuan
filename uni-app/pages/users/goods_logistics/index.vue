@@ -8,7 +8,7 @@
 				<view class='text acea-row row-between'>
 					<view class='name line2'>{{product.productInfo.store_name}}</view>
 					<view class='money'>
-						<view>￥{{product.truePrice}}</view>
+						<view>￥{{product.productInfo.price}}</view>
 						<view>x{{product.cart_num}}</view>
 					</view>
 				</view>
@@ -32,7 +32,7 @@
 				<view class='item' v-for="(item,index) in expressList" :key="index">
 					<view class='circular' :class='index === 0 ? "on":""'></view>
 					<view class='text' :class='index===0 ? "on-font on":""'>
-						<view>{{item.status}}</view>
+						<view>{{item.context}}</view>
 						<view class='data' :class='index===0 ? "on-font on":""'>{{item.time}}</view>
 					</view>
 				</view>

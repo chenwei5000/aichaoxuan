@@ -128,7 +128,7 @@ export function orderTake(uni){
  * @returns {*}
  */
 export function express(uni) {
-  return request.get("order/express/" + uni);
+  return request_new.get("Order.QueryExpress",{'order_id':uni});
 }
 
 /**
