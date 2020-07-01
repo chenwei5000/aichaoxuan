@@ -85,7 +85,7 @@ export function getReplyConfig(id){
  * 
 */
 export function getSearchKeyword(){
-  return request.get('search/keyword',{},{noAuth:true});
   //return request.get('search/keyword',{},{noAuth:true});
+  return request_new.get('Home.ListSearchKeyword',{},{noAuth:true});
 }
 
