@@ -77,6 +77,8 @@
 		                console.log('get openid', res.openid) // 用户openid
 		                console.log('get share openid', res.share_openid) // 分享者openid，分享卡片进入场景才有
 		                console.log('get custom params', res.custom_params) // 开发者在跳转进入直播间页面时，页面路径上携带的自定义参数，这里传回给开发者
+						// 取到分享自定义参数里的shop_key,设置好，如果没有带，则用默认shop_key
+						
 		            }).catch(err => {
 		                console.log('get share params', err)
 		            })
