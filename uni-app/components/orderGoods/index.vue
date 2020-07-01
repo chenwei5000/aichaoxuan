@@ -54,7 +54,7 @@
 			cartInfo:function(nVal,oVal){
 				let num = 0
 				nVal.forEach((item,index)=>{
-					num += item.cart_num
+					num += Number(item.cart_num)
 				})
 				this.totalNmu = num
 			}
