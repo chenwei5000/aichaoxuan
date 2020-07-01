@@ -55,14 +55,6 @@ export function getShare() {
 }
 
 /**
- * 获取关注海报
- * @returns {*}
- */
-export function follow() {
-  return request.get("wechat/follow", {}, { noAuth: true });
-}
-
-/**
  * 获取图片base64
  * @retins {*}
  * */
