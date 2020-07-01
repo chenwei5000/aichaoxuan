@@ -17,7 +17,7 @@
 		        </view>
 		    </view>
 		    <view class='list'>
-		        <view class='item acea-row row-between-wrapper'>
+		        <view class='item acea-row row-between-wrapper' v-if="orderInfo._status._type > 1">
 		          <view>退货件数</view>
 		          <view class='num'>{{orderInfo.total_num}}</view>
 		        </view>
@@ -120,7 +120,7 @@
 			    getOrderInfo:function(){
 			      let that=this;
 			      getOrderDetail(that.orderId).then(res=>{
-					that.$set(that,'orderInfo',res.data);
+					that.$set(that,'orderInfo',res.data[0]);
 			      });
 			    },
 			    /**
@@ -167,7 +167,7 @@
 			        text: that.RefundArray[that.index] || '',
 			        refund_reason_wap_explain: value.refund_reason_wap_explain,
 			        refund_reason_wap_img: that.refund_reason_wap_img.join(','),
-			        uni: that.orderId
+			        order_id: that.orderId
 			      }).then(res=>{
 			        return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
 			      }).catch(err=>{
