@@ -833,15 +833,15 @@
 			margin-top: 400rpx;
 			/* #endif */
 			/* #ifdef H5 */
-			margin-top: 20rpx;
+			margin-top: 0rpx;
 			/* #endif */
 			width: 750rpx;
-			height: 400rpx;
+			height: 280rpx;
 			swiper,
 			.swiper-item,
 			image {
 				width: 100%;
-				height: 400rpx;
+				height: 280rpx;
 			}
 		}
 
