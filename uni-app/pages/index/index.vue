@@ -68,10 +68,12 @@
 					<view style="width: 320rpx;height: 70rpx;display: flex;align-items: center;justify-content: center;background-image: url(../../static/images/livebg.png);background-size: 320rpx 70rpx;">
 						<text style="font-size:28rpx;font-weight:500;color:rgba(255,255,255,1);">好货直播live</text>
 					</view>
+					<navigator url="../live/live">
 					<view style="height: 70rpx;display: flex;align-items: center;">
 						<text style="font-size:24rpx;color:rgba(255,2,5,1);">全部直播</text>
 						<image style="width: 12rpx;height: 20rpx;margin-left: 26rpx;" src="../../static/images/livemore.png"></image>
 					</view>
+					</navigator>
 				</view>
 				<block v-for="(item,index) in liveList" :key="index">
 				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">

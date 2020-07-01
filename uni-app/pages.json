@@ -81,7 +81,15 @@
 				// #endif
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/live/live",
+            "style" : {
+				"navigationBarTitleText": "直播",
+				"navigationBarBackgroundColor": "#e93323",
+				"navigationBarTextStyle": "#fff"
+			}
+        }
+    ],
 	 "subPackages": [
 	    {
 	      "root": "pages/users",
