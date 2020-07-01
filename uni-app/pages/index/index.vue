@@ -10,9 +10,9 @@
 					搜索商品</navigator>
 			</view>
 			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
-				<view style="width:120rpx;height:120rpx;background:rgba(216,216,216,1);border-radius: 50%;margin-left: 32rpx;"></view>
-				<text style="font-size:28rpx;color: #fff;">萌宝妈咪的小店</text>
-				<view class="lxdzbox">
+				<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
+				<text style="font-size:28rpx;color: #fff;">{{shopName}}</text>
+				<view class="lxdzbox" @tap="open('set')">
 					<text class="lxdztxt">联系店主</text>
 				</view>
 			</view>
@@ -33,9 +33,9 @@
 				</view>
 			</view>
 			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
-				<view style="width:120rpx;height:120rpx;background:rgba(216,216,216,1);border-radius: 50%;margin-left: 32rpx;"></view>
-				<text style="font-size:28rpx;color: #fff;">萌宝妈咪的小店</text>
-				<view class="lxdzbox">
+				<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
+				<text style="font-size:28rpx;color: #fff;">{{shopName}}</text>
+				<view class="lxdzbox" @tap="open('set')">
 					<text class="lxdztxt">联系店主</text>
 				</view>
 			</view>
@@ -243,6 +243,17 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
 		<!-- #endif -->
+		<uni-popup ref="showset" type="center" :mask-click="true">
+			<view style="width: 686rpx;margin-left: 32rpx;background-color: #FFFFFF;border-radius: 16rpx;">
+				<view style="width: 686rpx;height: 184rpx;display: flex;align-items: center;margin-top: 32rpx;margin-bottom: 32rpx;">
+					<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
+					<text style="font-size:28rpx;">{{shopName}}</text>
+				</view>
+				<view style="width: 686rpx;height: 500rpx;display: flex;align-items: center;justify-content: center;">
+					<image style="width:400rpx;height:400rpx;" :src="shopWechatBarcode"></image>
+				</view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
@@ -294,6 +305,7 @@
 	import {
 		silenceBindingSpread
 	} from '@/utils';
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
@@ -302,6 +314,7 @@
 			promotionGood,
 			countDown,
 			recommend,
+			uniPopup,
 			// #ifdef MP
 			authorize
 			// #endif
@@ -380,7 +393,8 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				shopName: '' //首页title
+				shopName: '', //首页title
+				shopWechatBarcode:''
 			}
 		},
 		onLoad() {
@@ -532,6 +546,7 @@
 					})
 					that.$set(that, "shopAvatar", res.data.shopAvatar);
 					that.$set(that, "shopName", res.data.shopName);
+					that.$set(that, "shopWechatBarcode", res.data.shopWechatBarcode);
 					that.$set(that, "imgUrls", res.data.banner);
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;
@@ -650,7 +665,13 @@
 					this.params.page++
 					this.tempArr = this.tempArr.concat(data.list)
 				})
-			}
+			},
+			open(type){
+				this.$refs['show' + type].open()
+			},
+			cancel(type) {
+				this.$refs['show' + type].close()
+			},
 		},
 		mounted() {
 			let self = this
@@ -765,7 +786,7 @@
 
 		/* #ifdef MP */
 		.mp-header {
-			z-index: 999;
+			z-index: 99;
 			position: fixed;
 			left: 0;
 			top: 0;
