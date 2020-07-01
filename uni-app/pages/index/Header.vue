@@ -27,7 +27,7 @@
 					<text>{{ shopInfo.shopName }}</text>
 				</view>
 				<view class="button">
-					<button type="default">联系店主</button>
+					<button type="default" @click="$emit('openMask')">联系店主</button>
 					<!-- 微信二维码 shopInfo.shopWechatBarcode -->
 				</view>
 			</view>
