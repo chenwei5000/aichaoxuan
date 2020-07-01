@@ -1,65 +1,34 @@
 <template>
 	<view class="page-index" :class="{'bgf':navIndex >0}">
-		<!-- #ifdef H5 -->
-		<view class="header">
-			<view class="serch-wrapper flex">
-				<view class="logo" style="margin-right: 32rpx;">
-					<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
-				</view>
-				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-					搜索商品</navigator>
+		<!-- 1.0 Header 部分 -->
+		<Header 
+			:shopInfo="shopName"
+			:config="headerConfig" 
+			@searchHeigth="headerHeight" 
+			@changeTab="changeTab"
+			@openMask="openMask">
+		</Header>
+		
+		<!-- 2.0 首页展示 -->
+		<view class="page_content" :style="'position: relative; top: '+ scrollHeight +'px;'" v-if="navIndex == 0">
+			<view class="swiper">
+				<swiper 
+					indicator-dots="true" 
+					:autoplay="true" 
+					:circular="circular" 
+					:interval="interval" 
+					:duration="duration"
+					indicator-color="rgba(255,255,255,0.6)" 
+					indicator-active-color="#fff">
+					<block v-for="(item,index) in imgUrls" :key="index">
+						<swiper-item>
+							<navigator :url='item.url' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
+								<image :src="item.pic" class="slide-image"></image>
+							</navigator>
+						</swiper-item>
+					</block>
+				</swiper>
 			</view>
-			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
-				<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
-				<text style="font-size:28rpx;color: #fff;">{{shopName}}</text>
-				<view class="lxdzbox" @tap="open('set')">
-					<text class="lxdztxt">联系店主</text>
-				</view>
-			</view>
-			<tabNav class="tabNav" :class="{'fixed':isFixed}" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
-			 @childTab='childTab'></tabNav>
-		</view>
-		<!-- #endif -->
-		<!-- #ifdef MP -->
-		<view class="mp-header">
-			<view class="sys-head" view :style="{ height: statusBarHeight }"></view>
-			<view class="serch-box" view style="height: 43px;">
-				<view class="serch-wrapper flex">
-					<view class="logo" style="margin-right: 32rpx;">
-						<text style="font-size:32rpx;color:rgba(255,255,255,1);letter-spacing:2rpx;">精选宝贝</text>
-					</view>
-					<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-						搜索商品</navigator>
-				</view>
-			</view>
-			<view style="width: 750rpx;display: flex;align-items: center;justify-content: space-around;margin-top: 32rpx;margin-bottom: 32rpx;">
-				<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
-				<text style="font-size:28rpx;color: #fff;">{{shopName}}</text>
-				<view class="lxdzbox" @tap="open('set')">
-					<text class="lxdztxt">联系店主</text>
-				</view>
-			</view>
-			<tabNav class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
-		</view>
-		<!-- #endif -->
-		<!-- banner -->
-		<view class="swiper">
-			<swiper indicator-dots="true" :autoplay="true" :circular="circular" :interval="interval" :duration="duration"
-			 indicator-color="rgba(255,255,255,0.6)" indicator-active-color="#fff">
-				<block v-for="(item,index) in imgUrls" :key="index">
-					<swiper-item>
-						<navigator :url='item.url' class='slide-navigator acea-row row-between-wrapper' hover-class='none'>
-							<image :src="item.pic" class="slide-image"></image>
-						</navigator>
-					</swiper-item>
-				</block>
-			</swiper>
-		</view>
-		<!-- 首页展示 -->
-		<view class="page_content" v-if="navIndex == 0">
-			<!-- #ifdef MP -->
-			<!-- <view class="mp-bg"></view> -->
-			<!-- #endif -->
 			<!-- 直播 -->
 			<!-- #ifdef MP -->
 			<block v-if="liveList.length>0">
@@ -76,7 +45,7 @@
 					</navigator>
 				</view>
 				<block v-for="(item,index) in liveList" :key="index">
-				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">
+				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex; box-sizing: border-box;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">
 					<view style="width: 340rpx;height: 340rpx;border-radius: 16rpx;">
 						<image style="width: 340rpx;height: 340rpx;border-radius: 16rpx;" :src="item.cover_img"></image>
 					</view>
@@ -243,26 +212,26 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
 		<!-- #endif -->
-		<uni-popup ref="showset" type="center" :mask-click="true">
-			<view style="width: 686rpx;margin-left: 32rpx;background-color: #FFFFFF;border-radius: 16rpx;">
-				<view style="width: 686rpx;height: 184rpx;display: flex;align-items: center;margin-top: 32rpx;margin-bottom: 32rpx;">
-					<image style="width:120rpx;height:120rpx;border-radius: 50%;margin-left: 32rpx;" :src="shopAvatar"></image>
-					<text style="font-size:28rpx;">{{shopName}}</text>
+		
+		<uni-popup ref="showset" :mask-click="true">
+			<view class="shop-mask" >
+				<icon class="close-mask" @click="closeMask" type="clear" size="22"/>
+				<view class="mask-head">
+					<view><image :src="shopName.shopAvatar"></image></view>
+					<text>{{ shopName.shopName }}</text>
 				</view>
-				<view style="width: 686rpx;height: 500rpx;display: flex;align-items: center;justify-content: center;">
-					<image style="width:400rpx;height:400rpx;" :src="shopWechatBarcode"></image>
+				<view class="wechat-code">
+					<image :src="shopName.shopWechatBarcode"></image>
 				</view>
+				<text class="tips"> 截图保存二维码 </text>
 			</view>
 		</uni-popup>
 	</view>
 </template>
 
 <script>
-	var statusBarHeight = uni.getSystemInfoSync().statusBarHeight + 'px';
 	let app = getApp();
-	import {
-		getIndexData,
-	} from '@/api/api.js';
+	import { getIndexData } from '@/api/api.js';
 	// #ifdef MP-WEIXIN
 	import {
 		getTemlIds,
@@ -281,13 +250,8 @@
 	// #endif
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
-	import {
-		goShopDetail
-	} from '@/libs/order.js'
-	import {
-		mapGetters
-	} from "vuex";
-	import tabNav from '@/components/tabNav.vue'
+	import { goShopDetail } from '@/libs/order.js'
+	import { mapGetters } from "vuex";
 	import countDown from '@/components/countDown';
 	import {
 		getCategoryList,
@@ -305,16 +269,17 @@
 	import {
 		silenceBindingSpread
 	} from '@/utils';
-	import uniPopup from "@/components/uni-popup/uni-popup.vue"
+	
+	import Header from './Header.vue'
+	
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
-			tabNav,
+			Header,
 			goodList,
 			promotionGood,
 			countDown,
 			recommend,
-			uniPopup,
 			// #ifdef MP
 			authorize
 			// #endif
@@ -324,14 +289,11 @@
 				loading: false,
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
-				statusBarHeight: statusBarHeight,
 				navIndex: 0,
-				navTop: [],
 				subscribe: false,
 				followUrl: "",
 				followHid: true,
 				followCode: false,
-				shopAvatar: "",
 				imgUrls: [],
 				itemNew: [],
 				activityList: [],
@@ -367,7 +329,6 @@
 				datatime: 0,
 				childID: 0,
 				loadend: false,
-				loading: false,
 				loadTitle: '加载更多',
 				sortProduct: [],
 				where: {
@@ -384,7 +345,6 @@
 				prodeuctTop: 0,
 				pinkInfo: '',
 				searchH: 0,
-				isFixed: false,
 				goodType: 0, //精品推荐Type
 				goodScroll: true, //精品推荐开关
 				params: { 
@@ -393,29 +353,28 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				shopName: '', //首页title
-				shopWechatBarcode:''
+				shopName: {} ,//首页title
+				scrollHeight: 0,
+				
+				// Header 配置
+				headerConfig: {
+					navTop: [],
+					isFixed: false,
+				}
 			}
 		},
 		onLoad() {
-			let self = this
-			// #ifdef MP
-			// 获取小程序头部高度
-			this.navH = app.globalData.navHeight;
-			let info = uni.createSelectorQuery().select(".mp-header");
-			info.boundingClientRect(function(data) {
-				self.marTop = data.height
-			}).exec()
-			// #endif
 			// #ifndef MP
 			this.navH = 0;
 			// #endif
-			this.isLogin && silenceBindingSpread();
-			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.setVisit()
-			]);
+			
+			this.isLogin && silenceBindingSpread()
+			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ])
+			
 			// #ifdef MP
 			this.getLiveList()
 			// #endif
+			
 		},
 		onShow() {
 			let self = this
@@ -424,11 +383,12 @@
 			})
 			// #ifdef MP						
 			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
-			console.log(customParams)
+			// console.log(customParams)
 			 //    this.setData({
 			 //        customParams
 			 // })
 			 // #endif
+			 
 		},
 		methods: {
 			// 记录会员访问
@@ -436,59 +396,8 @@
 				setVisit({
 					url: '/pages/index/index'
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 				})
-			},
-			// 获取导航
-			getAllCategory: function() {
-				let that = this;
-				getCategoryList().then(res => {
-					res.data.unshift({
-						'cate_name': '首页'
-					})
-					that.navTop = res.data;
-				})
-			},
-			// 导航分类切换
-			changeTab(e) {
-				let self = this
-				if (e.type == 'big') {
-					if (e.index == 0) {
-						this.navIndex = e.index
-					} else {
-						// #ifdef MP
-						setTimeout(res => {
-							this.navH = app.globalData.navHeight;
-							let info = uni.createSelectorQuery().select(".mp-header");
-							info.boundingClientRect(function(data) {
-								self.prodeuctTop = data.height
-							}).exec()
-						}, 300)
-						// #endif
-						// #ifdef H5
-						self.prodeuctTop = 18
-						// #endif
-						this.navIndex = e.index
-						if (this.navTop[e.index].children.length > 0) {
-							this.where.sid = this.navTop[e.index].children[0].id
-						} else {
-							this.where.sid = this.navTop[e.index].id
-						}
-						this.loadend = false
-						this.loading = false
-						this.where.page = 1
-						this.sortProduct = []
-						this.get_product_list()
-					}
-				} else {
-					this.navIndex = e.parentIndex
-					this.where.sid = this.navTop[e.parentIndex].children[e.childIndex].id
-					this.loadend = false
-					this.loading = false
-					this.where.page = 1
-					this.sortProduct = []
-					this.get_product_list()
-				}
 			},
 			//分类产品
 			get_product_list: function(isPage) {
@@ -544,10 +453,9 @@
 					uni.setNavigationBarTitle({
 						title: res.data.shopName
 					})
-					that.$set(that, "shopAvatar", res.data.shopAvatar);
-					that.$set(that, "shopName", res.data.shopName);
-					that.$set(that, "shopWechatBarcode", res.data.shopWechatBarcode);
+					that.$set(that, "shopName", res.data);
 					that.$set(that, "imgUrls", res.data.banner);
+					
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;
 					that.setOpenShare();
@@ -575,6 +483,73 @@
 					this.getIndexProductList();
 				})
 			},
+			
+			// 获取导航
+			getAllCategory: function() {
+				let that = this;
+				getCategoryList().then(res => {
+					res.data.unshift({
+						'cate_name': '首页'
+					})
+					that.headerConfig.navTop = res.data
+				})
+			},
+			// 导航分类切换
+			changeTab(e) {
+				let self = this
+				if (e.type == 'big') {
+					if (e.index == 0) {
+						this.navIndex = e.index
+					} else {
+						// #ifdef MP
+						setTimeout(res => {
+							this.navH = app.globalData.navHeight;
+							let info = uni.createSelectorQuery().select(".header");
+							info.boundingClientRect(function(data) {
+								self.prodeuctTop = data ? data.height : 0
+							}).exec()
+						}, 300)
+						// #endif
+						// #ifdef H5
+						self.prodeuctTop = 18
+						// #endif
+						this.navIndex = e.index
+						if (this.navTop[e.index].children.length > 0) {
+							this.where.sid = this.navTop[e.index].children[0].id
+						} else {
+							this.where.sid = this.navTop[e.index].id
+						}
+						this.loadend = false
+						this.loading = false
+						this.where.page = 1
+						this.sortProduct = []
+						this.get_product_list()
+					}
+				} else {
+					this.navIndex = e.parentIndex
+					this.where.sid = this.navTop[e.parentIndex].children[e.childIndex].id
+					this.loadend = false
+					this.loading = false
+					this.where.page = 1
+					this.sortProduct = []
+					this.get_product_list()
+				}
+			},
+			
+			// 获取高度
+			headerHeight(num) {
+				this.searchH = num
+			},
+			
+			// 打开面板
+			openMask() {
+				this.$refs.showset.open()
+			},
+			
+			closeMask() {
+				this.$refs.showset.close()
+			},
+			
 			// 微信分享；
 			setOpenShare: function() {
 				let that = this;
@@ -665,23 +640,7 @@
 					this.params.page++
 					this.tempArr = this.tempArr.concat(data.list)
 				})
-			},
-			open(type){
-				this.$refs['show' + type].open()
-			},
-			cancel(type) {
-				this.$refs['show' + type].close()
-			},
-		},
-		mounted() {
-			let self = this
-			// #ifdef H5
-			// 获取H5 搜索框高度
-			let appSearchH = uni.createSelectorQuery().select(".serch-wrapper");
-			appSearchH.boundingClientRect(function(data) {
-				self.searchH = data.height
-			}).exec()
-			// #endif
+			}
 		},
 		// 滚动到底部
 		onReachBottom() {
@@ -700,13 +659,26 @@
 				}
 			}
 		},
+		
 		// 滚动监听
 		onPageScroll(e) {
 			let self = this
-			if (e.scrollTop >= self.searchH) {
-				self.isFixed = true
+			
+			if (e.scrollTop >= this.searchH) {
+				self.headerConfig.isFixed = true
+				
+				// #ifdef H5
+				// 设置距离
+				let tabNav = uni.createSelectorQuery().select(".tabNav");
+				let pageContent = uni.createSelectorQuery().select(".page-content");
+				tabNav.boundingClientRect(function(data) {
+					self.scrollHeight = data.height
+					
+				}).exec()
+				// #endif
 			} else {
-				self.isFixed = false
+				self.headerConfig.isFixed = false
+				self.scrollHeight = 0
 			}
 		}
 	}
@@ -732,6 +704,66 @@
 		text-align: center;
 		border-radius: 8rpx;
 	}
+	
+	// 联系店主的遮罩
+	.shop-mask {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 528rpx;
+		height: 704rpx;
+		background-color: #fff;
+		transform: translate(-50%, -40%);
+		overflow: hidden;
+		
+		.close-mask {
+			position: absolute;
+			top: 32rpx;
+			right: 32rpx;
+		}
+		
+		.mask-head {
+			padding: 58rpx 32rpx 0;
+			overflow: hidden;
+			
+			view {
+				float: left;
+				width: 120rpx;
+				height: 120rpx;
+				border-radius: 50%;
+				overflow: hidden;
+				border: 1px solid #d8d8d8;
+				box-sizing: border-box;
+				margin-right: 32rpx;
+				
+				image {
+					width: 100%;
+					height: 100%;
+				}
+			}
+			text {
+				float: left;
+				font-size: 28rpx;
+				padding-top: 20rpx;
+			}
+		}
+		.wechat-code {
+			width: 364rpx;
+			height: 364rpx;
+			margin: 50rpx auto;
+			
+			image {
+				width: 100%;
+				height: 100%;
+			}
+		}
+		.tips {
+			display: block;
+			text-align: center;
+			font-size: 24rpx;
+			color: #555;
+		}
+	}
 
 	.page-index {
 		display: flex;
@@ -739,102 +771,7 @@
 		min-height: 100%;
 		background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
 
-		// &.bgf{
-		// 	background: #fff;
-		// }
-		.header {
-			width: 100%;
-			height: 340rpx;
-			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-
-			.serch-wrapper {
-				align-items: center;
-				padding: 20rpx 50rpx 0 32rpx;
-
-				.logo {
-					height: 42rpx;
-					margin-right: 32rpx;
-				}
-
-				image {
-					width: 118rpx;
-					height: 42rpx;
-				}
-
-				.input {
-					display: flex;
-					align-items: center;
-					width: 500rpx;
-					height: 58rpx;
-					padding: 0 0 0 30rpx;
-					background: rgba(247, 247, 247, 1);
-					border: 1px solid rgba(241, 241, 241, 1);
-					border-radius: 29rpx;
-					color: #BBBBBB;
-					font-size: 28rpx;
-
-					.iconfont {
-						margin-right: 20rpx;
-					}
-				}
-			}
-
-			.tabNav {
-				padding-top: 24rpx;
-			}
-		}
-
-		/* #ifdef MP */
-		.mp-header {
-			z-index: 99;
-			position: fixed;
-			left: 0;
-			top: 0;
-			width: 100%;
-			/* #ifdef H5 */
-			padding-bottom: 20rpx;
-			/* #endif */
-			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-
-			.serch-wrapper {
-				height: 100%;
-				align-items: center;
-				padding: 0 50rpx 0 32rpx;
-
-				image {
-					width: 118rpx;
-					height: 42rpx;
-					margin-right: 30rpx;
-				}
-
-				.input {
-					display: flex;
-					align-items: center;
-					width: 305rpx;
-					height: 58rpx;
-					padding: 0 0 0 30rpx;
-					background: rgba(247, 247, 247, 1);
-					border: 1px solid rgba(241, 241, 241, 1);
-					border-radius: 29rpx;
-					color: #BBBBBB;
-					font-size: 28rpx;
-
-					.iconfont {
-						margin-right: 20rpx;
-					}
-				}
-			}
-		}
-
-		/* #endif */
-		
 		.swiper {
-			/* #ifdef MP */
-			margin-top: 400rpx;
-			/* #endif */
-			/* #ifdef H5 */
-			margin-top: 0rpx;
-			/* #endif */
 			width: 750rpx;
 			height: 280rpx;
 			swiper,
@@ -846,10 +783,13 @@
 		}
 
 		.page_content {
-			/* #ifdef H5 */
-			// margin-top: -140rpx !important;
+			/* #ifdef MP */
+			padding-top: 346rpx !important;
 			/* #endif */
-			// padding: 0 20rpx;
+			
+			/* #ifdef H5 */
+			padding-top: 10rpx;
+			/* #endif */
 
 			
 
