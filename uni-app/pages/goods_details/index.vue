@@ -97,10 +97,6 @@
 				<view class="">发送给朋友</view>
 			</button>
 			<!-- #endif -->
-			<button class="item" hover-class='none' @click="goPoster">
-				<view class="iconfont icon-haibao"></view>
-				<view class="">生成海报</view>
-			</button>
 		</view>
 		<view class="mask" v-if="posters" @click="listenerActionClose"></view>
 		<!-- #ifdef MP -->
@@ -527,7 +523,6 @@
 						  that.$set(that,'navList',navList);
 					// #ifdef H5
 					that.$set(that, 'storeImage', that.storeInfo.image);
-					that.getImageBase64();
 					if (that.isLogin) {
 						that.getCartCount();
 					};
@@ -906,135 +901,11 @@
 					that.$set(that, 'PromotionCode', '');
 				});
 			},
-			getImageBase64: function() {
-				let that = this;
-				imageBase64(that.storeImage, that.PromotionCode)
-					.then(res => {
-						that.storeImage = res.data.image;
-						that.PromotionCode = res.data.code;
-					})
-					.catch(() => {});
-			},
 			// 小程序关闭分享弹窗；
 			goFriend: function() {
 				this.posters = false;
 			},
-			/**
-			 * 生成海报
-			 */
-			goPoster: function() {
-				let that = this;
-				that.posters = false;
-				that.$set(that, 'canvasStatus', true);
-				let arr2 = [that.posterbackgd, that.storeImage, that.PromotionCode];
-				// #ifndef H5
-				if (that.isDown) return that.$util.Tips({
-					title: '正在下载海报,请稍后再试！'
-				});
-				// #endif
-				uni.getImageInfo({
-					src: that.PromotionCode,
-					fail: function(res) {
-						// #ifdef H5
-						return that.$util.Tips({
-							title: res
-						});
-						// #endif
-						// #ifdef MP
-						return that.$util.Tips({
-							title: '小程序二维码需要发布正式版后才能获取到'
-						});
-						// #endif
-					},
-					success() {
-						if (arr2[2] == '') {
-							//海报二维码不存在则从新下载
-							// #ifndef H5
-							that.downloadFilePromotionCode(function(msgPromotionCode) {
-								arr2[2] = msgPromotionCode;
-								if (arr2[2] == '')
-									return that.$util.Tips({
-										title: '海报二维码生成失败！'
-									});
-								that.$util.PosterCanvas(arr2, that.storeInfo.store_name, that.storeInfo.price, function(tempFilePath) {
-									that.$set(that, 'posterImage', tempFilePath);
-									that.$set(that, 'posterImageStatus', true);
-									that.$set(that, 'canvasStatus', false);
-									that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
-								});
-							});
-							// #endif
-							// #ifdef H5
-							that.$util.PosterCanvas(arr2, that.storeInfo.store_name, that.storeInfo.price, function(tempFilePath) {
-								that.$set(that, 'posterImage', tempFilePath);
-								that.$set(that, 'posterImageStatus', true);
-								that.$set(that, 'canvasStatus', false);
-								that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
-							});
-							// #endif
-						} else {
-							//生成推广海报
-							that.$util.PosterCanvas(arr2, that.storeInfo.store_name, that.storeInfo.price, function(tempFilePath) {
-								that.$set(that, 'posterImage', tempFilePath);
-								that.$set(that, 'posterImageStatus', true);
-								that.$set(that, 'canvasStatus', false);
-								that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
-							});
-						}
-					},
-				});
-			},
 
-			/*
-			 * 保存到手机相册
-			 */
-			// #ifdef MP
-			savePosterPath: function() {
-				let that = this;
-				uni.getSetting({
-					success(res) {
-						if (!res.authSetting['scope.writePhotosAlbum']) {
-							uni.authorize({
-								scope: 'scope.writePhotosAlbum',
-								success() {
-									uni.saveImageToPhotosAlbum({
-										filePath: that.posterImage,
-										success: function(res) {
-											that.posterImageClose();
-											that.$util.Tips({
-												title: '保存成功',
-												icon: 'success'
-											});
-										},
-										fail: function(res) {
-											that.$util.Tips({
-												title: '保存失败'
-											});
-										}
-									})
-								}
-							})
-						} else {
-							uni.saveImageToPhotosAlbum({
-								filePath: that.posterImage,
-								success: function(res) {
-									that.posterImageClose();
-									that.$util.Tips({
-										title: '保存成功',
-										icon: 'success'
-									});
-								},
-								fail: function(res) {
-									that.$util.Tips({
-										title: '保存失败'
-									});
-								},
-							})
-						}
-					}
-				})
-			},
-			// #endif
 			//#ifdef H5
 			ShareInfo() {
 				let data = this.storeInfo;
