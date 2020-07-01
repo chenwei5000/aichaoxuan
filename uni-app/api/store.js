@@ -11,24 +11,6 @@ export function getProductDetail(id){
 }
 
 /**
- * 添加收藏
- * @param int id
- * @param string category product=普通产品,product_seckill=秒杀产品
-*/
-export function collectAdd(id, category){
-  return request.post('collect/add', { id: id, 'product': category === undefined ? 'product' : category });
-}
-
-/**
- * 删除收藏产品
- * @param int id
- * @param string category product=普通产品,product_seckill=秒杀产品
-*/
-export function collectDel(id, category) {
-  return request.post('collect/del', { id: id, category: category === undefined ? 'product' : category });
-}
-
-/**
  * 购车添加
  * 
 */
@@ -69,15 +51,6 @@ export function getProductHot(page,limit) {
     type:'hot'
   },{noAuth:true});
 }
-/**
- * 批量收藏
- * 
- * @param object id  产品编号 join(',') 切割成字符串
- * @param string category 
-*/
-export function collectAll(id, category) {
-  return request.post('collect/all', { id: id, category: category === undefined ? 'product' : category });
-}
 
 /**
  * 首页产品的轮播图和产品信息
@@ -87,14 +60,6 @@ export function collectAll(id, category) {
 export function getIndexProductList(data){
   //return request.get('groom/list/1',data,{noAuth:true});
   return request_new.get('Goods.ListGoods',data,{noAuth:true});
-}
-
-/**
- * 获取收藏列表
- * @param object data
-*/
-export function getCollectUserList(data) {
-  return request.get('collect/user', data)
 }
 
 /**
@@ -121,5 +86,6 @@ export function getReplyConfig(id){
 */
 export function getSearchKeyword(){
   return request.get('search/keyword',{},{noAuth:true});
+  //return request.get('search/keyword',{},{noAuth:true});
 }
 

@@ -51,43 +51,6 @@ export function registerVerify(phone, reset){
 }
 
 /**
- * 手机号注册
- * @param object data
- * 
-*/
-export function phoneRegister(data){
-  return request.post('register',data,{noAuth:true});
-}
-
-/**
- * 手机号修改密码
- * @param object data
- * 
-*/
-export function phoneRegisterReset(data){
-  return request.post('register/reset',data,{noAuth:true})
-}
-
-/**
- * 切换H5登录
- * @param object data
-*/
-// #ifdef MP
-export function switchH5Login(){
-  return request.post('switch_h5', { 'from':'routine'});
-}
-// #endif
-
-/*
- * h5切换公众号登陆
- * */
-// #ifdef H5
-export function switchH5Login() {
-  return request.post("switch_h5", { 'from': "wechat" });
-}
-// #endif
-
-/**
  * 绑定手机号
  * 
 */

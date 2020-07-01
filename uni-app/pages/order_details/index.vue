@@ -17,7 +17,6 @@
 						<view :class="status.type == 0 || status.type == -9 ? 'on':''">待付款</view>
 						<view :class="status.type == 1 ? 'on':''">{{orderInfo.shipping_type==1 ? '待发货':'待核销'}}</view>
 						<view :class="status.type == 2 ? 'on':''" v-if="orderInfo.shipping_type == 1">待收货</view>
-						<view :class="status.type == 3 ? 'on':''">待评价</view>
 						<view :class="status.type == 4 ? 'on':''">已完成</view>
 					</view>
 					<view class='progress acea-row row-between-wrapper'>
@@ -28,8 +27,6 @@
 						<view class='iconfont' :class='(status.type == 2 ? "icon-webicon318":"icon-yuandianxiao") + " " +(status.type >= 2 ? "font-color":"")'
 						 v-if="orderInfo.shipping_type == 1"></view>
 						<view class='line' :class='status.type > 2 ? "bg-color":""'></view>
-						<view class='iconfont' :class='(status.type == 3 ? "icon-webicon318":"icon-yuandianxiao") + " " + (status.type >= 3 ? "font-color":"")'></view>
-						<view class='line' :class='status.type > 3 ? "bg-color":""'></view>
 						<view class='iconfont' :class='(status.type == 4 ? "icon-webicon318":"icon-yuandianxiao") + " " + (status.type >= 4 ? "font-color":"")'></view>
 					</view>
 				</view>

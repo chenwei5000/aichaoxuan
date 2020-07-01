@@ -82,8 +82,17 @@
 			}
 		}
 	    ,{
+<<<<<<< HEAD
             "path" : "pages/index/Header",
             "style" : {}
+=======
+            "path" : "pages/live/live",
+            "style" : {
+				"navigationBarTitleText": "直播",
+				"navigationBarBackgroundColor": "#e93323",
+				"navigationBarTextStyle": "#fff"
+			}
+>>>>>>> f2927ad62d3ee373fcce7b950beaa6ceeb5a146d
         }
     ],
 	 "subPackages": [
