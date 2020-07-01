@@ -13,7 +13,7 @@ import request_new from "@/utils/request_new.js";
 export function getIndexData()
 {
   //return request.get("index",{},{ noAuth : true});
-  return request_new.get("Home.index",{},{ noAuth : true});
+  return request_new.get("Home.Index",{},{ noAuth : true});
 }
 
 /**

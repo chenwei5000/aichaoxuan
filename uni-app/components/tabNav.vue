@@ -11,7 +11,11 @@
 		<view class="child-box" v-if="tabClick>0 && tabTitle[tabClick].children.length>0">
 			<scroll-view scroll-x="true" style="white-space: nowrap; display: flex;align-items: center; height: 100%;" scroll-with-animation :scroll-left="tabLeft" show-scrollbar="false">
 				<view class="wrapper">
-					<view v-for="(item,index) in tabTitle[tabClick].children" class="child-item" :class="{on:index == childIndex}" @click="childTab(tabClick,index)">
+					<view 
+					v-for="(item,index) in tabTitle[tabClick].children" 
+					class="child-item" 
+					:class="{on:index == childIndex}" 
+					@click="childTab(tabClick,index)">
 						<image :src="item.pic" mode=""></image>
 						<view class="txt">{{item.cate_name}}</view>
 					</view>
@@ -31,7 +35,9 @@
 		props: {
 			tabTitle: {
 				type: Array,
-				default: []
+				default() {
+					return []
+				}
 			}
 
 		},
@@ -101,7 +107,7 @@
 		.longTab {
 			width: 100%;
 			/* #ifdef H5 */
-			padding-bottom: 20rpx;
+			padding: 10rpx 0;
 			/* #endif */
 			/* #ifdef MP */
 			padding-top: 12rpx;

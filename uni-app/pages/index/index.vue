@@ -1,54 +1,15 @@
 <template>
 	<view class="page-index" :class="{'bgf':navIndex >0}">
-		<!-- 1.0 头部展示 -->
-		<template name="header">
-			<view class="header">
-			<!-- 在小程序中，系统的显示通信商和信号的部分 -->
-			<view class="sys-head" view :style="{ height: headerData.statusBarHeight }"></view>
-			
-			<!--  1.1 H5 页面顶部搜索栏 -->
-			<view class="serch-wrapper flex">
-				<view class="logo">
-					<text>精选宝贝</text>
-				</view>
-				<navigator url="/pages/goods_search/index" class="input" hover-class="none"><text class="iconfont icon-xiazai5"></text>
-					搜索你想要的</navigator>
-			</view>
-			
-			
-			<!-- 1.2 H5 页面店铺信息 -->
-			<view class="store-infomation">
-				<view class="user-img">
-					<view>
-						<img src="" alt="">
-					</view>
-				</view>
-				<view class="store-name">
-					<text>萌宝妈咪的小店</text>
-				</view>
-				<view class="button">
-					<button type="default">联系店主</button>
-				</view>
-			</view>
-			
-			<!-- 1.3 H5 页面导航 -->
-			<tabNav v-if="deviveType === 'H5'" class="tabNav" :class="{ 'fixed': headerData.isFixed }" :tabTitle="navTop" @changeTab='changeTab' @emChildTab='emChildTab'
-			 @childTab='childTab'></tabNav>
-			<tabNav v-else class="tabNav" :tabTitle="navTop" @changeTab='changeTab'></tabNav>
-			 </view>
-		</template>
-		
-		<!-- #ifdef H5 -->
-		<template is="header" :data="headerData" :value="deviveType"></template>
-		<!-- #endif -->
-		
-		<!-- 条件注释 小程序顶部搜索栏 -->
-		<!-- #ifdef MP -->
-		<template is="header" :data="headerData"></template>
-		<!-- #endif -->
+		<!-- 1.0 Header 部分 -->
+		<Header 
+			:shopInfo="shopName"
+			:config="headerConfig" 
+			@searchHeigth="headerHeight" 
+			@changeTab="changeTab">
+		</Header>
 		
 		<!-- 2.0 首页展示 -->
-		<view class="page_content" v-if="navIndex == 0">
+		<view class="page_content" v-if="navIndex == 0" :style="'position: relative; top: '+ scrollHeight +'px'">
 			<view class="mp-bg"></view>
 			<!-- banner -->
 			<view class="swiper">
@@ -213,11 +174,8 @@
 </template>
 
 <script>
-	var statusBarHeight = uni.getSystemInfoSync().statusBarHeight + 'px';
 	let app = getApp();
-	import {
-		getIndexData,
-	} from '@/api/api.js';
+	import { getIndexData } from '@/api/api.js';
 	// #ifdef MP-WEIXIN
 	import {
 		getTemlIds,
@@ -236,13 +194,8 @@
 	// #endif
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
-	import {
-		goShopDetail
-	} from '@/libs/order.js'
-	import {
-		mapGetters
-	} from "vuex";
-	import tabNav from '@/components/tabNav.vue'
+	import { goShopDetail } from '@/libs/order.js'
+	import { mapGetters } from "vuex";
 	import countDown from '@/components/countDown';
 	import {
 		getCategoryList,
@@ -260,10 +213,13 @@
 	import {
 		silenceBindingSpread
 	} from '@/utils';
+	
+	import Header from './Header.vue'
+	
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
-			tabNav,
+			Header,
 			goodList,
 			promotionGood,
 			countDown,
@@ -278,7 +234,6 @@
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
 				navIndex: 0,
-				navTop: [],
 				subscribe: false,
 				followUrl: "",
 				followHid: true,
@@ -342,35 +297,28 @@
 					limit: 10,
 				},
 				tempArr: [], //精品推荐临时数组
-				shopName: '' ,//首页title，
-				// 头部模板数据
-				headerData: {
+				shopName: {} ,//首页title
+				scrollHeight: 0,
+				
+				// Header 配置
+				headerConfig: {
+					navTop: [],
 					isFixed: false,
-					type: 'H5',
-					statusBarHeight: statusBarHeight
-				},
-				deviveType: 'H5'
+				}
 			}
 		},
 		onLoad() {
-			let self = this
-			// #ifdef MP
-			// 获取小程序头部高度
-			this.navH = app.globalData.navHeight;
-			let info = uni.createSelectorQuery().select(".mp-header");
-			info.boundingClientRect(function(data) {
-				self.marTop = data ? data.height : 0
-			}).exec()
-			// #endif
 			// #ifndef MP
 			this.navH = 0;
 			// #endif
-			this.isLogin && silenceBindingSpread();
-			Promise.all([this.getAllCategory(), this.getIndexConfig(), this.setVisit()
-			]);
+			
+			this.isLogin && silenceBindingSpread()
+			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ])
+			
 			// #ifdef MP
 			this.getLiveList()
 			// #endif
+			
 		},
 		onShow() {
 			let self = this
@@ -379,11 +327,12 @@
 			})
 			// #ifdef MP						
 			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
-			console.log(customParams)
+			// console.log(customParams)
 			 //    this.setData({
 			 //        customParams
 			 // })
 			 // #endif
+			 
 		},
 		methods: {
 			// 记录会员访问
@@ -391,59 +340,8 @@
 				setVisit({
 					url: '/pages/index/index'
 				}).then(res => {
-					console.log(res)
+					// console.log(res)
 				})
-			},
-			// 获取导航
-			getAllCategory: function() {
-				let that = this;
-				getCategoryList().then(res => {
-					res.data.unshift({
-						'cate_name': '首页'
-					})
-					that.navTop = res.data;
-				})
-			},
-			// 导航分类切换
-			changeTab(e) {
-				let self = this
-				if (e.type == 'big') {
-					if (e.index == 0) {
-						this.navIndex = e.index
-					} else {
-						// #ifdef MP
-						setTimeout(res => {
-							this.navH = app.globalData.navHeight;
-							let info = uni.createSelectorQuery().select(".mp-header");
-							info.boundingClientRect(function(data) {
-								self.prodeuctTop = data ? data.height : 0
-							}).exec()
-						}, 300)
-						// #endif
-						// #ifdef H5
-						self.prodeuctTop = 18
-						// #endif
-						this.navIndex = e.index
-						if (this.navTop[e.index].children.length > 0) {
-							this.where.sid = this.navTop[e.index].children[0].id
-						} else {
-							this.where.sid = this.navTop[e.index].id
-						}
-						this.loadend = false
-						this.loading = false
-						this.where.page = 1
-						this.sortProduct = []
-						this.get_product_list()
-					}
-				} else {
-					this.navIndex = e.parentIndex
-					this.where.sid = this.navTop[e.parentIndex].children[e.childIndex].id
-					this.loadend = false
-					this.loading = false
-					this.where.page = 1
-					this.sortProduct = []
-					this.get_product_list()
-				}
 			},
 			//分类产品
 			get_product_list: function(isPage) {
@@ -499,8 +397,9 @@
 					uni.setNavigationBarTitle({
 						title: res.data.shopName
 					})
-					that.$set(that, "shopName", res.data.shopName);
+					that.$set(that, "shopName", res.data);
 					that.$set(that, "imgUrls", res.data.banner);
+					
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;
 					that.setOpenShare();
@@ -528,6 +427,64 @@
 					this.getIndexProductList();
 				})
 			},
+			
+			// 获取导航
+			getAllCategory: function() {
+				let that = this;
+				getCategoryList().then(res => {
+					res.data.unshift({
+						'cate_name': '首页'
+					})
+					that.headerConfig.navTop = res.data
+				})
+			},
+			// 导航分类切换
+			changeTab(e) {
+				let self = this
+				if (e.type == 'big') {
+					if (e.index == 0) {
+						this.navIndex = e.index
+					} else {
+						// #ifdef MP
+						setTimeout(res => {
+							this.navH = app.globalData.navHeight;
+							let info = uni.createSelectorQuery().select(".header");
+							info.boundingClientRect(function(data) {
+								self.prodeuctTop = data ? data.height : 0
+							}).exec()
+						}, 300)
+						// #endif
+						// #ifdef H5
+						self.prodeuctTop = 18
+						// #endif
+						this.navIndex = e.index
+						if (this.navTop[e.index].children.length > 0) {
+							this.where.sid = this.navTop[e.index].children[0].id
+						} else {
+							this.where.sid = this.navTop[e.index].id
+						}
+						this.loadend = false
+						this.loading = false
+						this.where.page = 1
+						this.sortProduct = []
+						this.get_product_list()
+					}
+				} else {
+					this.navIndex = e.parentIndex
+					this.where.sid = this.navTop[e.parentIndex].children[e.childIndex].id
+					this.loadend = false
+					this.loading = false
+					this.where.page = 1
+					this.sortProduct = []
+					this.get_product_list()
+				}
+			},
+			
+			// 获取高度
+			headerHeight(num) {
+				this.searchH = num
+			},
+			
 			// 微信分享；
 			setOpenShare: function() {
 				let that = this;
@@ -620,16 +577,6 @@
 				})
 			}
 		},
-		mounted() {
-			let self = this
-			// #ifdef H5
-			// 获取H5 搜索框高度
-			let appSearchH = uni.createSelectorQuery().select(".serch-wrapper");
-			appSearchH.boundingClientRect(function(data) {
-				self.searchH = data ? data.height : 0
-			}).exec()
-			// #endif
-		},
 		// 滚动到底部
 		onReachBottom() {
 
@@ -647,13 +594,25 @@
 				}
 			}
 		},
+		
 		// 滚动监听
 		onPageScroll(e) {
 			let self = this
-			if (e.scrollTop >= self.searchH) {
-				self.headerData.isFixed = true
+			
+			if (e.scrollTop >= this.searchH) {
+				self.headerConfig.isFixed = true
+				
+				// #ifdef H5
+				// 设置距离
+				let tabNav = uni.createSelectorQuery().select(".tabNav");
+				let pageContent = uni.createSelectorQuery().select(".page-content");
+				tabNav.boundingClientRect(function(data) {
+					self.scrollHeight = data.height
+				}).exec()
+				// #endif
 			} else {
-				self.headerData.isFixed = false
+				self.headerConfig.isFixed = false
+				self.scrollHeight = 0
 			}
 		}
 	}
@@ -686,132 +645,18 @@
 		min-height: 100%;
 		background: linear-gradient(180deg, #fff 0%, #f5f5f5 100%);
 
-		/* 1.0 header Site start */ 
-		.header {
-			width: 100%;
-			overflow: hidden;
-			background: linear-gradient(90deg, $bg-star 50%, $bg-end 100%);
-
-			.serch-wrapper {
-				align-items: center;
-				padding: 17rpx 32rpx;
-
-				.logo {
-					width: 136rpx;
-					height: 44rpx;
-					line-height: 44rpx;
-					margin-right: 20rpx;
-					color: #fff;
-					font-size: 32rpx;
-				}
-
-				.input {
-					display: flex;
-					align-items: center;
-					width: 500rpx;
-					height: 58rpx;
-					padding: 0 0 0 30rpx;
-					background: rgba(247, 247, 247, 1);
-					border: 1px solid rgba(241, 241, 241, 1);
-					border-radius: 29rpx;
-					color: #BBBBBB;
-					font-size: 28rpx;
-
-					.iconfont {
-						margin-right: 20rpx;
-					}
-				}
-			}
-
-			.store-infomation {
-				display: flex;
-				height: 160rpx;
-				.user-img {
-					flex: 1;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					view {
-						width: 120rpx;
-						height: 120rpx;
-						background-color: #D8D8D8;
-						border-radius: 50%;
-					}
-				}
-				.store-name {
-					flex: 2;
-					
-					text {
-						font-size: 28rpx;
-						line-height: 160rpx;
-						color: #fff;
-						padding-left: 20rpx;
-						letter-spacing: 2rpx;
-					}
-				}
-				.button {
-					flex: 1.5;
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					
-					button {
-						width: 190rpx;
-						height: 62rpx;
-						line-height: 60rpx;
-						background: transparent;
-						border-radius: 31px;
-						border:1px solid rgba(255,255,255,1);
-						padding: 0 31rpx;
-						font-size: 24rpx;
-						color: #fff;
-					}
-				}
-			}
-			
-			.tabNav {
-				padding-top: 14rpx;
-			}
-		}
-
-		/* #ifdef MP */
-		.header {
-			z-index: 999;
-			position: fixed;
-			left: 0;
-			top: 0;
-			
-			.serch-wrapper {
-				padding: 10rpx 32rpx;
-				.input {
-					width: 342rpx;
-					margin-left: -5px;
-				}
-			}
-			
-		}
-		.tabNav {
-			position: static;
-		}
-		/* #endif */
-		/* header end */ 
-
-
 		/* 2.0 Content Site */ 
 		.page_content {
 			position: relative;
 			top: -1px;
 			padding: 0 20rpx;
 			/* #ifdef MP */
-			padding-top: 350rpx;
+			margin-top: 184px;
 			/* #endif */
 
 			.mp-bg {
 				position: absolute;
-				top: 0;
-				/* #ifdef MP */
-				top: 350rpx;
-				/* #endif */
+				top: -4rpx;
 				left: 0;
 				width: 100%;
 				height: 140rpx;
@@ -1642,14 +1487,6 @@
 
 	.pictrue {
 		position: relative;
-	}
-
-	.fixed {
-		z-index: 100;
-		position: fixed;
-		left: 0;
-		top: 0;
-		background: linear-gradient(90deg, red 50%, #ff5400 100%);
 	}
 
 	.mores-txt {

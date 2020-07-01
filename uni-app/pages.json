@@ -81,7 +81,11 @@
 				// #endif
 			}
 		}
-	],
+	    ,{
+            "path" : "pages/index/Header",
+            "style" : {}
+        }
+    ],
 	 "subPackages": [
 	    {
 	      "root": "pages/users",
