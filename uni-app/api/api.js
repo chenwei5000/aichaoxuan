@@ -85,5 +85,6 @@ export function getCity(id) {
  * 获取小程序直播列表
  */
 export function getLiveList(page,limit) {
-  return request.get('wechat/live', { page, limit}, { noAuth: true });
+  //return request.get('wechat/live', { page, limit}, { noAuth: true });
+  return request_new.get('Home.ListRecommendLive', { page:page, limit:limit}, { noAuth: true });
 }
