@@ -190,7 +190,7 @@ export function WxJsapiPay(data){
   return request_new.post('Billing.WxJsapiPay',data);
 }
 export function WxH5Pay(data){
-  return request_new.post('Billing.WxJsapiPay',data);
+  return request_new.post('Billing.WxH5Pay',data);
 }
 export function WxWxaPay(data){
   return request_new.post('Billing.WxWxaPay',data);

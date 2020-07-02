@@ -120,7 +120,7 @@
 				})
 				this.getUserAddress();
 				//this.getCityList(0);
-				//if (!this.id) this.getProvince();
+				if (!this.id) this.getProvince();
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();

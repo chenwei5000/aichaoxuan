@@ -155,6 +155,7 @@
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
 	// #endif
+	import Routine from '@/libs/routine';
 	export default {
 		components: {
 			addressWindow,
@@ -232,7 +233,12 @@
 		computed: mapGetters(['isLogin']),
 		onLoad: function(options) {
 			// #ifdef H5
-			this.from = this.$wechat.isWeixin() ? 'weixin' : 'weixinh5'
+			if (this.$wechat.isWeixin()){
+				this.from = 'weixin'
+				this.$wechat.oAuth();
+			}else{
+				this.from = 'weixinh5'
+			}
 			// #endif
 			// #ifdef MP
 			this.from = 'routine'
@@ -518,29 +524,57 @@
 					    orderId = res.data.order_id,
 					    jsConfig = '',
 						goPages = '/pages/order_pay_status/index?order_id=' + orderId + '&msg=' + res.msg;
-					let data = {
+					var data = {
 						pay_code:res.data.pay_code
 					}
 					// #ifdef  MP
+					// status = 'WECHAT_PAY';
+					// console.log('WxWxaPay')
+					// Routine.getCode().then(code=>{
+					// 	console.log('code',code)
+					// 	data.code = code;
+					// 	WxJsapiPay(data).then(e => {
+					// 		console.log(e)
+					// 	}).catch(err => {
+					// 		console.log(err)
+					// 		uni.hideLoading();
+					// 		return that.$util.Tips({
+					// 			title: err
+					// 		});
+					// 	});
+					// }).catch(res=>{
+					// 	uni.hideLoading();
+					// })
+					// return;
 					status = 'WECHAT_PAY';
 					console.log('WxWxaPay')
-					WxWxaPay(data).then(e => {
-						console.log(e)
-						jsConfig = e.data.jsApiParams;
-						console.log('jsConfig',jsConfig);
-						that.topay(status,jsConfig,goPages,res)
-					}).catch(err => {
-						uni.hideLoading();
-						return that.$util.Tips({
-							title: err
+					Routine.getCode().then(code=>{
+						console.log('code',code)
+						data.code = code;
+						WxWxaPay(data).then(e => {
+							console.log(e)
+							jsConfig = e.data.jsApiParams;
+							console.log('jsConfig',jsConfig);
+							that.topay(status,jsConfig,goPages,res)
+						}).catch(err => {
+							console.log(err)
+							uni.hideLoading();
+							return that.$util.Tips({
+								title: err
+							});
 						});
-					});
+					}).catch(res=>{
+						uni.hideLoading();
+					})
+					
 					// #endif
 					// #ifdef  H5
 					console.log('h5')
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
+						let code = uni.getStorageSync(WX_AUTH);
+						console.log('WX_AUTH',code);
 						WxJsapiPay(data).then(e => {
 							console.log(e)
 							//that.topay(status,jsConfig,goPages,res)
@@ -552,8 +586,11 @@
 						});
 					}else{
 						status = "WECHAT_H5_PAY"
+						alert('WECHAT_H5_PAY')
 						WxH5Pay(data).then(e => {
 							console.log(e)
+							jsConfig = e.data;
+							console.log('jsConfig',jsConfig);
 							that.topay(status,jsConfig,goPages,res)
 						}).catch(err => {
 							uni.hideLoading();
@@ -642,7 +679,7 @@
 									title: '取消支付'
 								}, {
 									tab: 5,
-									url: goPages + '&status=0'
+									url: 'pages/index/index'
 								});
 							},
 							complete: function(e) {
@@ -684,9 +721,9 @@
 							url: goPages + '&status=1'
 						});
 						break;
-					case "WECHAT_H5_PAY": //gongzhonghao
+					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url;
+							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com'+encodeURIComponent(goPages);
 						}, 100);
 						break;
 				}
