@@ -124,10 +124,12 @@
 					this.navH = app.globalData.navHeight;
 					let info = uni.createSelectorQuery().in(this).select(".header");
 					info.boundingClientRect(function(data) {
-						_this.$emit('searchHeigth', this.searchH, data ? data.height + 5 : 0)
+						_this.$emit('searchHeigth', _this.searchH, data ? data.height + 5 : 0)
 					}).exec()
 				}, 300)
 				// #endif
+				
+				this.$emit('searchHeigth', this.searchH)
 			},
 			changetabName(e) {
 				this.$emit('hasTab', e)

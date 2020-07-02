@@ -535,6 +535,7 @@
 			
 			// 获取高度
 			headerHeight(num, num1) {
+				console.log(num)
 				this.searchH = num
 				this.prodeuctTop = num1
 			},
