@@ -274,9 +274,9 @@
 	import {
 		silenceBindingSpread
 	} from '@/utils';
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	
 	import Header from './Header.vue'
-	
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
