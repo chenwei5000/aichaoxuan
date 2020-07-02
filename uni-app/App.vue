@@ -78,7 +78,23 @@
 		                console.log('get share openid', res.share_openid) // 分享者openid，分享卡片进入场景才有
 		                console.log('get custom params', res.custom_params) // 开发者在跳转进入直播间页面时，页面路径上携带的自定义参数，这里传回给开发者
 						// 取到分享自定义参数里的shop_key,设置好，如果没有带，则用默认shop_key
-						
+						let customeP = JSON.parse(res.custom_params);
+						let urlShopKey = customeP.shop_key;
+						console.log('分享直播的店铺Key:',urlShopKey);
+						if (urlShopKey !== undefined && urlShopKey.length>10) {
+							var LastShopKey = Cache.get(SHOP_KEY);
+							if (LastShopKey !== urlShopKey ) {
+								Cache.set(SHOP_KEY, urlShopKey || 0);
+							} 
+						}else
+						{
+							var LastShopKey = Cache.get(SHOP_KEY);
+							// 既没有参数，也没有缓存，则默认shop_key 
+							if(LastShopKey === undefined)
+							{
+								Cache.set(SHOP_KEY, '5pSMIG2RFGPfzcz5KeCUhQ==' || 0);
+							}
+						}
 		            }).catch(err => {
 		                console.log('get share params', err)
 		            })

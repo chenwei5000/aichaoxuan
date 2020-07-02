@@ -50,7 +50,7 @@
 					</navigator>
 				</view>
 				<block v-for="(item,index) in liveList" :key="index">
-				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex; box-sizing: border-box;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params=shopid&room_id='+item.roomid">
+				<navigator style="width: 750rpx;padding: 20rpx 52rpx 20rpx 32rpx;display: flex; box-sizing: border-box;" :url="'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?custom_params='+LiveCustomParams+'&room_id='+item.roomid">
 					<view style="width: 340rpx;height: 340rpx;border-radius: 16rpx;">
 						<image style="width: 340rpx;height: 340rpx;border-radius: 16rpx;" :src="item.cover_img"></image>
 					</view>
@@ -244,6 +244,7 @@
 	} from '@/api/api.js';
 	import {
 		SUBSCRIBE_MESSAGE,
+		SHOP_KEY,
 		TIPS_KEY
 	} from '@/config/cache';
 	// #endif
@@ -270,11 +271,9 @@
 	import recommend from '@/components/recommend';
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
-	// #endif
-	import {
-		silenceBindingSpread
-	} from '@/utils';
-	
+	import store from '@/store';
+	import Cache from '@/utils/cache'
+	// #endif	
 	// import uniPopup from "@/components/uni-popup/uni-popup"
 	import Header from './Header.vue'
 	export default {
@@ -294,6 +293,7 @@
 				loading: false,
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false, //是否隐藏授权
+				LiveCustomParams:"",
 				navIndex: 0,
 				subscribe: false,
 				followUrl: "",
@@ -372,10 +372,17 @@
 			this.navH = 0;
 			// #endif
 			
-			this.isLogin && silenceBindingSpread()
+			
 			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ])
 			
 			// #ifdef MP
+			let shop_key="";
+			if (store.state.app.shopKey) {
+			  shop_key = encodeURIComponent(store.state.app.shopKey);
+			}else{
+				shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
+			}
+			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			this.getLiveList()
 			// #endif
 			
@@ -384,15 +391,7 @@
 			let self = this
 			uni.setNavigationBarTitle({
 				title: self.shopName
-			})
-			// #ifdef MP						
-			let customParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shopId: 1 }))
-			// console.log(customParams)
-			 //    this.setData({
-			 //        customParams
-			 // })
-			 // #endif
-			 
+			})			 
 		},
 		methods: {
 			// 记录会员访问
