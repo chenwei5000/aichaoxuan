@@ -14,31 +14,50 @@
 		<!-- 直播列表 -->
 		<view class="live-content">
 			<view class="lives-list" v-for="item in liveList" :key="item.id">
-				<view class="live-item">
-					<view class="item-left">
-						<view class="tips">
-							<view class="tips-left">直播中</view>
-							<view>115人观看</view>
+				
+				<navigator :url="liveUrl + item.roomid + '&custom_params=' + item.status">
+					<view class="live-item">
+						<view class="item-left">
+							<view class="tips">
+								<view class="tips-left">
+									<text v-if="num === 1">直播中</text>
+									<text v-else-if="num === 2">直播预告</text>
+									<text v-else>精彩回放</text>
+								</view>
+							</view>
+							<view class="like">
+								<text class="join-live" v-if="num === 1">进入直播</text>
+								<text class="join-live" v-else-if="num === 2">订阅直播</text>
+								<text class="join-live" v-else>点击回放</text>
+							</view>
+							<image :src="item.share_img" mode=""></image>
 						</view>
-						<navigator :url="liveUrl + item.roomid + '&custom_params=' + item.status">
-							<image :src="item.cover_img" mode=""></image>
-						</navigator>
-					</view>
-					<view class="item-right">
-						<text>{{ item.name }}</text>
-						<view>
-							<!-- start_time -->
-							<text>{{ item.anchor_name }}</text>
-						</view>
-						<view class="item-pro">
-							<view v-for="subItem in item.goods" :key="subItem.id">
-								<text>￥{{ subItem.price }}</text>
-								<image :src="subItem.cover_img" mode=""></image>
+						<view class="item-right">
+							<text>{{ item.name }}</text>
+							<view>
+								<!-- start_time -->
+								<view>
+									<image :src="item.cover_img" mode=""></image>
+								</view>
+								<text>{{ item.anchor_name }}</text>
+							</view>
+							<view class="item-pro">
+								<view>
+									<text>￥{{ item.goods[0].price }}</text>
+									<image :src="item.goods[0].cover_img" mode=""></image>
+								</view>
+								<view v-if="item.goods.length >= 2">
+									<view class="mask-view">
+										<text>{{ item.goods.length }}</text>
+										<text>宝贝</text>
+									</view>
+									<image :src="item.goods[0].cover_img" mode=""></image>
+								</view>
 							</view>
 						</view>
+						</view>
 					</view>
-					</view>
-				</view>
+				</navigator>
 		</view>
 		
 		
@@ -70,25 +89,30 @@
 					}
 				],
 				// 直播间数据
-				liveList: []
+				liveList: [],
+				num: 1
 			}
 		},
 		onLoad(){
-			this.getLivesHosue()
+			this.getLivesHosue(this.num)
 			// console.log(this.navTop, 111)
 			
 		},
 		mounted() {
 		},
 		methods: {
-			async getLivesHosue() {
-				await get_Lives(3, 1, 20).then(res => {
+			async getLivesHosue(num) {
+				await get_Lives(num, 1, 20).then(res => {
 					this.liveList = res.data.live_list
 				}).catch(res => {
 				
 				})
 				
 				console.log(this.liveList, 1111)
+			},
+			changeTab(e) {
+				this.num = e.index + 1
+				this.getLivesHosue(this.num)
 			}
 		}
 	}
@@ -128,7 +152,7 @@
 					height: 36rpx;
 					line-height: 36rpx;
 					background-color: #FF2803;
-					padding: 0 18rpx 0 0;
+					// padding: 0 18rpx 0 0;
 					border-radius: 18rpx;
 					font-size: 24rpx;
 					color: #fff;
@@ -142,25 +166,42 @@
 					view:nth-last-of-type(1) {
 						line-height: 36rpx;
 						float: left;
-						padding-left: 18rpx;
-						// width: 240rpx;
+						// padding-left: 18rpx;
 						text-align: right;
+					}
+				}
+				
+				.like {
+					position: absolute;
+					right: 20rpx;
+					bottom: 20rpx;
+					
+					.join-live {
+						display: block;
+						height: 36rpx;
+						line-height: 36rpx;
+						color: #fff;
+						background-color: #FF2803;
+						padding: 0 18rpx;
+						border-radius: 18rpx;
+						font-size: 24rpx;
 					}
 				}
 				navigator {
 					height: 100%;
 				}
 				image {
-					width: 100%;
-					height: 100%;
+					width: 340rpx !important;
+					height: 340rpx !important;
 				}
 			}
 			.item-right {
 				width: 294rpx;
 				margin-left: 32rpx;
-				margin-top: 20rpx;
+				padding-top: 30rpx;
 				display: flex;
 				flex-direction: column;
+				box-sizing: border-box;
 				> text {
 					font-size:24rpx;
 					color:rgba(51,51,51,1);
@@ -168,6 +209,7 @@
 				}
 				> view:nth-of-type(1) {
 					height: 80rpx;
+					padding: 30rpx 0;
 					display: flex;
 					align-items: center;
 					view {
@@ -177,6 +219,13 @@
 						border-radius: 50%;
 						margin-left: 20rpx;
 						margin-right: 20rpx;
+						overflow: hidden;
+						padding-left: 20rpx;
+						
+						image {
+							width: 100%;
+							height: 100%;
+						}
 					}
 					text {
 						font-size:24rpx;
@@ -194,23 +243,45 @@
 						background:rgba(216,216,216,1);
 						border-radius: 16rpx;
 						margin-right: 14rpx;
+						margin-bottom: 14rpx;
 						overflow: hidden;
 						
-						text{
+						.mask-view {
+							position: absolute;
+							top: 0;
+							left: 0;
+							width: 100%;
+							height: 100%;
+							background-color: rgba(0, 0, 0, .4);
+							text-align: center;
+							padding-top: 40rpx;
+							box-sizing: border-box;
+							
+							text {
+								position: static;
+								display: block;
+								background: transparent;
+								font-size: 28rpx;
+							}
+						}
+						
+						> text{
 							width: 100%;
 							position: absolute;
 							bottom: 10rpx;
 							font-size: 12px;
 							text-align: center;
 							color: #fff;
+							background-color: rgba(0, 0, 0, .4);
 						}
 						image {
 							width: 100%;
 							height: 100%;
 						}
 					}
-					view:nth-last-of-type(1) {
+					view:nth-of-type(2n) {
 						margin-right: 0;
+						
 					}
 				}
 			}
