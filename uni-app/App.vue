@@ -18,7 +18,7 @@
 		 },
 
 		onLaunch: function(option) {
-			console.log(option)
+			console.log('this is on Launch');
 			let that = this;
 			// #ifdef MP
 			let urlShopKey = option.query.shop_key;
@@ -73,6 +73,7 @@
 		},
 		onShow(options) {
 			// #ifdef MP	
+			console.log(" aaaaaa this is on Show");
 		    // 分享卡片入口场景才调用getShareParams接口获取以下参数
 		    if (options.scene == 1007 || options.scene == 1008 || options.scene == 1044) {
 		        livePlayer.getShareParams()
