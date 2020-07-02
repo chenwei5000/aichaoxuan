@@ -536,7 +536,6 @@
 			headerHeight(num, num1) {
 				this.searchH = num
 				this.prodeuctTop = num1
-				console.log(num1)
 			},
 			
 			// 打开面板
@@ -711,7 +710,7 @@
 		width: 528rpx;
 		height: 704rpx;
 		background-color: #fff;
-		transform: translate(-50%, -40%);
+		transform: translate(-50%, -35%);
 		overflow: hidden;
 		
 		.close-mask {

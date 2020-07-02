@@ -82,13 +82,16 @@
 			}
 		},
 		{
-		            "path" : "pages/live/live",
-		            "style" : {
-						"navigationBarTitleText": "直播",
-						"navigationBarBackgroundColor": "#e93323",
-						"navigationBarTextStyle": "#fff"
-					}
-		        },
+		    "path" : "pages/live/live",
+		    "style" : {
+				"navigationBarTitleText": "直播",
+				"navigationBarBackgroundColor": "#e93323",
+				"navigationBarTextStyle": "#fff",
+				"usingComponents": {
+					// "subscribe": "plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id="
+				}
+			}
+		 },
 		{
 				            "path" : "pages/index/Header",
 				            "style" : {}
