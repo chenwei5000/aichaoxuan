@@ -240,7 +240,7 @@
 	// #ifdef MP-WEIXIN
 	import {
 		getTemlIds,
-		getLiveList
+		getLiveLists
 	} from '@/api/api.js';
 	import {
 		SUBSCRIBE_MESSAGE,
@@ -274,8 +274,8 @@
 	import {
 		silenceBindingSpread
 	} from '@/utils';
-	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	
+	// import uniPopup from "@/components/uni-popup/uni-popup"
 	import Header from './Header.vue'
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
@@ -535,9 +535,9 @@
 			
 			// 获取高度
 			headerHeight(num, num1) {
-				console.log(num)
 				this.searchH = num
 				this.prodeuctTop = num1
+				console.log(num1)
 			},
 			
 			// 打开面板
@@ -621,8 +621,8 @@
 			},
 			// 直播
 			getLiveList: function() {
-				getLiveList(1, 20).then(res => {
-					this.liveList = res.data
+				getLiveLists(1, 20).then(res => {
+					this.liveList = res.data.live_list
 				}).catch(res => {
 
 				})

@@ -352,7 +352,6 @@ import {
  		if (sp === undefined) sp = [];
  		for (var i = 0; i < list.length; i++) {
  			sp.push(list[i]);
-			console.log((list[i]))
  		}
  		return sp;
  	},

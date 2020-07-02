@@ -1,5 +1,6 @@
 import request from "@/utils/request.js";
 import request_new from "@/utils/request_new.js";
+import store from '../store';
 /**
  * 公共接口 ，优惠券接口 , 行业此讯 , 手机号码注册
  * 
@@ -86,4 +87,19 @@ export function getCity(id) {
  */
 export function getLiveList(page,limit) {
   return request.get('wechat/live', { page, limit}, { noAuth: true });
+}
+
+
+/*
+ * 获取首页推荐直播列表
+*/
+export function getLiveLists(page,limit) {
+  return request_new.get('Home.ListRecommendLive', { page, limit}, { noAuth: true });
+}
+
+/*
+ * 获取直播列表页直播间列表 直播中
+*/
+export async function get_Lives(type, page,limit) {
+  return request_new.get('Live.ListLive', { type, page, limit}, { noAuth: true });
 }
