@@ -5,12 +5,17 @@
 			:shopInfo="shopName"
 			:config="headerConfig" 
 			@searchHeigth="headerHeight" 
-			@changeTab="changeTab"
+			@hasTab="changeTab"
 			@openMask="openMask">
 		</Header>
 		
 		<!-- 2.0 首页展示 -->
-		<view class="page_content" :style="'position: relative; top: '+ scrollHeight +'px;'" v-if="navIndex == 0">
+		<!-- #ifdef H5 -->
+			<view class="page_content" :style="'position: relative; top: '+ scrollHeight +'px;'" v-if="navIndex == 0">
+		<!-- #endif -->
+		<!-- #ifdef MP -->
+			<view class="page_content" :style="'padding-top: '+ prodeuctTop +'px !important;'" v-if="navIndex == 0">
+		<!-- #endif -->
 			<view class="swiper">
 				<swiper 
 					indicator-dots="true" 
@@ -172,7 +177,7 @@
 			</view>
 		</view>
 		<!-- 分类页 -->
-		<view class="productList" v-if="navIndex>0" :style="'margin-top:'+prodeuctTop+'px'">
+		<view class="productList" v-if="navIndex>0" :style="'padding-top: '+ prodeuctTop +'px;'">
 			<block v-if="sortProduct.length>0">
 				<view class='list acea-row row-between-wrapper' :class='is_switch==true?"":"on"'>
 					<view class='item' :class='is_switch==true?"":"on"' hover-class='none' v-for="(item,index) in sortProduct" :key="index"
@@ -355,7 +360,6 @@
 				tempArr: [], //精品推荐临时数组
 				shopName: {} ,//首页title
 				scrollHeight: 0,
-				
 				// Header 配置
 				headerConfig: {
 					navTop: [],
@@ -414,7 +418,9 @@
 						that.hostProduct = []
 						this.get_host_product()
 					}
-					let list = res.data;
+					
+					// 修改，无 2 级分类，直接切换了内容
+					let list = res.data.list;
 					let productList = that.$util.SplitArray(list, that.sortProduct);
 					let loadend = list.length < that.where.limit;
 					that.loadend = loadend;
@@ -501,23 +507,14 @@
 					if (e.index == 0) {
 						this.navIndex = e.index
 					} else {
-						// #ifdef MP
-						setTimeout(res => {
-							this.navH = app.globalData.navHeight;
-							let info = uni.createSelectorQuery().select(".header");
-							info.boundingClientRect(function(data) {
-								self.prodeuctTop = data ? data.height : 0
-							}).exec()
-						}, 300)
-						// #endif
 						// #ifdef H5
 						self.prodeuctTop = 18
 						// #endif
 						this.navIndex = e.index
-						if (this.navTop[e.index].children.length > 0) {
-							this.where.sid = this.navTop[e.index].children[0].id
+						if (this.headerConfig.navTop[e.index].children.length > 0) {
+							this.where.sid = this.headerConfig.navTop[e.index].children[0].id
 						} else {
-							this.where.sid = this.navTop[e.index].id
+							this.where.sid = this.headerConfig.navTop[e.index].id
 						}
 						this.loadend = false
 						this.loading = false
@@ -527,7 +524,7 @@
 					}
 				} else {
 					this.navIndex = e.parentIndex
-					this.where.sid = this.navTop[e.parentIndex].children[e.childIndex].id
+					this.where.sid = this.headerConfig.navTop[e.parentIndex].children[e.childIndex].id
 					this.loadend = false
 					this.loading = false
 					this.where.page = 1
@@ -537,8 +534,9 @@
 			},
 			
 			// 获取高度
-			headerHeight(num) {
+			headerHeight(num, num1) {
 				this.searchH = num
+				this.prodeuctTop = num1
 			},
 			
 			// 打开面板
@@ -783,14 +781,10 @@
 		}
 
 		.page_content {
-			/* #ifdef MP */
-			padding-top: 346rpx !important;
-			/* #endif */
 			
 			/* #ifdef H5 */
 			padding-top: 10rpx;
 			/* #endif */
-
 			
 
 			.nav {

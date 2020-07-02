@@ -33,21 +33,24 @@
 			</view>
 			
 				<!-- 1.3 H5 页面导航 -->
-				<tabNav 
-					v-if="deviveType === 'H5'" 
-					class="tabNav" 
-					:class="{ 'fixed': config.isFixed }" 
-					:tabTitle="config.navTop" 
-					@changeTab="(e) => { $emit('changeTab', e) }" 
-					@emChildTab='emChildTab'
-					@childTab='childTab'>
-				</tabNav>
-				<tabNav 
-					v-else 
-					class="tabNav" 
-					:tabTitle="config.navTop" 
-					@changeTab="(e) => { $emit('changeTab', e) }" >
-				</tabNav>
+				<!-- #ifdef H5 -->
+					<tabNav
+						class="tabNav" 
+						:class="{ 'fixed': config.isFixed }" 
+						:tabTitle="config.navTop" 
+						@changeTab="e => { changetabName(e) }" 
+						@emChildTab='emChildTab'
+						@childTab='childTab'>
+					</tabNav>
+				<!-- #endif -->
+				
+				<!-- #ifdef MP -->
+					<tabNav
+						class="tabNav" 
+						:tabTitle="config.navTop" 
+						@changeTab="e => { changetabName(e) }" >
+					</tabNav>
+				<!-- #endif -->
 			 </view>
 		</template>
 		
@@ -63,6 +66,7 @@
 </template>
 
 <script>
+	let app = getApp()
 	// 获取手机系统信息的高度
 	var statusBarHeight = uni.getSystemInfoSync().statusBarHeight + 'px';
 	import tabNav from '@/components/tabNav.vue'
@@ -88,23 +92,11 @@
 					type: 'H5',
 					statusBarHeight: statusBarHeight
 				},
-				deviveType: 'H5',
 				scrollHeight: 0
 			}
 		},
-		onLoad() {
-			let self = this
-			
-			// #ifdef MP
-			// 获取小程序头部高度
-			this.navH = app.globalData.navHeight;
-			let info = uni.createSelectorQuery().select(".header");
-			info.boundingClientRect(function(data) {
-				self.marTop = data ? data.height : 0
-			}).exec()
-			// #endif
-		},
 		mounted() {
+			
 			let self = this
 			// #ifdef H5
 			// 获取H5 搜索框高度
@@ -121,10 +113,24 @@
 			// #endif
 			
 			this.transforHeight()
+			
 		},
 		methods: {
 			transforHeight() {
-				this.$emit('searchHeigth', this.searchH)
+				const _this = this
+				// #ifdef MP
+				// 因为组件被封装，获取不到高度了
+				setTimeout(res => {
+					this.navH = app.globalData.navHeight;
+					let info = uni.createSelectorQuery().in(this).select(".header");
+					info.boundingClientRect(function(data) {
+						_this.$emit('searchHeigth', this.searchH, data ? data.height + 5 : 0)
+					}).exec()
+				}, 300)
+				// #endif
+			},
+			changetabName(e) {
+				this.$emit('hasTab', e)
 			}
 		}
 	}
@@ -239,7 +245,9 @@
 		top: 0;
 		
 		.serch-wrapper {
-			padding: 10rpx 32rpx;
+			height: 86rpx;
+			line-height: 86rpx;
+			padding: 12rpx 32rpx;
 			.input {
 				width: 342rpx;
 				margin-left: -5px;
