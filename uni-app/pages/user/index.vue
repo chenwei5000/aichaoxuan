@@ -102,7 +102,7 @@
 					},
 					{
 						img: '/static/images/order4.png',
-						title: '待评价',
+						title: '已完成',
 						url: '/pages/users/order_list/index?status=40'
 					},
 					{
