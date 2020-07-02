@@ -1,12 +1,13 @@
 
 <script>
+	// #ifdef MP
+	let livePlayer = requirePlugin('live-player-plugin');
+	// #endif
+
 	import { checkLogin } from "./libs/login";
 	import { HTTP_REQUEST_URL } from './config/app';
 	import Cache from './utils/cache'
 	import { SHOP_KEY } from './config/cache';
-	// #ifdef MP
-	let livePlayer = requirePlugin('live-player-plugin');
-	// #endif
 	export default {
 		globalData: {
 			spid: 0,
