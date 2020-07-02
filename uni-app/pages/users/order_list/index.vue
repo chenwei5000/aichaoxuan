@@ -6,19 +6,19 @@
 				</view>
 			</view>
 			<view class='nav acea-row row-around'>
-				<view class='item' :class='orderStatus==0 ? "on": ""' @click="statusClick(10)">
+				<view class='item' :class='orderStatus==10 ? "on": ""' @click="statusClick(10)">
 					<view>待付款</view>
 					<view class='num'>{{orderData.unpaid_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==1 ? "on": ""' @click="statusClick(20)">
+				<view class='item' :class='orderStatus==20 ? "on": ""' @click="statusClick(20)">
 					<view>待发货</view>
 					<view class='num'>{{orderData.unshipped_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==2 ? "on": ""' @click="statusClick(30)">
+				<view class='item' :class='orderStatus==30 ? "on": ""' @click="statusClick(30)">
 					<view>待收货</view>
 					<view class='num '>{{orderData.received_count || 0}}</view>
 				</view>
-				<view class='item' :class='orderStatus==3 ? "on": ""' @click="statusClick(40)">
+				<view class='item' :class='orderStatus==40 ? "on": ""' @click="statusClick(40)">
 					<view>已完成</view>
 					<view class='num'>{{orderData.complete_count || 0}}</view>
 				</view>

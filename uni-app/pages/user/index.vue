@@ -15,8 +15,6 @@
 						<view class="name" v-if="userInfo.uid">
 							{{userInfo.nickname}}
 						</view>
-						<view class="num" v-if="userInfo.phone" >{{userInfo.phone}}
-						</view>
 						<!-- <view class="phone" v-if="!userInfo.phone && isLogin" @tap="bindPhone">绑定手机号</view> -->
 					</view>
 				</view>
@@ -102,7 +100,7 @@
 					},
 					{
 						img: '/static/images/order4.png',
-						title: '待评价',
+						title: '已完成',
 						url: '/pages/users/order_list/index?status=40'
 					},
 					{
@@ -260,6 +258,7 @@
 						width: 120rpx;
 						height: 120rpx;
 						border-radius: 50%;
+						margin-left: 100rpx;
 					}
 
 					.info {
@@ -267,8 +266,9 @@
 						display: flex;
 						flex-direction: column;
 						justify-content: space-between;
-						margin-left: 20rpx;
-						padding: 15rpx 0;
+						margin-left: 10rpx;
+						margin-top: 25rpx;
+						padding: 15rpx 40rpx;
 
 						.name {
 							display: flex;
