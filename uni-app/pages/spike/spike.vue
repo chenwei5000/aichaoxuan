@@ -81,6 +81,11 @@
 				var t = this;
 				t.type = parseInt(index)+1;
 				t.getFlashSale();
+			},
+			detail(id){
+				uni.navigateTo({
+					url:'../goods_details/index?id='+id
+				})
 			}
 		}
 	}
