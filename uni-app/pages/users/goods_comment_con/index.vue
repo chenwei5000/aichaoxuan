@@ -27,7 +27,7 @@
 		               <image :src='item'></image>
 		               <text class='iconfont icon-guanbi1 font-color' @click='DelPic(index)'></text>
 		             </view>
-		             <view class='pictrue acea-row row-center-wrapper row-column' @click='uploadpic' v-if="pics.length < 8">
+		             <view class='pictrue acea-row row-center-wrapper row-column' @click.stop='uploadpic' v-if="pics.length < 8">
 		               <text class='iconfont icon-icon25201'></text>
 		               <view>上传图片</view>
 		             </view>
@@ -48,6 +48,7 @@
 	import {
 		toLogin
 	} from '@/libs/login.js';
+	import store from '@/store';
 	import {
 		mapGetters
 	} from "vuex";
@@ -63,6 +64,7 @@
 		data() {
 			return {
 				 pics:[],
+				 files:[],
 				   scoreList: [
 				         {
 				           name: "商品质量",
@@ -129,6 +131,8 @@
 			    let that = this, pic = this.pics[index];
 			    that.pics.splice(index, 1);
 				that.$set(that,'pics',that.pics);
+				that.files.splice(index, 1);
+				that.$set(that,'files',that.files);
 			  },
 			
 			  /**
@@ -137,7 +141,49 @@
 			  */
 			  uploadpic: function () {
 			    let that = this;
-				console.log('地方');
+				let nowtoken = store.state.app.token;
+				let shop_key = encodeURIComponent(store.state.app.shopKey);
+				let url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
+				console.log(url);
+				uni.chooseImage({
+					count: 1,
+					sizeType: ['compressed', 'original'],
+					sourceType: ['album', 'camera'],
+					success: function(res) {
+						console.log(res);
+						//res.tempFilePaths[0]
+						that.pics.push(res.tempFilePaths[0]);
+						uni.showLoading({
+						    title: "上传中"
+						});
+						uni.uploadFile({
+						    url: url,
+						    filePath: res.tempFilePaths[0],
+						    name: 'review',
+							formData: {
+							    biz_type:'review',
+							},
+							success: function(e) {
+								console.log(e);
+								e = JSON.parse(e.data);
+								that.files.push(e.data.image);
+								console.log(that.files)
+								//that.$set(that,'pics',that.pics);
+								console.log(e);
+								uni.hideLoading();
+								uni.showToast({
+									title: e.msg
+								});
+						    },
+						    complete: function(e) {
+								console.log(e);
+						    }
+						});
+					},
+					fail: function(err) {
+						console.log(err);
+					}
+				});
 			   //  that.$util.uploadImageOne('upload/image', function (res) {
 			   //    console.log(res);
 			   //    that.pics.push(res.data.url);
@@ -153,7 +199,7 @@
 			      product_score = that.scoreList[0].index + 1 === 0 ? "" : that.scoreList[0].index + 1;
 			    if (!value.content) return that.$util.Tips({ title:'请填写你对宝贝的心得！'});
 			    value.score = product_score;
-			    value.pics=that.pics;
+			    value.pics=that.files;
 			    value.og_id = that.og_id;
 			    uni.showLoading({ title: "正在发布评论……" });
 			    orderComment(value).then(res=>{
