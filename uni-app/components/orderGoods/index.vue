@@ -17,8 +17,8 @@
 					<view class='money font-color' v-else>￥{{item.productInfo.price}}</view>
 					<view class='evaluate' v-if='evaluate>=1 && evaluate<3' @click.stop="refund(orderId)">退款</view>
 					<view class='evaluate' v-if='evaluate>=3' @click.stop="refund(orderId)">退货</view>
-					<view class='evaluate' style="margin-right: 150rpx;" v-if='item.is_reply==0 && evaluate>=3' @click.stop="evaluateTap(item.unique,orderId)">评价</view>
-					<view class='evaluate' style="margin-right: 150rpx;" v-else-if="item.is_reply==1 && evaluate>=3" @click.stop="comment(item.productInfo.id)">已评价</view>
+					<view class='evaluate' style="margin-right: 150rpx;" v-if='item.productInfo.review_state ==0 && evaluate>=3' @click.stop="evaluateTap(item.unique,orderId)">评价</view>
+					<view class='evaluate' style="margin-right: 150rpx;" v-else-if="item.productInfo.review_state ==1 && evaluate>=3" @click.stop="comment(item.productInfo.id)">已评价</view>
 				</view>
 			</view>
 		</view>
