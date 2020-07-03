@@ -97,11 +97,7 @@
 			    this.getOrderInfo();
 			    this.getRefundReason();
 			  },
-			  goRefundList:function(){
-			  	uni.navigateTo({
-			  		url: '/pages/users/order_list/index',
-			  	});
-			  },
+
 			  /**
 			     * 获取订单详情
 			     * 
@@ -167,8 +163,10 @@
 				  	header : {'content-type':'application/x-www-form-urlencoded'},
 				      success: function(e) {
 				  		console.log(e);
-				  		if (e.data.code == 200) {
-							goRefundList();
+				  		if (e.data.status == 200) {
+							uni.navigateTo({
+								url: '/pages/users/order_list/index',
+							});
 				  			//return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
 				  		} else {
 				  			uni.showToast({

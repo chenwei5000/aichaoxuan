@@ -154,6 +154,7 @@
 					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
 			      });
 			    },
+
 			    /**
 			     * 申请退货
 			    */
@@ -178,8 +179,11 @@
 				  	header : {'content-type':'application/x-www-form-urlencoded'},
 				      success: function(e) {
 				  		console.log(e);
-				  		if (e.data.code == 200) {
-				  			return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
+				  		if (e.data.status == 200) {
+				  			uni.navigateTo({
+				  				url: '/pages/users/order_list/index',
+				  			});
+							//return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
 				  		} else {
 				  			uni.showToast({
 				  				title: e.data.msg,
