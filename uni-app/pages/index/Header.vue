@@ -38,7 +38,7 @@
 						class="tabNav" 
 						:class="{ 'fixed': config.isFixed }" 
 						:tabTitle="config.navTop" 
-						@changeTab="e => { changetabName(e) }" 
+						@changeTab="changetabName" 
 						@emChildTab='emChildTab'
 						@childTab='childTab'>
 					</tabNav>

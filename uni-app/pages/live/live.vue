@@ -15,7 +15,7 @@
 		<view class="live-content">
 			<view class="lives-list" v-for="item in liveList" :key="item.id">
 				
-				<navigator :url="liveUrl + item.roomid + '&custom_params=' + item.status">
+				<navigator :url="liveUrl + item.roomid + '&custom_params=' + LiveCustomParams">
 					<view class="live-item">
 						<view class="item-left">
 							<view class="tips">
@@ -66,10 +66,8 @@
 
 <script>
 	import { get_Lives } from '@/api/api.js'
-	
-	import {
-		mapGetters
-	} from "vuex";
+	import store from '@/store'
+	import { mapGetters } from "vuex";
 	import tabNav from '@/components/tabNav.vue'
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
@@ -90,13 +88,21 @@
 				],
 				// 直播间数据
 				liveList: [],
-				num: 1
+				num: 1,
+				LiveCustomParams: ''
 			}
 		},
 		onLoad(){
+			// #ifdef MP
+			let shop_key="";
+			if (store.state.app.shopKey) {
+			  shop_key = encodeURIComponent(store.state.app.shopKey);
+			}else{
+				shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
+			}
+			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
+			// #endif
 			this.getLivesHosue(this.num)
-			// console.log(this.navTop, 111)
-			
 		},
 		mounted() {
 		},
