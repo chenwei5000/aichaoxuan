@@ -53,6 +53,13 @@ export function getAfterSaleList2(data){
   return request_new.post('Order.AfterSaleList', data);
 }
 /**
+ * 售后详情
+ * @param string unique 
+*/
+export function getAfterSaleDetail(data){
+  return request_new.get('Order.AfterSaleDetails', data);
+}
+/**
  * 订单产品信息
  * @param string unique 
 */
