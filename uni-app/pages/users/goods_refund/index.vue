@@ -34,22 +34,6 @@
 		          <view>备注说明</view>
 		          <textarea placeholder='填写备注信息，100字以内' class='num' name="refund_reason_wap_explain" placeholder-class='填写备注信息，100字以内'></textarea>
 		        </view>
-		        <view class='item acea-row row-between'>
-		          <view class='title acea-row row-between-wrapper'>
-		              <view>上传凭证</view>
-		              <view class='tip'>( 最多可上传3张 )</view>
-		          </view>
-		          <view class='upload acea-row row-middle'>
-		              <view class='pictrue' v-for="(item,index) in refund_reason_wap_img" :key="index">
-		                <image :src='item'></image>
-		                <view class='iconfont icon-guanbi1 font-color' @tap='DelPic(index)'></view>
-		              </view>
-		              <view class='pictrue acea-row row-center-wrapper row-column' @tap='uploadpic' v-if="refund_reason_wap_img.length < 3">
-		                <text class='iconfont icon-icon25201'></text>
-		                <view>上传凭证</view>
-		              </view>
-		          </view>
-		        </view>
 		    </view>
 		    <button class='returnBnt bg-color' form-type="submit">申请退款</button>
 		  </view>
