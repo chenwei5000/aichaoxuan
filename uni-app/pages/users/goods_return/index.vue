@@ -149,7 +149,7 @@
 			    */
 			    uploadpic:function(){
 			      let that=this;
-			      this.$util.uploadImageOne('upload/image',function(res){
+			      this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
 			        that.refund_reason_wap_img.push(res.data.url);
 					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
 			      });
@@ -173,7 +173,7 @@
 				  		money:t.goodsDetail.most_return_money,
 				  		text:t.RefundArray[t.index] || '',
 				  		remark:value.refund_reason_wap_explain,
-				  		aftersale:t.refund_reason_wap_img.join(',')
+				  		refund_reason_wap_img:t.refund_reason_wap_img.join(',')
 				  	},
 				  	dataType:'json',
 				  	header : {'content-type':'application/x-www-form-urlencoded'},

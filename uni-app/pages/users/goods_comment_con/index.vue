@@ -166,7 +166,7 @@
 							success: function(e) {
 								console.log(e);
 								e = JSON.parse(e.data);
-								that.files.push(e.data.image);
+								that.files.push(e.data.name);
 								console.log(that.files)
 								//that.$set(that,'pics',that.pics);
 								console.log(e);
