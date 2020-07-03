@@ -377,11 +377,7 @@
 			
 			// #ifdef MP
 			let shop_key="";
-			if (store.state.app.shopKey) {
-			  shop_key = encodeURIComponent(store.state.app.shopKey);
-			}else{
-				shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
-			}
+			shop_key = getShopKey();
 			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			this.getLiveList()
 			// #endif

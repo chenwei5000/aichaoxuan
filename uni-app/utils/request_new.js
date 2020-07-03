@@ -1,5 +1,6 @@
 import { HTTP_REQUEST_URL_NEW, HEADER, TOKENNAME} from '@/config/app';
 import { toLogin, checkLogin } from '../libs/login';
+import { getShopKey } from '../libs/public.js';
 import store from '../store';
 import Cache from '../utils/cache'
 import { SHOP_KEY } from '../config/cache';
@@ -22,11 +23,9 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
   if (store.state.app.token) 
     nowtoken= store.state.app.token;
 
-  if (store.state.app.shopKey) {
-    shop_key = encodeURIComponent(store.state.app.shopKey);
-  }else{
-	shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
-  }
+  shop_key = getShopKey();
+  //console.log("get shop_key from cache:",shop_key);
+  
   return new Promise((reslove, reject) => {
     uni.request({
       url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,

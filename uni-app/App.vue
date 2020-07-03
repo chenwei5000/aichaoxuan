@@ -22,20 +22,8 @@
 			let that = this;
 			// #ifdef MP
 			let urlShopKey = option.query.shop_key;
-			if (urlShopKey !== undefined && urlShopKey.length>10) {
-				var LastShopKey = Cache.get(SHOP_KEY);
-				if (LastShopKey !== urlShopKey ) {
-					Cache.set(SHOP_KEY, urlShopKey || 0);
-				} 
-			}else
-			{
-				var LastShopKey = Cache.get(SHOP_KEY);
-				// 既没有参数，也没有缓存，则默认shop_key
-				if(LastShopKey === undefined)
-				{
-					Cache.set(SHOP_KEY, '5pSMIG2RFGPfzcz5KeCUhQ==' || 0);
-				}
-			}
+			setShopKey(urlShopKey);
+			
 			 if (HTTP_REQUEST_URL==''){
 			      console.error("请配置根目录下的config.js文件中的 'HTTP_REQUEST_URL'\n\n请修改开发者工具中【详情】->【AppID】改为自己的Appid\n\n请前往后台【小程序】->【小程序配置】填写自己的 appId and AppSecret");
 			      return false;

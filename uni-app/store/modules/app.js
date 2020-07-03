@@ -32,6 +32,9 @@ const mutations = {
 	UPDATE_LOGIN(state, token) {
 		state.token = token;
 	},
+	UPDATE_SHOP_KEY(state, key) {
+		state.shopKey= key;
+	},
 	LOGOUT(state) {
 		state.token = undefined;
 		state.uid = undefined
