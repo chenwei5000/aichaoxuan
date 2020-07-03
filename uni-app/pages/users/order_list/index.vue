@@ -33,11 +33,10 @@
 								<text class="sign cart-color acea-row row-center-wrapper" v-else-if="item.seckill_id != 0">秒杀</text>
 								<view>{{item._add_time}}</view>
 							</view>
-							<view v-if="item._status._type == 0" class='font-color'>待付款</view>
-							<view v-else-if="item._status._type == 1&& item.shipping_type==1" class='font-color'>待发货</view>
-							<view v-else-if="item._status._type == 2 && item.shipping_type==1" class='font-color'>待收货</view>
-							<view v-else-if="item._status._type == 3 && item.shipping_type==1" class='font-color'>待评价</view>
-							<view v-else-if="item._status._type == 4 && item.shipping_type==1" class='font-color'>已完成</view>
+							<view v-if="orderStatus == 10" class='font-color'>待付款</view>
+							<view v-else-if="orderStatus == 20 && item.shipping_type==1" class='font-color'>待发货</view>
+							<view v-else-if="orderStatus == 30 && item.shipping_type==1" class='font-color'>待收货</view>
+							<view v-else-if="orderStatus == 40 && item.shipping_type==1" class='font-color'>已完成</view>
 							<view v-else-if="item.shipping_type==2" class='font-color'>待核销</view>
 						</view>
 						<view class='item-info acea-row row-between row-top' v-for="(goods,index) in item.cartInfo" :key="index">
@@ -52,11 +51,11 @@
 									<view>x{{goods.cart_num}}</view>
 								</view>
 							</view>
-							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="item._status._type > 0">
-								<text class="btn cancel" v-if="goods.productInfo.review_state == 0" @tap="evaluateTap('',item.id)">去评论</text>
-								<text class="btn cancel" v-if="goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
-								<text class="btn cancel" v-if="orderStatus==30 || orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
-								<text class="btn cancel" v-else @tap="refund(goods.productInfo.id)">申请退款</text>
+							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="orderStatus > 0">
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap('',item.id)">去评论</text>
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
+								<text class="btn cancel" v-if="orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
+								<text class="btn cancel" v-if="orderStatus==20"  @tap="refund(goods.productInfo.id)">申请退款</text>
 							</view>
 						</view>
 						<view class='totalPrice'>共{{item.cartInfo.length || 0}}件商品，总金额
@@ -64,14 +63,14 @@
 						</view>
 					</view>
 					<view class='bottom acea-row row-right row-middle'>
-						<view class='bnt cancelBnt' v-if="item._status._type==0 || item._status._type == 9" @click='cancelOrder(index,item.id)'>取消订单</view>
-						<view class='bnt bg-color' v-if="item._status._type == 0" @click='goPay(item.pay_price,item.id,item.pay_code)'>立即付款</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 1 || item._status._type == 9" @click='goOrderDetails(item.id)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 2 && item.delivery_type" @click='goOrderDetails(item.id)'>查看详情</view>
-						<!-- <view class='bnt bg-color' v-else-if="item._status._type == 3" @click='goOrderDetails(item.id)'>去评价</view> -->
-						<view class='bnt bg-color' v-else-if="item.seckill_id < 1 && item.bargain_id < 1 && item.combination_id < 1 && item._status._type == 4"
+						<view class='bnt cancelBnt' v-if="orderStatus==0 || orderStatus == 9" @click='cancelOrder(index,item.id)'>取消订单</view>
+						<view class='bnt bg-color' v-if="orderStatus == 0" @click='goPay(item.pay_price,item.id,item.pay_code)'>立即付款</view>
+						<view class='bnt bg-color' v-else-if="orderStatus == 1 || orderStatus == 9" @click='goOrderDetails(item.id)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="orderStatus == 2 && item.delivery_type" @click='goOrderDetails(item.id)'>查看详情</view>
+						<!-- <view class='bnt bg-color' v-else-if="orderStatus == 3" @click='goOrderDetails(item.id)'>去评价</view> -->
+						<view class='bnt bg-color' v-else-if="item.seckill_id < 1 && item.bargain_id < 1 && item.combination_id < 1 && orderStatus == 4"
 						 @click='goOrderDetails(item.id)'>再次购买</view>
-						<view class='bnt cancelBnt' v-if="item._status._type == 4" @click='delOrder(item.id,index)'>删除订单</view>
+						<view class='bnt cancelBnt' v-if="orderStatus == 4" @click='delOrder(item.id,index)'>删除订单</view>
 					</view>
 				</view>
 			</view>
