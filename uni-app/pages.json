@@ -159,6 +159,12 @@
 					}
 				},
 				{
+					"path": "goods_refund/index",
+					"style": {
+						"navigationBarTitleText": "申请退款"
+					}
+				},
+				{
 					"path": "goods_return/index",
 					"style": {
 						"navigationBarTitleText": "申请退货"
