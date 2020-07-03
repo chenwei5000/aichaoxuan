@@ -52,7 +52,7 @@
 								</view>
 							</view>
 							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="orderStatus > 0">
-								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap('',item.id)">去评论</text>
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap(goods.productInfo.id,item.id)">去评论</text>
 								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
 								<text class="btn cancel" v-if="orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
 								<text class="btn cancel" v-if="orderStatus==20"  @tap="refund(goods.productInfo.id)">申请退款</text>
@@ -354,9 +354,9 @@
 					that.loadTitle = "加载更多";
 				})
 			},
-			evaluateTap:function(unique,orderId){
+			evaluateTap:function(og_id,orderId){
 				uni.navigateTo({
-					url:"/pages/users/goods_comment_con/index?unique="+unique+"&uni="+orderId
+					url:"/pages/users/goods_comment_con/index?og_id="+og_id+"&orderId="+orderId
 				})
 			},
 			/**

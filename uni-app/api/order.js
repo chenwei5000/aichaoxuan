@@ -61,7 +61,7 @@ export function orderProduct(unique){
  * 
 */
 export function orderComment(data){
-  return request.post('order/comment',data);
+  return request_new.post('Review.AddReview',data);
 }
 
 /**
