@@ -270,14 +270,7 @@
 						icon: "icon-weixinzhifu",
 						value: 'weixin',
 						title: '微信快捷支付'
-					},
-					{
-						name: "余额支付",
-						icon: "icon-yuezhifu",
-						value: 'yue',
-						title: '可用余额:',
-						number: 0
-					},
+					}
 				],
 				pay_close: false,
 				pay_order_id: '',
