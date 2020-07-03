@@ -45,7 +45,13 @@ export function getOrderList(data){
   //return request.get('order/list',data);
   return request_new.get('Order.ListOrder',data);
 }
-
+/**
+ * 售后列表
+ * @param string unique 
+*/
+export function getAfterSaleList2(data){
+  return request_new.post('Order.AfterSaleList', data);
+}
 /**
  * 订单产品信息
  * @param string unique 
