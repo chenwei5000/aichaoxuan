@@ -39,8 +39,8 @@
 			<block v-if="liveList.length>0">
 			<view style="width: 750rpx;background-color: #fff;margin-top: 20rpx;">
 				<view style="width: 718rpx;height: 70rpx;display: flex;align-items: center;justify-content: space-between;">
-					<view style="width: 320rpx;height: 70rpx;display: flex;align-items: center;justify-content: center;background-image: url(../../static/images/livebg.png);background-size: 320rpx 70rpx;">
-						<text style="font-size:28rpx;font-weight:500;color:rgba(255,255,255,1);">好货直播live</text>
+					<view style="width: 320rpx;height: 70rpx;">
+						<image src="../../static/images/lives.png" style="width: 100%; height: 100%;" mode=""></image>
 					</view>
 					<navigator url="../live/live">
 					<view style="height: 70rpx;display: flex;align-items: center;">
@@ -239,6 +239,9 @@
 		follow
 	} from '@/api/public.js';
 	// #endif
+	import { 
+		getShopKey
+	} from '../../libs/public.js'
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
 	import { goShopDetail } from '@/libs/order.js'
