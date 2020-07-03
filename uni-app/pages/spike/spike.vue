@@ -1,14 +1,7 @@
 <template>
 	<view>
 		<view class="lives-head">
-			<tabNav 
-				class="tabNav" 
-				:class="{'fixed':isFixed}" 
-				:tabTitle="navTop" 
-				@changeTab='changeTab' 
-				@emChildTab='emChildTab'
-				@childTab='childTab'>
-			</tabNav>
+			<wuc-tab :tab-list="tabList" :tabCur.sync="TabCur" :tabClass="tabClass" :selectClass="selectClass" :textFlex="true" @change="tabChange"></wuc-tab>
 		</view>
 		
 		
@@ -21,13 +14,14 @@
 				></image>
 				<text class="pname" @tap="detail(item.spu_id)">{{ item.goods_name }}</text>
 				<view class="price-box">
-					<view class="fd-r" style="margin-top: 10rpx;">
+					<view style="margin-top: 10rpx;display: flex;justify-content: space-between;">
 						<view class="ai-c">
 							<text class="price">秒 ¥{{ item.flash_sale_price }}</text>
 						</view>
-						<view class="ai-c" style="margin-left: 16rpx;" @tap="detail(item.spu_id)">
-							
-							
+						<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.spu_id)">
+							<view class="bnt">
+								<text>了解详情</text>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -42,24 +36,19 @@
 	import { getFlashSale } from '@/api/api.js'
 	import store from '@/store'
 	import { mapGetters } from "vuex";
-	import tabNav from '@/components/tabNav.vue'
+	import WucTab from '@/components/wuc-tab/wuc-tab.vue';
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
 		components: {
-			tabNav
+			WucTab
 		},
 		data() {
 			return {
-				isFixed: false,
-				navTop:[
-					{cate_name: "秒杀中",children: [],icon: "",id: "1",pic: "",pid: "0"
-					},
-					{cate_name: "预热中",children: [],icon: "",id: "2",pic: "",pid: "0"
-					}
-				],
+				TabCur: 0,
+				tabList: [{ name: '秒杀中' }, { name: '预热中' }],
 				data:{},
 				list:{},
-				num: 1,
+				type: 1,
 			}
 		},
 		onLoad(){
@@ -76,9 +65,9 @@
 		mounted() {
 		},
 		methods: {
-			async getFlashSale() {
+			async getFlashSale(type) {
 				var t = this;
-				await getFlashSale({type:1}).then(res => {
+				await getFlashSale({type:t.type}).then(res => {
 					console.log(res.data)
 					t.list = res.data[0].lists
 				}).catch(res => {
@@ -87,9 +76,11 @@
 				
 				console.log(t.list, 1111)
 			},
-			changeTab(e) {
-				this.num = e.index + 1
-				this.getLivesHosue(this.num)
+			tabChange(index) {
+			    this.TabCur = index;
+				var t = this;
+				t.type = parseInt(index)+1;
+				t.getFlashSale();
 			}
 		}
 	}
@@ -103,6 +94,13 @@
 		width: 750rpx;
 		height: 96rpx;
 		background-color: #e93323;
+	}
+	.tabClass{
+		color: #FFFFFF;
+	}
+	.selectClass{
+		color: #FFFFFF;
+		font-weight: 600;
 	}
 	.list-box{
 		width: 750rpx;
@@ -135,6 +133,25 @@
 		font-weight:400;
 		color:rgba(85,85,85,1);
 		line-height:40rpx;
+	}
+	
+	.bnt {
+		width: 176rpx;
+		height: 60rpx;
+		text-align: center;
+		line-height: 60rpx;
+		border-radius: 50rpx;
+		color: rgba(221,25,34,1);
+		border: 1rpx solid rgba(221,25,34,1);
+		font-size: 27rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.bnt text{
+		font-size: 28rpx;
+		color: rgba(221,25,34,1);
 	}
 	
 	.jc-c{
