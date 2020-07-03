@@ -16,14 +16,12 @@
 						<text class="pname" @tap="detail(item.sku_id)">{{ item.goods_name }}</text>
 					</view>
 					<view class="price-box">
-						<view class="ai-c">
-							<text class="price" :style="item.time_text ? 'color: #27B232' : ''">
-								秒 ¥{{ item.flash_sale_price }}
-							</text>
-						</view>
+						
 						<view style="margin-top: 10rpx;display: flex;justify-content: space-between;">
 							<view class="ai-c">
-								<text class="oprice">零 ¥{{ item.retail_price }}</text>
+								<text class="price" :style="item.time_text ? 'color: #27B232' : ''">
+									秒 ¥{{ item.flash_sale_price }}
+								</text>
 							</view>
 							<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.sku_id)">
 								<view class="bnt">
