@@ -150,9 +150,9 @@
 						<view class="text-info">
 							<view class="title line1">{{item.store_name}}</view>
 							<view class="price">
-								秒￥{{item.price}}
-								<text style="margin-left: 16rpx;">零￥{{item.price}}</text>
-								<view class="txt" v-if="item.checkCoupon">券</view>
+								￥{{item.price}}
+								<!-- <text style="margin-left: 16rpx;">零￥{{item.price}}</text> -->
+								<!-- <view class="txt" v-if="item.checkCoupon">券</view> -->
 							</view>
 						</view>
 					</view>
@@ -179,12 +179,8 @@
 						</view>
 						<view class='text' :class='is_switch==true?"":"on"'>
 							<view class='name line1'>{{item.store_name}}</view>
-							<view class='money font-color' :class='is_switch==true?"":"on"'>秒 ￥<text class='num'>{{item.price}}</text></view>
+							<view class='money font-color' :class='is_switch==true?"":"on"'>￥<text class='num'>{{item.price}}</text></view>
 							<view class='vip acea-row row-between-wrapper' :class='is_switch==true?"":"on"'>
-								<view class='vip-money' v-if="item.vip_price && item.vip_price > 0">秒 ￥{{item.vip_price}}
-									<image src='../../static/images/vip.png'></image>
-								</view>
-								<view>已售{{item.sales}}件</view>
 							</view>
 						</view>
 					</view>
