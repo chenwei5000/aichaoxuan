@@ -53,7 +53,7 @@
 							</view>
 							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="orderStatus > 0">
 								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap(goods.id,item.id)">去评论</text>
-								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.review_id)">查看评论</text>
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comment(goods.productInfo.review_id)">查看评论</text>
 								<text class="btn cancel" v-if="orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
 								<text class="btn cancel" v-if="orderStatus==20"  @tap="refund(goods.productInfo.id)">申请退款</text>
 							</view>
