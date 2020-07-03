@@ -91,7 +91,7 @@
 				this.parentEmit(obj)
 			},
 			parentEmit(data){
-				this.$emit('changeTab', data);
+				this.$emit('changeTab', data)
 			}
 		}
 	}
