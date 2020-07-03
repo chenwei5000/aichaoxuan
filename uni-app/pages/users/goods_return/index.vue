@@ -74,6 +74,9 @@
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
 	// #endif
+	import store from '@/store';
+	import Cache from '@/utils/cache'
+	import { SHOP_KEY } from '@/config/cache';
 	export default {
 		components: {
 			// #ifdef MP
@@ -154,7 +157,84 @@
 					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
 			      });
 			    },
-				
+				addAfterSale(){
+					var t = this;
+					// if (t.reason == 0){
+					// 	uni.showToast({
+					// 		title: '请选择退款原因',
+					// 		icon: 'none'
+					// 	});
+					// 	return;
+					// }
+					
+					var url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
+					if (t.refund_reason_wap_img.length>0){
+					uni.showLoading({
+					    title: "上传中"
+					});
+					uni.uploadFile({
+					    url: url,
+					    files: t.refund_reason_wap_img,
+						formData: {
+						    og_id:t.og_id,
+						    apply_type:t.apply_type,
+						    money:t.money,
+						    reason:t.reason,
+						    remark:t.remark,
+						},
+						success: function(e) {
+							console.log(e);
+							e = JSON.parse(e.data);
+							console.log(e);
+							uni.hideLoading();
+							uni.showToast({
+								title: e.msg
+							});
+							setTimeout(()=>{
+								uni.reLaunch({
+									url:'index'
+								})
+							},1000)
+					    },
+					    complete: function(e) {
+							console.log(e);
+							
+					    }
+					});
+					}else{
+						uni.request({
+						    url: url,
+							method: 'POST',
+							data: {
+								og_id:t.og_id,
+								apply_type:1,
+								money:that.RefundArray[that.index] || '',
+								reason:value.refund_reason_wap_explain,
+								remark:that.RefundArray[that.index] || '',
+							},
+							dataType:'json',
+							header : {'content-type':'application/x-www-form-urlencoded'},
+						    success: function(e) {
+								console.log(e);
+								if (e.data.code == 200) {
+									uni.showToast({
+										title: e.data.msg
+									});
+									setTimeout(()=>{
+										uni.reLaunch({
+											url:'index'
+										})
+									},1000)
+								} else {
+									uni.showToast({
+										title: e.data.msg,
+										icon: 'none'
+									});
+								}
+						    }
+						});
+					}
+				},
 			    /**
 			     * 申请退货
 			    */

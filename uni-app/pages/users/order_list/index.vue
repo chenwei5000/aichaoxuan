@@ -25,7 +25,7 @@
 			</view>
 			<view class='list'>
 				<view class='item' v-for="(item,index) in orderList" :key="index">
-					<view @click='goOrderDetails(item.id)'>
+					<view>
 						<view class='title acea-row row-between-wrapper'>
 							<view class="acea-row row-middle">
 								<text class="sign cart-color acea-row row-center-wrapper" v-if="item.bargain_id != 0">砍价</text>
@@ -40,17 +40,23 @@
 							<view v-else-if="item._status._type == 4 && item.shipping_type==1" class='font-color'>已完成</view>
 							<view v-else-if="item.shipping_type==2" class='font-color'>待核销</view>
 						</view>
-						<view class='item-info acea-row row-between row-top' v-for="(item,index) in item.cartInfo" :key="index">
-							<view class='pictrue'>
-								<image :src='item.productInfo.image'></image>
+						<view class='item-info acea-row row-between row-top' v-for="(goods,index) in item.cartInfo" :key="index">
+							<view class='pictrue' @click='goOrderDetails(item.id)'>
+								<image :src='goods.productInfo.image'></image>
 							</view>
-							<view class='text acea-row row-between'>
-								<view class='name line2'>{{item.productInfo.store_name}}</view>
+							<view class='text acea-row row-between' @click='goOrderDetails(item.id)'>
+								<view class='name line2'>{{goods.productInfo.store_name}}</view>
 								<view class='money'>
-									<view v-if="item.productInfo.attrInfo">￥{{item.productInfo.attrInfo.price}}</view>
-									<view v-else>￥{{item.productInfo.price}}</view>
-									<view>x{{item.cart_num}}</view>
+									<view v-if="goods.productInfo.attrInfo">￥{{goods.productInfo.attrInfo.price}}</view>
+									<view v-else>￥{{goods.productInfo.price}}</view>
+									<view>x{{goods.cart_num}}</view>
 								</view>
+							</view>
+							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="item._status._type > 0">
+								<text class="btn cancel" v-if="goods.productInfo.review_state == 0" @tap="evaluateTap('',item.id)">去评论</text>
+								<text class="btn cancel" v-if="goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
+								<text class="btn cancel" v-if="orderStatus==30 || orderStatus==40" @tap="refund(item.id)">申请退货</text>
+								<text class="btn cancel" v-else @tap="refund(item.id)">申请退款</text>
 							</view>
 						</view>
 						<view class='totalPrice'>共{{item.cartInfo.length || 0}}件商品，总金额
@@ -62,7 +68,7 @@
 						<view class='bnt bg-color' v-if="item._status._type == 0" @click='goPay(item.pay_price,item.id,item.pay_code)'>立即付款</view>
 						<view class='bnt bg-color' v-else-if="item._status._type == 1 || item._status._type == 9" @click='goOrderDetails(item.id)'>查看详情</view>
 						<view class='bnt bg-color' v-else-if="item._status._type == 2 && item.delivery_type" @click='goOrderDetails(item.id)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="item._status._type == 3" @click='goOrderDetails(item.id)'>去评价</view>
+						<!-- <view class='bnt bg-color' v-else-if="item._status._type == 3" @click='goOrderDetails(item.id)'>去评价</view> -->
 						<view class='bnt bg-color' v-else-if="item.seckill_id < 1 && item.bargain_id < 1 && item.combination_id < 1 && item._status._type == 4"
 						 @click='goOrderDetails(item.id)'>再次购买</view>
 						<view class='bnt cancelBnt' v-if="item._status._type == 4" @click='delOrder(item.id,index)'>删除订单</view>
@@ -184,6 +190,16 @@
 				let action = opt.action || null;
 				let value = opt.value != undefined ? opt.value : null;
 				(action && this[action]) && this[action](value);
+			},
+			refund(id){
+				uni.navigateTo({
+					url: '/pages/users/goods_return/index?orderId='+id,
+				});
+			},
+			comment(id){
+				uni.navigateTo({
+					url: '/pages/users/goods_comment_list/index?product_id='+id,
+				});
 			},
 			/**
 			 * 获取用户信息
@@ -339,7 +355,11 @@
 					that.loadTitle = "加载更多";
 				})
 			},
-
+			evaluateTap:function(unique,orderId){
+				uni.navigateTo({
+					url:"/pages/users/goods_comment_con/index?unique="+unique+"&uni="+orderId
+				})
+			},
 			/**
 			 * 删除订单
 			 */
@@ -534,5 +554,21 @@
 	.noCart .pictrue image {
 		width: 100%;
 		height: 100%;
+	}
+	
+	.btn {
+		margin-left: 18rpx;
+		width: 176rpx;
+		height: 40rpx;
+		text-align: center;
+		line-height: 40rpx;
+		// border-radius: 40rpx;
+		color: #fff;
+		font-size: 28rpx;
+	}
+	
+	.btn.cancel {
+		color: #aaa;
+		border: 1rpx solid #ddd;
 	}
 </style>

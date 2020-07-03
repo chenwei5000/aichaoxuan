@@ -15,8 +15,10 @@
 					<view class='attr line1' v-if="item.productInfo.attrInfo">{{item.productInfo.attrInfo.suk}}</view>
 					<view class='money font-color' v-if="item.productInfo.attrInfo">￥{{item.productInfo.attrInfo.price}}</view>
 					<view class='money font-color' v-else>￥{{item.productInfo.price}}</view>
-					<view class='evaluate' v-if='item.is_reply==0 && evaluate==3' @click.stop="evaluateTap(item.unique,orderId)">评价</view>
-					<view class='evaluate' v-else-if="item.is_reply==1 && evaluate==3">已评价</view>
+					<view class='evaluate' v-if='evaluate>=1 && evaluate<3' @click.stop="refund(orderId)">退款</view>
+					<view class='evaluate' v-if='evaluate>=3' @click.stop="refund(orderId)">退货</view>
+					<view class='evaluate' style="margin-right: 150rpx;" v-if='item.is_reply==0 && evaluate>=3' @click.stop="evaluateTap(item.unique,orderId)">评价</view>
+					<view class='evaluate' style="margin-right: 150rpx;" v-else-if="item.is_reply==1 && evaluate>=3" @click.stop="comment(item.productInfo.id)">已评价</view>
 				</view>
 			</view>
 		</view>
@@ -64,6 +66,16 @@
 				uni.navigateTo({
 					url:"/pages/users/goods_comment_con/index?unique="+unique+"&uni="+orderId
 				})
+			},
+			refund(orderId){
+				uni.navigateTo({
+					url: '/pages/users/goods_return/index?orderId='+orderId,
+				});
+			},
+			comment(id){
+				uni.navigateTo({
+					url: '/pages/users/goods_comment_list/index?product_id='+id,
+				});
 			},
 			jumpCon:function(id){
 				if(this.jump){
