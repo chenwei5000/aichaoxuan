@@ -2,17 +2,6 @@
 	<view>
 		<view class='evaluate-list'>
 			<view class='generalComment acea-row row-between-wrapper'>
-				<view class='acea-row row-middle font-color'>
-					<view class='evaluate'>评分</view>
-					<view class='start' :class="'star'+replyData.reply_star"></view>
-				</view>
-				<view><text class='font-color'>{{replyData.reply_chance}}%</text>好评率</view>
-			</view>
-			<view class='nav acea-row row-middle'>
-				<view class='item' :class='type==0 ? "bg-color":""' @click='changeType(0)'>全部({{replyData.sum_count}})</view>
-				<view class='item' :class='type==1 ? "bg-color":""' @click='changeType(1)'>好评({{replyData.good_count}})</view>
-				<view class='item' :class='type==2 ? "bg-color":""' @click='changeType(2)'>中评({{replyData.in_count}})</view>
-				<view class='item' :class='type==3 ? "bg-color":""' @click='changeType(3)'>差评({{replyData.poor_count}})</view>
 			</view>
 			<userEvaluation :reply="reply"></userEvaluation>
 			<view class='loadingicon acea-row row-center-wrapper'>
@@ -29,8 +18,7 @@
 
 <script>
 	import {
-		getReplyList,
-		getReplyConfig
+		getReplyList
 	} from '@/api/store.js';
 	import userEvaluation from '@/components/userEvaluation';
 	export default {
@@ -64,20 +52,10 @@
 			that.product_id = options.product_id;
 		},
 		onShow: function() {
-			this.getProductReplyCount();
 			this.getProductReplyList();
 		},
 		methods: {
-			/**
-			 * 获取评论统计数据
-			 * 
-			 */
-			getProductReplyCount: function() {
-				let that = this;
-				getReplyConfig(that.product_id).then(res => {
-					that.$set(that,'replyData',res.data);
-				});
-			},
+
 			/**
 			 * 分页获取评论
 			 */

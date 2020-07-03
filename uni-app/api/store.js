@@ -69,7 +69,8 @@ export function getIndexProductList(data){
  * 
 */
 export function getReplyList(id,data){
-  return request.get('reply/list/'+id,data)
+  //return request.get('reply/list/'+id,data)
+    return request_new.get('Review.ListAll',{sku_id:id});
 }
 
 /**
