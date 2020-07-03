@@ -51,7 +51,8 @@ export function getOrderList(data){
  * @param string unique 
 */
 export function orderProduct(unique){
-  return request.post('order/product', { unique: unique});
+  //return request.post('order/product', { unique: unique});
+  return request_new.post('Order.GetOrderGoodsDetailForReview', { og_id: unique});
 }
 
 /**
