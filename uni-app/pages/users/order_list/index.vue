@@ -55,8 +55,8 @@
 							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="item._status._type > 0">
 								<text class="btn cancel" v-if="goods.productInfo.review_state == 0" @tap="evaluateTap('',item.id)">去评论</text>
 								<text class="btn cancel" v-if="goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
-								<text class="btn cancel" v-if="orderStatus==30 || orderStatus==40" @tap="refund(item.id)">申请退货</text>
-								<text class="btn cancel" v-else @tap="refund(item.id)">申请退款</text>
+								<text class="btn cancel" v-if="orderStatus==30 || orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
+								<text class="btn cancel" v-else @tap="refund(goods.productInfo.id)">申请退款</text>
 							</view>
 						</view>
 						<view class='totalPrice'>共{{item.cartInfo.length || 0}}件商品，总金额
@@ -193,7 +193,7 @@
 			},
 			refund(id){
 				uni.navigateTo({
-					url: '/pages/users/goods_return/index?orderId='+id,
+					url: '/pages/users/goods_return/index?og_id='+id,
 				});
 			},
 			comment(id){

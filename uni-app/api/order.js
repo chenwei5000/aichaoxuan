@@ -131,13 +131,22 @@ export function orderTake(uni){
 export function express(uni) {
   return request_new.get("Order.QueryExpress",{'order_id':uni});
 }
-
+export function getOrderGoodsDetail(data){
+  return request_new.get('Order.GetOrderGoodsDetail',data);
+}
 /**
  * 获取退款理由
  * 
 */
 export function ordeRefundReason(){
   return request_new.get('Order.ListRefundReason');
+}
+
+export function afterSaleList(data){
+  return request_new.post('Order.AfterSaleList',data);
+}
+export function afterSaleDetails(data){
+  return request_new.get('Order.AfterSaleDetails',data);
 }
 
 /**

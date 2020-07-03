@@ -2,17 +2,17 @@
 	<view>
 		<form  @submit="subRefund" report-submit='true'>
 		  <view class='apply-return'>
-		    <view class='goodsStyle acea-row row-between' v-for="(item,index) in orderInfo.cartInfo" :key="index">
-		        <view class='pictrue'><image :src='item.productInfo.image'></image></view>
+		    <view class='goodsStyle acea-row row-between'>
+		        <view class='pictrue'><image :src='goodsDetail.goods_image'></image></view>
 		        <view class='text acea-row row-between'>
-		          <view class='name line2'>{{item.productInfo.store_name}}</view>
-		          <view class='money' v-if="item.productInfo.attrInfo">
-		              <view>￥{{item.productInfo.attrInfo.price}}</view>
-		              <view class='num'>x{{item.cart_num}}</view>
+		          <view class='name line2'>{{goodsDetail.goods_name}}</view>
+		          <view class='money' v-if="goodsDetail.attrInfo">
+		              <view>￥{{goodsDetail.attrInfo.price}}</view>
+		              <view class='num'>x{{goodsDetail.goodsDetail}}</view>
 		          </view>
 		          <view class='money' v-else>
-		              <view>￥{{item.productInfo.price}}</view>
-		              <view class='num'>x{{item.cart_num}}</view>
+		              <view>￥{{goodsDetail.goods_price}}</view>
+		              <view class='num'>x{{goodsDetail.goods_num}}</view>
 		          </view>
 		        </view>
 		    </view>
@@ -23,7 +23,7 @@
 		        </view>
 		        <view class='item acea-row row-between-wrapper'>
 		          <view>退款金额</view>
-		          <view class='num'>￥{{orderInfo.pay_price}}</view>
+		          <view class='num'>￥{{goodsDetail.most_return_money}}</view>
 		        </view>
 		        <view class='item acea-row row-between-wrapper' @tap="toggleTab('region')">
 		          <view>退款原因</view>
@@ -64,7 +64,7 @@
 	</view>
 </template>
 <script>
-	import { ordeRefundReason, orderRefundVerify, getOrderDetail} from '@/api/order.js';
+	import { ordeRefundReason, orderRefundVerify, getOrderGoodsDetail} from '@/api/order.js';
 	import {
 		toLogin
 	} from '@/libs/login.js';
@@ -87,17 +87,18 @@
 			return {
 				refund_reason_wap_img:[],
 				    orderInfo:{},
+					goodsDetail:{},
 				    RefundArray: [],
 				    index: 0,
-				    orderId:0,
+				    og_id:0,
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
 		},
 		computed: mapGetters(['isLogin']),
 		 onLoad: function (options) {
-		    if (!options.orderId) return this.$util.Tips({title:'缺少订单id,无法退款'},{tab:3,url:1});
-			this.orderId = options.orderId;
+		    if (!options.og_id) return this.$util.Tips({title:'缺少订单id,无法退款'},{tab:3,url:1});
+			this.og_id = options.og_id;
 			if (this.isLogin) {
 				this.getOrderInfo();
 				this.getRefundReason();
@@ -122,8 +123,8 @@
 			    */
 			    getOrderInfo:function(){
 			      let that=this;
-			      getOrderDetail(that.orderId).then(res=>{
-					that.$set(that,'orderInfo',res.data[0]);
+			      getOrderGoodsDetail({og_id:that.og_id}).then(res=>{
+					that.$set(that,'goodsDetail',res.data.order_goods_info);
 			      });
 			    },
 			    /**
@@ -157,102 +158,55 @@
 					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
 			      });
 			    },
-				addAfterSale(){
-					var t = this;
-					// if (t.reason == 0){
-					// 	uni.showToast({
-					// 		title: '请选择退款原因',
-					// 		icon: 'none'
-					// 	});
-					// 	return;
-					// }
-					
-					var url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
-					if (t.refund_reason_wap_img.length>0){
-					uni.showLoading({
-					    title: "上传中"
-					});
-					uni.uploadFile({
-					    url: url,
-					    files: t.refund_reason_wap_img,
-						formData: {
-						    og_id:t.og_id,
-						    apply_type:t.apply_type,
-						    money:t.money,
-						    reason:t.reason,
-						    remark:t.remark,
-						},
-						success: function(e) {
-							console.log(e);
-							e = JSON.parse(e.data);
-							console.log(e);
-							uni.hideLoading();
-							uni.showToast({
-								title: e.msg
-							});
-							setTimeout(()=>{
-								uni.reLaunch({
-									url:'index'
-								})
-							},1000)
-					    },
-					    complete: function(e) {
-							console.log(e);
-							
-					    }
-					});
-					}else{
-						uni.request({
-						    url: url,
-							method: 'POST',
-							data: {
-								og_id:t.og_id,
-								apply_type:1,
-								money:that.RefundArray[that.index] || '',
-								reason:value.refund_reason_wap_explain,
-								remark:that.RefundArray[that.index] || '',
-							},
-							dataType:'json',
-							header : {'content-type':'application/x-www-form-urlencoded'},
-						    success: function(e) {
-								console.log(e);
-								if (e.data.code == 200) {
-									uni.showToast({
-										title: e.data.msg
-									});
-									setTimeout(()=>{
-										uni.reLaunch({
-											url:'index'
-										})
-									},1000)
-								} else {
-									uni.showToast({
-										title: e.data.msg,
-										icon: 'none'
-									});
-								}
-						    }
-						});
-					}
-				},
 			    /**
 			     * 申请退货
 			    */
 			    subRefund:function(e){
 					console.log(e);
-			      let that = this, value = e.detail.value;
+			      let t = this, value = e.detail.value;
+				  //if (!value.refund_reason_wap_explain) return this.$util.Tips({title:'请输入退款原因'});
+				  
+				  var url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
+				  uni.request({
+				      url: url,
+				  	method: 'POST',
+				  	data: {
+				  		og_id:t.og_id,
+				  		apply_type:1,
+				  		money:t.goodsDetail.most_return_money,
+				  		text:t.RefundArray[t.index] || '',
+				  		remark:value.refund_reason_wap_explain,
+				  		aftersale:t.refund_reason_wap_img.join(',')
+				  	},
+				  	dataType:'json',
+				  	header : {'content-type':'application/x-www-form-urlencoded'},
+				      success: function(e) {
+				  		console.log(e);
+				  		if (e.data.code == 200) {
+				  			return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
+				  		} else {
+				  			uni.showToast({
+				  				title: e.data.msg,
+				  				icon: 'none'
+				  			});
+				  		}
+				      },
+				  	fail: function(err){
+				  		return this.$util.Tips({ title: err });
+				  	}
+				  });
 			      //收集form表单
 			      // if (!value.refund_reason_wap_explain) return app.Tips({title:'请输入退款原因'});
-			      orderRefundVerify({
-			        text: that.RefundArray[that.index] || '',
-			        refund_reason_wap_explain: value.refund_reason_wap_explain,
-			        refund_reason_wap_img: that.refund_reason_wap_img.join(','),
-			        order_id: that.orderId
-			      }).then(res=>{
-			        return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
-			      }).catch(err=>{
-			        return this.$util.Tips({ title: err });
-			      })
+			      // orderRefundVerify({
+			      //   text: that.RefundArray[that.index] || '',
+			      //   refund_reason_wap_explain: value.refund_reason_wap_explain,
+			      //   refund_reason_wap_img: that.refund_reason_wap_img.join(','),
+			      //   order_id: that.orderId
+			      // }).then(res=>{
+			      //   return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
+			      // }).catch(err=>{
+			      //   return this.$util.Tips({ title: err });
+			      // })
 			    },
 			    bindPickerChange: function (e) {
 					this.$set(this,'index',e.detail.value);
