@@ -7,13 +7,13 @@
 		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
 			<image
 				style="width: 690rpx;height: 260rpx;border-top-left-radius: 16rpx;border-top-right-radius: 16rpx;margin-left: 30rpx;margin-right: 30rpx;"
-				@tap="detail(item.goods_id)"
+				@tap="detail(item.sku_id)"
 				:src="item.goods_image"
 			></image>
 			<view class="list-box" style="margin-left: 30rpx;margin-right: 30rpx;">
 				<view>
 					<view style="margin-left: 30rpx;margin-right: 30rpx;">
-						<text class="pname" @tap="detail(item.goods_id)">{{ item.goods_name }}</text>
+						<text class="pname" @tap="detail(item.sku_id)">{{ item.goods_name }}</text>
 					</view>
 					<view class="price-box">
 						<view class="ai-c">
@@ -25,7 +25,7 @@
 							<view class="ai-c">
 								<text class="oprice">零 ¥{{ item.retail_price }}</text>
 							</view>
-							<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.spu_id)">
+							<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.sku_id)">
 								<view class="bnt">
 									<text>了解详情</text>
 								</view>
