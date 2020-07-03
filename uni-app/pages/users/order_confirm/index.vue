@@ -586,7 +586,6 @@
 						});
 					}else{
 						status = "WECHAT_H5_PAY"
-						alert('WECHAT_H5_PAY')
 						WxH5Pay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data;
@@ -723,7 +722,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com'+encodeURIComponent(goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com%2Fstore'+encodeURIComponent(goPages);
 						}, 100);
 						break;
 				}
