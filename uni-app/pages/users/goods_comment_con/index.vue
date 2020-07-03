@@ -3,12 +3,12 @@
 		<form @submit="formSubmit" report-submit='true'>
 		<view class='evaluate-con'>
 		   <view class='goodsStyle acea-row row-between'>
-		      <view class='pictrue'><image :src='productInfo.image'></image></view>
+		      <view class='pictrue'><image :src='productInfo.goods_image'></image></view>
 		      <view class='text acea-row row-between'>
-		         <view class='name line2'>{{productInfo.store_name}}</view>
+		         <view class='name line2'>{{productInfo.goods_name}}</view>
 		         <view class='money'>
-		            <view>￥{{productInfo.price}}</view>
-		            <view class='num'>x{{cart_num}}</view>
+		            <view>￥{{productInfo.goods_price}}</view>
+		            <view class='num'>x{{productInfo.goods_num}}</view>
 		         </view>
 		      </view>
 		   </view>
@@ -21,7 +21,7 @@
 		           <text class='evaluate'>{{item.index === -1 ? "" : item.index + 1 + "分"}}</text>
 		       </view>
 		       <view class='textarea'>
-		          <textarea placeholder='商品满足你的期待么？说说你的想法，分享给想买的他们吧~' name="comment" placeholder-class='placeholder'></textarea>
+		          <textarea placeholder='商品满足你的期待么？说说你的想法，分享给想买的他们吧~' name="content" placeholder-class='placeholder'></textarea>
 		          <view class='list acea-row row-middle'>
 		             <view class='pictrue' v-for="(item,index) in pics" :key="index">
 		               <image :src='item'></image>
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-	import { orderProduct, orderComment} from '@/api/order.js';
+	import { getOrderGoodsDetail, orderComment} from '@/api/order.js';
 	import {
 		toLogin
 	} from '@/libs/login.js';
@@ -68,15 +68,10 @@
 				           name: "商品质量",
 				           stars: ["", "", "", "", ""],
 				           index: -1
-				         },
-				         {
-				           name: "服务态度",
-				           stars: ["", "", "", "", ""],
-				           index: -1
 				         }
 				       ],
+				    og_id:'',
 				    orderId:'',
-				    unique:'',
 				    productInfo:{},
 				    cart_num:0,
 				isAuto: false, //没有授权的不会自动授权
@@ -85,9 +80,9 @@
 		},
 		computed: mapGetters(['isLogin']),
 		onLoad(options) {
-			if (!options.unique || !options.uni) return this.$util.Tips({title:'缺少参数'},{tab:3,url:1});
-			    this.unique = options.unique;
-				this.orderId = options.uni;
+			if (!options.og_id || !options.orderId) return this.$util.Tips({title:'缺少参数'},{tab:3,url:1});
+			    this.og_id = options.og_id;
+				 this.orderId = options.orderId;
 			if (this.isLogin) {
 				this.getOrderProduct();
 			} else {
@@ -114,11 +109,14 @@
 			  */
 			  getOrderProduct:function(){
 			    let that=this;
-			    orderProduct(that.unique).then(res=>{
-				  that.$set(that,'productInfo',res.data.productInfo);
-				  console.log(res.data.productInfo);
-				  that.cart_num = res.data.cart_num;
-			    });
+				getOrderGoodsDetail({og_id:that.og_id}).then(res=>{
+					that.$set(that,'productInfo',res.data.order_goods_info);
+				});
+			   //  orderProduct(that.unique).then(res=>{
+				  // that.$set(that,'productInfo',res.data.productInfo);
+				  // console.log(res.data.productInfo);
+				  // that.cart_num = res.data.cart_num;
+			   //  });
 			  },
 			  stars: function(indexn, indexw) {
 			        this.scoreList[indexw].index = indexn;
@@ -140,11 +138,11 @@
 			  uploadpic: function () {
 			    let that = this;
 				console.log('地方');
-			    that.$util.uploadImageOne('upload/image', function (res) {
-			      console.log(res);
-			      that.pics.push(res.data.url);
-				  that.$set(that,'pics',that.pics);
-			    });
+			   //  that.$util.uploadImageOne('upload/image', function (res) {
+			   //    console.log(res);
+			   //    that.pics.push(res.data.url);
+				  // that.$set(that,'pics',that.pics);
+			   //  });
 			  },
 			
 			  /**
@@ -152,12 +150,11 @@
 			  */
 			  formSubmit:function(e){
 			    let formId = e.detail.formId, value = e.detail.value, that = this, 
-			      product_score = that.scoreList[0].index + 1 === 0 ? "" : that.scoreList[0].index + 1, service_score = that.scoreList[1].index + 1 === 0 ? "" : that.scoreList[1].index + 1;
-			    if (!value.comment) return that.$util.Tips({ title:'请填写你对宝贝的心得！'});
-			    value.product_score = product_score;
-			    value.service_score = service_score;
+			      product_score = that.scoreList[0].index + 1 === 0 ? "" : that.scoreList[0].index + 1;
+			    if (!value.content) return that.$util.Tips({ title:'请填写你对宝贝的心得！'});
+			    value.score = product_score;
 			    value.pics=that.pics;
-			    value.unique = that.unique;
+			    value.og_id = that.og_id;
 			    uni.showLoading({ title: "正在发布评论……" });
 			    orderComment(value).then(res=>{
 			      uni.hideLoading();

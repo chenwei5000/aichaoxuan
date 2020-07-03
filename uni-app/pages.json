@@ -96,7 +96,11 @@
 				            "path" : "pages/index/Header",
 				            "style" : {}
 		}
-	],
+	    ,{
+            "path" : "pages/spike/spike",
+            "style" : {}
+        }
+    ],
 	 "subPackages": [
 	    {
 	      "root": "pages/users",
