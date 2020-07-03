@@ -4,23 +4,31 @@
 			<wuc-tab :tab-list="tabList" :tabCur.sync="TabCur" :tabClass="tabClass" :selectClass="selectClass" :textFlex="true" @change="tabChange"></wuc-tab>
 		</view>
 		
-		
 		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
-			<view style="width: 750rpx;background-color: #fff;">
-				<image
-					style="width: 750rpx;height: 280rpx;"
-					@tap="detail(item.spu_id)"
-					:src="item.goods_image"
-				></image>
-				<text class="pname" @tap="detail(item.spu_id)">{{ item.goods_name }}</text>
-				<view class="price-box">
-					<view style="margin-top: 10rpx;display: flex;justify-content: space-between;">
+			<image
+				style="width: 690rpx;height: 260rpx;border-top-left-radius: 16rpx;border-top-right-radius: 16rpx;margin-left: 30rpx;margin-right: 30rpx;"
+				@tap="detail(item.goods_id)"
+				:src="item.goods_image"
+			></image>
+			<view class="list-box" style="margin-left: 30rpx;margin-right: 30rpx;">
+				<view>
+					<view style="margin-left: 30rpx;margin-right: 30rpx;">
+						<text class="pname" @tap="detail(item.goods_id)">{{ item.goods_name }}</text>
+					</view>
+					<view class="price-box">
 						<view class="ai-c">
-							<text class="price">秒 ¥{{ item.flash_sale_price }}</text>
+							<text class="price" :style="item.time_text ? 'color: #27B232' : ''">
+								秒 ¥{{ item.flash_sale_price }}
+							</text>
 						</view>
-						<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.spu_id)">
-							<view class="bnt">
-								<text>了解详情</text>
+						<view style="margin-top: 10rpx;display: flex;justify-content: space-between;">
+							<view class="ai-c">
+								<text class="oprice">零 ¥{{ item.retail_price }}</text>
+							</view>
+							<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.spu_id)">
+								<view class="bnt">
+									<text>了解详情</text>
+								</view>
 							</view>
 						</view>
 					</view>
@@ -108,17 +116,16 @@
 		font-weight: 600;
 	}
 	.list-box{
-		width: 750rpx;
+		width: 690rpx;
 		background-color: #fff;
+		margin-top: -20rpx;;
+		padding-top: 30rpx;
 	}
 	.pname{
 		font-size:28rpx;
 		font-family:PingFangSC-Regular,PingFang SC;
 		font-weight:400;
 		color:rgba(51,51,51,1);
-		margin-top: 30rpx;
-		margin-left: 30rpx;
-		margin-right: 30rpx;
 	}
 	.price-box{
 		margin-top: 30rpx;
