@@ -30,6 +30,10 @@
 		WxH5Pay,
 		WxWxaPay
 	} from '@/api/order.js';
+	// #ifdef MP
+	import authorize from '@/components/Authorize';
+	// #endif
+	import Routine from '@/libs/routine';
 	export default {
 		props: {
 			payMode: {
@@ -68,32 +72,45 @@
 			},
 			goPay: function(number, paytype) {
 				let that = this;
+				let ua = '',
+					orderId = that.order_id,
+					jsConfig = '';
 				let data = {
 					pay_code:that.pay_code
 				},status ='';
 				// #ifdef  MP
 				status = 'WECHAT_PAY';
 				console.log('WxWxaPay')
-				WxWxaPay(data).then(e => {
-					console.log(e)
-					jsConfig = e.data.jsApiParams;
-					console.log('jsConfig',jsConfig);
-					that.topay(status,jsConfig,res)
-				}).catch(err => {
-					uni.hideLoading();
-					return that.$util.Tips({
-						title: err
+				Routine.getCode().then(code=>{
+					console.log('code',code)
+					data.code = code;
+					WxWxaPay(data).then(res => {
+						console.log(res)
+						jsConfig = res.data.jsApiParams;
+						console.log('jsConfig',jsConfig);
+						that.topay(status,jsConfig,orderId,res)
+					}).catch(err => {
+						console.log(err)
+						uni.hideLoading();
+						return that.$util.Tips({
+							title: err
+						});
 					});
-				});
+				}).catch(e=>{
+					uni.hideLoading();
+				})
 				// #endif
 				// #ifdef  H5
 				console.log('h5')
 				ua = window.navigator.userAgent.toLowerCase();
 				if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 				    status = 'WECHAT_PAY'
+					let code = uni.getStorageSync(WX_AUTH);
+					console.log('WX_AUTH',code);
+					data.code = code;
 					WxJsapiPay(data).then(e => {
 						console.log(e)
-						//that.topay(status,jsConfig,res)
+						//that.topay(status,jsConfig,orderId,res)
 					}).catch(err => {
 						uni.hideLoading();
 						return that.$util.Tips({
@@ -104,7 +121,7 @@
 					status = "WECHAT_H5_PAY"
 					WxH5Pay(data).then(e => {
 						console.log(e)
-						that.topay(status,jsConfig,res)
+						that.topay(status,jsConfig, orderId,res)
 					}).catch(err => {
 						uni.hideLoading();
 						return that.$util.Tips({
@@ -114,8 +131,8 @@
 				}
 				// #endif
 			},
-			topay(status,jsConfig,res){
-				let goPages = '/pages/order_pay_status/index?order_id=1';
+			topay(status,jsConfig, orderId,res){
+				let goPages = '/pages/order_pay_status/index?order_id='+orderId;
 				let that = this;
 				switch (status) {
 					case 'ORDER_EXIST':
@@ -228,9 +245,9 @@
 							url: goPages + '&status=1'
 						});
 						break;
-					case "WECHAT_H5_PAY": //gongzhonghao
+					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url;
+							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com%2Fstore'+encodeURIComponent(goPages);
 						}, 100);
 						break;
 				}
