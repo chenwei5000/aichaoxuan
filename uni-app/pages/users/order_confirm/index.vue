@@ -567,7 +567,7 @@
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
-						data.code = this.code;
+						data.code = that.code;
 						WxJsapiPay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data.jsApiParams;
