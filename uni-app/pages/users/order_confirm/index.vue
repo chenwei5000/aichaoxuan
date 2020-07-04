@@ -140,6 +140,7 @@
 		storeListApi
 	} from '@/api/store.js';
 	import {
+		WX_AUTH,
 		CACHE_LONGITUDE,
 		CACHE_LATITUDE
 	} from '@/config/cache.js';
@@ -554,11 +555,11 @@
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
-						console.log('WxJsapiPay');
 						let code = uni.getStorageSync(WX_AUTH);
-						console.log('WX_AUTH',code);
+						alert('WX_AUTH'+code);
+						data.code = code;
 						WxJsapiPay(data).then(e => {
-							console.log(e)
+							alert(JSON.stringify(e))
 							//that.topay(status,jsConfig,goPages,res)
 						}).catch(err => {
 							uni.hideLoading();
@@ -568,7 +569,7 @@
 						});
 					}else{
 						status = "WECHAT_H5_PAY"
-						console.log('WECHAT_H5_PAY')
+						alert('WECHAT_H5_PAY')
 						WxH5Pay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data;
