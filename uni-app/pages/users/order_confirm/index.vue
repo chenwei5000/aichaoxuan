@@ -558,7 +558,7 @@
 						let code = uni.getStorageSync(WX_AUTH);
 						let data = {
 							pay_code:res.data.pay_code,
-							code:code;
+							code:code
 						}
 						WxJsapiPay(data).then(e => {
 							console.log(e)
