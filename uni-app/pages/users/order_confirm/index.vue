@@ -556,11 +556,14 @@
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
 						let code = uni.getStorageSync(WX_AUTH);
-						alert('WX_AUTH'+code);
-						data.code = code;
+						let data = {
+							pay_code:res.data.pay_code,
+							code:code;
+						}
 						WxJsapiPay(data).then(e => {
-							alert(JSON.stringify(e))
-							//that.topay(status,jsConfig,goPages,res)
+							console.log(e)
+							jsConfig = e.data.jsApiParams;
+							that.topay(status,jsConfig,goPages,res)
 						}).catch(err => {
 							uni.hideLoading();
 							return that.$util.Tips({

@@ -20,9 +20,6 @@ urlShopKey = query["shop_key"];
 console.log("url shopKey:",urlShopKey);
 setShopKey(urlShopKey);
 
-import VConsole from './components/vconsole.min.js'
-let vConsole = new VConsole();
-
 Auth.isWeixin() && Auth.oAuth();
 
 // #endif
