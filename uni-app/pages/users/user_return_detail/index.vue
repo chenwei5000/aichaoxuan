@@ -93,14 +93,14 @@
 		},
 		data() {
 			return {
-				return_id:0,
+				og_id:0,
 				aftersaleInfo: {}, //售后信息
 			};
 		},
 		computed: mapGetters(['isLogin']),
 		onLoad: function(options) {
-			if (options.return_id) {
-				this.$set(this, 'return_id', options.return_id);
+			if (options.og_id) {
+				this.$set(this, 'og_id', options.og_id);
 			}
 			this.getAftersaleInfo();
 			if (this.isLogin) {
@@ -133,7 +133,7 @@
 					title: "正在加载中"
 				});
 				getAfterSaleDetail({
-					return_id: this.return_id,
+					og_id: this.og_id
 				}).then(res => {
 					uni.hideLoading();
 					let refundInfo = res.data.refund_info || {};

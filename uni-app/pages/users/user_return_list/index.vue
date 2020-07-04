@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class='return-list' v-if="aftersaleList.length">
-			<view class='goodWrapper' v-for="(item,index) in aftersaleList" :key="index" @click='goOrderDetails(item.return_id)'>
+			<view class='goodWrapper' v-for="(item,index) in aftersaleList" :key="index" @click='goOrderDetails(item.og_id)'>
 				<view class='iconfont icon-tuikuanzhong powder' v-if="item.apply_state==1||item.apply_state==2"></view>
 				<view class='iconfont icon-yituikuan' v-if="item.apply_state==4"></view>
 				<view class='orderNum'>订单号：{{item.order_code}}</view>
@@ -96,12 +96,12 @@
 			/**
 			 * 去订单详情
 			 */
-			goOrderDetails: function(return_id) {
-				if (!return_id) return that.$util.Tips({
+			goOrderDetails: function(og_id) {
+				if (!og_id) return that.$util.Tips({
 					title: '缺少售后编号无法查看售后详情'
 				});
 				uni.navigateTo({
-					url: '/pages/users/user_return_detail/index?return_id=' + return_id
+					url: '/pages/users/user_return_detail/index?og_id=' + og_id
 				})
 			},
 
