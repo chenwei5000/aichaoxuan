@@ -94,6 +94,12 @@ class AuthWechat {
 	 * @param {Object} config
 	 */
 	pay(config) {
+		//jweixin-module插件中时间戳字段为全小写 timestamp
+		//支付签名时间戳，
+		//NOTE: 注意微信jssdk中的所有使用timestamp字段均为小写。
+		//但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
+		config.timestamp = config.timeStamp;
+		console.log('== lib wechat.js config ==', config);
 		return new Promise((resolve, reject) => {
 			this.wechat().then((wx) => {
 				this.toPromise(wx.chooseWXPay, config).then(res => {
