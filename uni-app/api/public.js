@@ -57,7 +57,8 @@ export function login(data) {
  * @returns {*}
  */
 export function getShare() {
-  return request.get("share", {}, { noAuth: true });
+  //return request.get("share", {}, { noAuth: true });
+  return request_new.get("Site.GetWechatShareInfo", {}, { noAuth: true });
 }
 
 /**

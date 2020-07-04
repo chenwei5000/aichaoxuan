@@ -191,14 +191,6 @@
 			<view class='footer acea-row row-right row-middle' v-if="isGoodsReturn==false || status.type == 9">
 				<view class="qs-btn" v-if="status.type == 0 || status.type == -9" @click.stop="cancelOrder">取消订单</view>
 				<view class='bnt bg-color' v-if="status.type==0" @tap='pay_open(orderInfo.order_id)'>立即付款</view>
-				<!-- #ifdef MP -->
-				<!-- <view @tap="openSubcribe('/pages/users/goods_return/index?orderId='+orderInfo.order_id)" class='bnt cancel'
-				 v-else-if="orderInfo.paid === 1 && orderInfo.refund_status === 0">申请退款</view> -->
-				<!-- #endif -->
-				<!-- #ifndef MP -->
-				<!-- <navigator hover-class="none" :url="'/pages/users/goods_return/index?orderId='+orderInfo.order_id" class='bnt cancel'
-				 v-else-if="orderInfo.paid === 1 && orderInfo.refund_status === 0">申请退款</navigator> -->
-				<!-- #endif -->
 				<view class='bnt bg-color' v-if="status.class_status==1" @tap='goJoinPink'>查看拼团</view>
 				<navigator class='bnt cancel' v-if="orderInfo.delivery_type == 'express' && status.class_status==3 && status.type==2"
 				 hover-class='none' :url="'/pages/users/goods_logistics/index?orderId='+ orderInfo.order_id">查看物流</navigator>
