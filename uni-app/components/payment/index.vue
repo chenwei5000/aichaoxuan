@@ -108,9 +108,11 @@
 					let code = uni.getStorageSync(WX_AUTH);
 					console.log('WX_AUTH',code);
 					data.code = code;
-					WxJsapiPay(data).then(e => {
-						console.log(e)
-						//that.topay(status,jsConfig,orderId,res)
+					WxJsapiPay(data).then(res => {
+						console.log(res)
+						jsConfig = res.data.jsApiParams;
+						console.log('jsConfig',jsConfig);
+						that.topay(status,jsConfig,orderId,res)
 					}).catch(err => {
 						uni.hideLoading();
 						return that.$util.Tips({
@@ -119,9 +121,11 @@
 					});
 				}else{
 					status = "WECHAT_H5_PAY"
-					WxH5Pay(data).then(e => {
-						console.log(e)
-						that.topay(status,jsConfig, orderId,res)
+					WxH5Pay(data).then(res => {
+						console.log(res)
+						jsConfig = res.data;
+						console.log('jsConfig',jsConfig);
+						that.topay(status,jsConfig,orderId,res)
 					}).catch(err => {
 						uni.hideLoading();
 						return that.$util.Tips({
