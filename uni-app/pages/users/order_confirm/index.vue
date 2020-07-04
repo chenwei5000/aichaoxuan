@@ -286,7 +286,7 @@
 			let _this = this
 			// #ifdef  H5
 			if (!uni.getStorageSync('jsapi_code')){
-				var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&cope=snsapi_base#wechat_redirect';
+				var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
 				location.href = url;
 			}else{
 				this.code = uni.getStorageSync('jsapi_code')
