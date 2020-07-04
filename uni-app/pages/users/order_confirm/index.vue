@@ -528,24 +528,6 @@
 						pay_code:res.data.pay_code
 					}
 					// #ifdef  MP
-					// status = 'WECHAT_PAY';
-					// console.log('WxWxaPay')
-					// Routine.getCode().then(code=>{
-					// 	console.log('code',code)
-					// 	data.code = code;
-					// 	WxJsapiPay(data).then(e => {
-					// 		console.log(e)
-					// 	}).catch(err => {
-					// 		console.log(err)
-					// 		uni.hideLoading();
-					// 		return that.$util.Tips({
-					// 			title: err
-					// 		});
-					// 	});
-					// }).catch(res=>{
-					// 	uni.hideLoading();
-					// })
-					// return;
 					status = 'WECHAT_PAY';
 					console.log('WxWxaPay')
 					Routine.getCode().then(code=>{
@@ -566,13 +548,13 @@
 					}).catch(res=>{
 						uni.hideLoading();
 					})
-					
 					// #endif
 					// #ifdef  H5
 					console.log('h5')
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
+						console.log('WxJsapiPay');
 						let code = uni.getStorageSync(WX_AUTH);
 						console.log('WX_AUTH',code);
 						WxJsapiPay(data).then(e => {
@@ -586,6 +568,7 @@
 						});
 					}else{
 						status = "WECHAT_H5_PAY"
+						console.log('WECHAT_H5_PAY')
 						WxH5Pay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data;
