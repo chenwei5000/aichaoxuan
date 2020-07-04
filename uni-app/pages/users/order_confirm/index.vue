@@ -236,6 +236,10 @@
 			// #ifdef H5
 			if (this.$wechat.isWeixin()){
 				this.from = 'weixin'
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
 				this.$wechat.oAuth();
 			}else{
 				this.from = 'weixinh5'
@@ -280,6 +284,14 @@
 		 */
 		onShow: function() {
 			let _this = this
+			// #ifdef  H5
+			if (!uni.getStorageSync('jsapi_code')){
+				var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&cope=snsapi_base#wechat_redirect';
+				location.href = url;
+			}else{
+				this.code = uni.getStorageSync('jsapi_code')
+			}
+			// #endif
 			this.textareaStatus = true;
 			if (this.isLogin && this.toPay == false) {
 				this.getaddressInfo();
@@ -555,11 +567,7 @@
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
-						let code = uni.getStorageSync(WX_AUTH);
-						let data = {
-							pay_code:res.data.pay_code,
-							code:code
-						}
+						data.code = this.code;
 						WxJsapiPay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data.jsApiParams;
@@ -680,6 +688,7 @@
 						// #ifdef H5
 						console.log('公众号支付')
 						this.$wechat.pay(jsConfig).then(res => {
+							uni.setStorageSync('jsapi_code','')
 							return that.$util.Tips({
 								title: '支付成功',
 								icon: 'success'
