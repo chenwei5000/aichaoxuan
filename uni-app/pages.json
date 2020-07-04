@@ -3,7 +3,7 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "亲测好物",
 				"navigationStyle": "custom",
 				"app-plus": {
 					"scrollIndicator": false //禁用原生导航栏
