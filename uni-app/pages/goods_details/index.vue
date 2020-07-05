@@ -578,12 +578,15 @@
 			      // }
 			      query.select(idView).boundingClientRect();
 			      query.exec(function (res) {
-			        var top = res[0].top;
-			        var height = res[0].height;
-			        topArr.push(top);
-			        heightArr.push(height);
+				      if(res !== undefined && res !== null && res[0]!==null && res[0] !== undefined)
+				      {
+					var top = res[0].top;
+					var height = res[0].height;
+					topArr.push(top);
+					heightArr.push(height);
 					that.$set(that,'topArr',topArr);
 					that.$set(that,'heightArr',heightArr);
+				    }
 			      });
 			    };
 			  },
