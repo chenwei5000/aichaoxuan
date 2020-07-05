@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="lives-head">
-			<wuc-tab :tab-list="tabList" :tabCur.sync="TabCur" :tabClass="tabClass" :selectClass="selectClass" :textFlex="true" @change="tabChange"></wuc-tab>
+			 <gTabs :tabData="tabs" bgColor="#e93323" activeColor="#fff" :defaultIndex="0" :underLinePadding='50' :height="100" :itemNumber="2" @tabClick='tabClick' />
 		</view>
 		
 		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
@@ -42,16 +42,21 @@
 	import { getFlashSale } from '@/api/api.js'
 	import store from '@/store'
 	import { mapGetters } from "vuex";
-	import WucTab from '@/components/wuc-tab/wuc-tab.vue';
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
-		components: {
-			WucTab
-		},
 		data() {
 			return {
-				TabCur: 0,
-				tabList: [{ name: '秒杀中' }, { name: '预热中' }],
+				index: 0,
+				tabs: [
+					{
+						state: 1,
+						text: '秒杀中',
+					},
+					{
+						state: 2,
+						text: '预热中'
+					},
+				],
 				data:{},
 				list:{},
 				type: 1,
@@ -82,8 +87,9 @@
 				
 				console.log(t.list, 1111)
 			},
-			tabChange(index) {
-			    this.TabCur = index;
+			tabClick(index) {
+				console.log('tabClick : index = ' + index);
+				this.index = index
 				var t = this;
 				t.type = parseInt(index)+1;
 				t.getFlashSale();
