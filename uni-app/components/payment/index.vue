@@ -105,8 +105,7 @@
 				ua = window.navigator.userAgent.toLowerCase();
 				if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 				    status = 'WECHAT_PAY'
-					let code = uni.getStorageSync(WX_AUTH);
-					console.log('WX_AUTH',code);
+					let code = uni.getStorageSync('jsapi_code');
 					data.code = code;
 					WxJsapiPay(data).then(res => {
 						console.log(res)
@@ -221,6 +220,7 @@
 						// #endif
 						// #ifdef H5
 						console.log('公众号支付')
+						jsConfig = JSON.parse(jsConfig);
 						this.$wechat.pay(jsConfig).then(res => {
 							return that.$util.Tips({
 								title: '支付成功',
@@ -230,7 +230,7 @@
 								url: goPages
 							});
 						}).cache(res => {
-							return that.$util.Tips({
+							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
 							}, {
 								tab: 5,

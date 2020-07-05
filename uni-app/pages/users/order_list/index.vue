@@ -150,13 +150,34 @@
 				pay_close: false,
 				pay_order_id: '',
 				totalPrice: '0',
+				code:'',
 				pay_code:'',
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
 		},
 		computed: mapGetters(['isLogin']),
+		onLoad: function(options) {
+			if (options.status) this.orderStatus = options.status;
+			// #ifdef H5
+			if (this.$wechat.isWeixin()){
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
+				this.$wechat.oAuth();
+			}
+			// #endif
+		},
 		onShow() {
+			// #ifdef  H5
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}
+			}
+			// #endif
 			if (this.isLogin) {
 				this.getOrderData();
 				this.getOrderList();
@@ -228,12 +249,6 @@
 			 */
 			payClose: function() {
 				this.pay_close = false;
-			},
-			/**
-			 * 生命周期函数--监听页面加载
-			 */
-			onLoad: function(options) {
-				if (options.status) this.orderStatus = options.status;
 			},
 			/**
 			 * 获取订单统计数据
@@ -344,7 +359,6 @@
 			getOrderList: function() {
 				let that = this;
 				if (that.loadend) return;
-				if (that.loading) return;
 				that.loading = true;
 				that.loadTitle = "加载更多";
 				getOrderList({

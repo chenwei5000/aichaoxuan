@@ -285,11 +285,13 @@
 		onShow: function() {
 			let _this = this
 			// #ifdef  H5
-			if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-				var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
-				location.href = url;
-			}else{
-				this.code = uni.getStorageSync('jsapi_code')
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}else{
+					this.code = uni.getStorageSync('jsapi_code')
+				}
 			}
 			// #endif
 			this.textareaStatus = true;
@@ -689,7 +691,6 @@
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
 						this.$wechat.pay(jsConfig).then(res => {
-							uni.setStorageSync('jsapi_code','')
 							return that.$util.Tips({
 								title: '支付成功',
 								icon: 'success'
@@ -698,7 +699,6 @@
 								url: goPages
 							});
 						}).cache(res => {
-							uni.setStorageSync('jsapi_code','')
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
 							}, {

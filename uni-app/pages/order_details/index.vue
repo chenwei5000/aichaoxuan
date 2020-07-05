@@ -268,6 +268,7 @@
 				pay_order_id: '',
 				totalPrice: '0',
 				pay_code:'',
+				code:'',
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
@@ -277,8 +278,25 @@
 			if (options.order_id) {
 				this.$set(this, 'order_id', options.order_id);
 			}
+			// #ifdef H5
+			if (this.$wechat.isWeixin()){
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
+				this.$wechat.oAuth();
+			}
+			// #endif
 		},
 		onShow() {
+			// #ifdef  H5
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/order_details/index?order_id='+this.order_id)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}
+			}
+			// #endif
 			if (this.isLogin) {
 				this.getOrderInfo();
 				this.getUserInfo();
