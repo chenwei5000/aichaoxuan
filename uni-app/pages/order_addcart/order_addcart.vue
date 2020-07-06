@@ -163,7 +163,6 @@
 				that.$set(that, 'isShowAuth', true);
 				// #endif
 			}
-			uni.setStorageSync('jsapi_code','')
 		},
 		onShow: function() {
 			if (this.isLogin == true) {

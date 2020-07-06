@@ -691,13 +691,15 @@
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
 						this.$wechat.pay(jsConfig).then(res => {
-							return that.$util.Tips({
+							uni.showToast({
 								title: '支付成功',
-								icon: 'success'
-							}, {
-								tab: 5,
-								url: goPages
-							});
+								icon: 'success',
+							})
+							setTimeout(function() {
+								uni.navigateTo({
+									url: goPages
+								})
+							}, 1000)
 						}).cache(res => {
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'

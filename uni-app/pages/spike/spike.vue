@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="lives-head">
-			 <gTabs :tabData="tabs" bgColor="#e93323" activeColor="#fff" :defaultIndex="0" :underLinePadding='50' :height="100" :itemNumber="2" @tabClick='tabClick' />
+			 <gTabs :tabData="tabs" bgColor="#e93323" activeColor="#fff" :defaultIndex="0" :underLinePadding='70' :height="80" :itemNumber="2" @tabClick='tabClick' />
 		</view>
 		
 		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
