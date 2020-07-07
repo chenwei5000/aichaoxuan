@@ -2,10 +2,11 @@
 <script>
 	// #ifdef MP
 	let livePlayer = requirePlugin('live-player-plugin');
+	import { getMiniappShareInfo } from 'libs/public.js';
 	// #endif
 	import { 
 		setShopKey
-	} from 'libs/public.js'
+	} from 'libs/public.js';
 	import { checkLogin } from "./libs/login";
 	import { HTTP_REQUEST_URL } from './config/app';
 	import Cache from './utils/cache'
@@ -26,6 +27,7 @@
 			// #ifdef MP
 			let urlShopKey = option.query.shop_key;
 			setShopKey(urlShopKey);
+			console.log('shopKey from url:',urlShopKey);
 			
 			 if (HTTP_REQUEST_URL==''){
 			      console.error("请配置根目录下的config.js文件中的 'HTTP_REQUEST_URL'\n\n请修改开发者工具中【详情】->【AppID】改为自己的Appid\n\n请前往后台【小程序】->【小程序配置】填写自己的 appId and AppSecret");
@@ -35,21 +37,18 @@
 			      switch (option.scene) {
 			        //扫描小程序码
 			        case 1047:
-				  let val = that.$util.getUrlParams(decodeURIComponent(option.query.scene));
-				  if(val.shop_key) setShopKey(val.shop_key);
-			          if(val.pid) that.globalData.code = val.pid;
-			          break;
+			          //break;
 			        //长按图片识别小程序码
 			        case 1048:
-			          that.globalData.code = option.query.scene;
-			          break;
+			          //break;
 			        //手机相册选取小程序码
 			        case 1049:
-			          that.globalData.code = option.query.scene;
-			          break;
+			          //break;
 			        //直接进入小程序
 			        case 1001:
-			          that.globalData.spid = option.query.scene;
+				  let val = getMiniappShareInfo(decodeURIComponent(option.query.scene));
+				  if(val.data.shop_key) setShopKey(val.data.shop_key);
+			          //if(val.pid) that.globalData.code = val.pid;
 			          break;
 			      }
 			    }
@@ -65,7 +64,6 @@
 		},
 		onShow(options) {
 			// #ifdef MP	
-			console.log(" aaaaaa this is on Show");
 		    // 分享卡片入口场景才调用getShareParams接口获取以下参数
 		    if (options.scene == 1007 || options.scene == 1008 || options.scene == 1044) {
 		        livePlayer.getShareParams()

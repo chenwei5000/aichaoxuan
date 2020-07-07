@@ -61,6 +61,11 @@ export function getShare() {
   return request_new.get("Site.GetWechatShareInfo", {}, { noAuth: true });
 }
 
+export function getMiniappShareInfo(code)
+{
+    return request_new.get("Site.GetMiniappShareInfo",{code:code}, { noAuth: true });
+}
+
 /**
  * 获取图片base64
  * @retins {*}
