@@ -199,6 +199,12 @@
 					"style": {
 						"navigationBarTitleText": "商品评价"
 					}
+				},
+				{
+					"path": "goods_comment_detail/index",
+					"style": {
+						"navigationBarTitleText": "评论详情"
+					}
 				}
 		  ]
 	    },

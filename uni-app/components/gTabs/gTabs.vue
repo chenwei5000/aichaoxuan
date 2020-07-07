@@ -141,7 +141,7 @@
 	}
 </script>
 
-<style lang="less">
+<style lang="scss">
 	.tab-box {
 		width: 100%;
 		color: rgba(0, 0, 0, 0.8);

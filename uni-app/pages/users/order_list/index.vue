@@ -53,7 +53,7 @@
 							</view>
 							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="orderStatus > 0">
 								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap(goods.id,item.id)">去评论</text>
-								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comment(goods.id)">查看评论</text>
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comment(item.cartInfo)">查看评论1</text>
 								<text class="btn cancel" v-if="orderStatus==40 && goods.productInfo.refund_state!=1" @tap="goodsReturn(goods.productInfo.id)">申请退货</text>
 								<text class="btn cancel" v-if="orderStatus==20 && goods.productInfo.refund_state!=1"  @tap="refund(goods.productInfo.id)">申请退款</text>
 								<text class="btn cancel" v-if="goods.productInfo.refund_state==1"  @tap="refundDetail(goods.productInfo.id)">售后详情</text>
@@ -228,9 +228,10 @@
 				});
 			},
 			comment(id){
-				uni.navigateTo({
-					url: '/pages/users/goods_comment_list/index?product_id='+id,
-				});
+				console.log(id)
+				// uni.navigateTo({
+				// 	url: '/pages/users/goods_comment_detail/index?product_id=' + id
+				// })
 			},
 			/**
 			 * 获取用户信息
@@ -378,6 +379,8 @@
 					that.loading = false;
 					that.loadTitle = "加载更多";
 				})
+				
+				console.log(this.orderList)
 			},
 			evaluateTap:function(og_id,orderId){
 				uni.navigateTo({

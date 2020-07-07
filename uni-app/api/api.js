@@ -108,3 +108,19 @@ export async function get_Lives(type, page,limit) {
 export async function getFlashSale(data) {
   return request_new.get('FlashSale.ListGoods', data, { noAuth: true });
 }
+
+
+/*
+ * 获取我的评价  待评价 / 已评价 / 评论详情
+*/
+export async function get_Review(page,limit) {
+  return request_new.get('Review.ListMyWaitingReview', { page, limit}, { noAuth: true });
+}
+
+export async function get_FinishedReview(page,limit) {
+  return request_new.get('Review.ListMyFinishedReview', { page, limit}, { noAuth: true });
+}
+
+export async function get_ReviewDetail(id) {
+  return request_new.get('Review.GetDetail', { review_id: id});
+}
