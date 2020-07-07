@@ -116,6 +116,11 @@
 						title: '地址管理',
 						url: '/pages/users/user_address_list/index'
 					},
+					{
+						icon: '/static/images/record1.png',
+						title: '我的评价',
+						url: '/pages/users/user_rates_list/index'
+					}
 				],
 				autoplay: true,
 				circular: true,

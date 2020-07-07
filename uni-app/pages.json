@@ -93,8 +93,8 @@
 			}
 		 },
 		{
-				            "path" : "pages/index/Header",
-				            "style" : {}
+			"path" : "pages/index/Header",
+			"style" : {}
 		}
 	    ,{
             "path" : "pages/spike/spike",
@@ -122,6 +122,12 @@
 			  	"path": "user_address/index",
 			  	"style": {
 			  		"navigationBarTitleText": "添加地址"
+			  	}
+			  },
+			  {
+			  	"path": "user_rates_list/index",
+			  	"style": {
+			  		"navigationBarTitleText": "我的评价"
 			  	}
 			  },
 			  {
