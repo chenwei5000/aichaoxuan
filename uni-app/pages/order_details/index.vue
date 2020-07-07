@@ -196,7 +196,7 @@
 				 hover-class='none' :url="'/pages/users/goods_logistics/index?orderId='+ orderInfo.order_id">查看物流</navigator>
 				<view class='bnt bg-color' v-if="status.class_status==3" @tap='confirmOrder'>确认收货</view>
 				<view class='bnt cancel' v-if="status.type==4" @tap='delOrder'>删除订单</view>
-				<view class='bnt bg-color' v-if="status.class_status==5" @tap='goOrderConfirm'>再次购买</view>
+				<!-- <view class='bnt bg-color' v-if="status.class_status==5" @tap='goOrderConfirm'>再次购买</view> -->
 			</view>
 		</view>
 		<home></home>
@@ -562,6 +562,7 @@
 			 */
 			delOrder: function() {
 				let that = this;
+				console.log(this.order_id);
 				orderDel(this.order_id).then(res => {
 					return that.$util.Tips({
 						title: '删除成功',

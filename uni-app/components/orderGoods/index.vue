@@ -19,7 +19,7 @@
 					<view class='evaluate' v-if='evaluate>=3 && item.productInfo.refund_state!=1' @click.stop="goodsReturn(item.id)">退货</view>
 					<view class='evaluate' v-if='item.productInfo.refund_state==1' @click.stop="refundDetail(item.id)">售后详情</view>
 					<view class='evaluate' style="margin-right: 150rpx;" v-if='item.productInfo.review_state ==0 && evaluate>=3' @click.stop="evaluateTap(item.id,orderId)">评价</view>
-					<view class='evaluate' style="margin-right: 150rpx;" v-else-if="item.productInfo.review_state ==1 && evaluate>=3" @click.stop="comment(item.id)">已评价</view>
+					<view class='evaluate' style="margin-right: 150rpx;" v-else-if="item.productInfo.review_state ==1 && evaluate>=3" @click.stop="comment(item.productInfo.review_id)">已评价</view>
 				</view>
 			</view>
 		</view>
@@ -85,7 +85,7 @@
 			},
 			comment(id){
 				uni.navigateTo({
-					url: '/pages/users/goods_comment_list/index?product_id='+id,
+					url: '/pages/users/goods_comment_detail/index?product_id='+id,
 				});
 			},
 			jumpCon:function(id){

@@ -108,7 +108,7 @@ export function orderCancel(id){
  * 
 */
 export function orderDel(uni){
-  return request_new.post('Order.DeleteOrder',{uni:uni});
+  return request_new.post('Order.DeleteOrder',{order_id:uni});
 }
 
 /**
