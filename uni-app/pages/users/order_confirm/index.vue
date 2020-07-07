@@ -140,6 +140,7 @@
 		storeListApi
 	} from '@/api/store.js';
 	import {
+		WX_AUTH,
 		CACHE_LONGITUDE,
 		CACHE_LATITUDE
 	} from '@/config/cache.js';
@@ -235,6 +236,10 @@
 			// #ifdef H5
 			if (this.$wechat.isWeixin()){
 				this.from = 'weixin'
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
 				this.$wechat.oAuth();
 			}else{
 				this.from = 'weixinh5'
@@ -279,6 +284,16 @@
 		 */
 		onShow: function() {
 			let _this = this
+			// #ifdef  H5
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}else{
+					this.code = uni.getStorageSync('jsapi_code')
+				}
+			}
+			// #endif
 			this.textareaStatus = true;
 			if (this.isLogin && this.toPay == false) {
 				this.getaddressInfo();
@@ -528,24 +543,6 @@
 						pay_code:res.data.pay_code
 					}
 					// #ifdef  MP
-					// status = 'WECHAT_PAY';
-					// console.log('WxWxaPay')
-					// Routine.getCode().then(code=>{
-					// 	console.log('code',code)
-					// 	data.code = code;
-					// 	WxJsapiPay(data).then(e => {
-					// 		console.log(e)
-					// 	}).catch(err => {
-					// 		console.log(err)
-					// 		uni.hideLoading();
-					// 		return that.$util.Tips({
-					// 			title: err
-					// 		});
-					// 	});
-					// }).catch(res=>{
-					// 	uni.hideLoading();
-					// })
-					// return;
 					status = 'WECHAT_PAY';
 					console.log('WxWxaPay')
 					Routine.getCode().then(code=>{
@@ -566,18 +563,17 @@
 					}).catch(res=>{
 						uni.hideLoading();
 					})
-					
 					// #endif
 					// #ifdef  H5
 					console.log('h5')
 					ua = window.navigator.userAgent.toLowerCase();
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
-						let code = uni.getStorageSync(WX_AUTH);
-						console.log('WX_AUTH',code);
+						data.code = that.code;
 						WxJsapiPay(data).then(e => {
 							console.log(e)
-							//that.topay(status,jsConfig,goPages,res)
+							jsConfig = e.data.jsApiParams;
+							that.topay(status,jsConfig,goPages,res)
 						}).catch(err => {
 							uni.hideLoading();
 							return that.$util.Tips({
@@ -693,14 +689,17 @@
 						// #endif
 						// #ifdef H5
 						console.log('公众号支付')
+						jsConfig = JSON.parse(jsConfig);
 						this.$wechat.pay(jsConfig).then(res => {
-							return that.$util.Tips({
+							uni.showToast({
 								title: '支付成功',
-								icon: 'success'
-							}, {
-								tab: 5,
-								url: goPages
-							});
+								icon: 'success',
+							})
+							setTimeout(function() {
+								uni.navigateTo({
+									url: goPages
+								})
+							}, 1000)
 						}).cache(res => {
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
@@ -723,7 +722,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com'+encodeURIComponent(goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com%2Fstore'+encodeURIComponent(goPages);
 						}, 100);
 						break;
 				}

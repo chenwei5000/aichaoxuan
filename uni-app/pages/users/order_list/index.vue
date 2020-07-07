@@ -53,9 +53,10 @@
 							</view>
 							<view style="width: 100%;height: 50rpx;display: flex;justify-content: flex-end;" v-if="orderStatus > 0">
 								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 0" @tap="evaluateTap(goods.id,item.id)">去评论</text>
-								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comments(goods.productInfo.id)">查看评论</text>
-								<text class="btn cancel" v-if="orderStatus==40" @tap="refund(goods.productInfo.id)">申请退货</text>
-								<text class="btn cancel" v-if="orderStatus==20"  @tap="refund(goods.productInfo.id)">申请退款</text>
+								<text class="btn cancel" v-if="orderStatus == 40 && goods.productInfo.review_state == 1" @tap="comment(goods.id)">查看评论</text>
+								<text class="btn cancel" v-if="orderStatus==40 && goods.productInfo.refund_state!=1" @tap="goodsReturn(goods.productInfo.id)">申请退货</text>
+								<text class="btn cancel" v-if="orderStatus==20 && goods.productInfo.refund_state!=1"  @tap="refund(goods.productInfo.id)">申请退款</text>
+								<text class="btn cancel" v-if="goods.productInfo.refund_state==1"  @tap="refundDetail(goods.productInfo.id)">售后详情</text>
 							</view>
 						</view>
 						<view class='totalPrice'>共{{item.cartInfo.length || 0}}件商品，总金额
@@ -149,13 +150,34 @@
 				pay_close: false,
 				pay_order_id: '',
 				totalPrice: '0',
+				code:'',
 				pay_code:'',
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
 		},
 		computed: mapGetters(['isLogin']),
+		onLoad: function(options) {
+			if (options.status) this.orderStatus = options.status;
+			// #ifdef H5
+			if (this.$wechat.isWeixin()){
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
+				this.$wechat.oAuth();
+			}
+			// #endif
+		},
 		onShow() {
+			// #ifdef  H5
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}
+			}
+			// #endif
 			if (this.isLogin) {
 				this.getOrderData();
 				this.getOrderList();
@@ -192,7 +214,17 @@
 			},
 			refund(id){
 				uni.navigateTo({
+					url: '/pages/users/goods_refund/index?og_id='+id,
+				});
+			},
+			goodsReturn(id){
+				uni.navigateTo({
 					url: '/pages/users/goods_return/index?og_id='+id,
+				});
+			},
+			refundDetail(id){
+				uni.navigateTo({
+					url: '/pages/users/user_return_detail/index?og_id='+id,
 				});
 			},
 			comment(id){
@@ -217,12 +249,6 @@
 			 */
 			payClose: function() {
 				this.pay_close = false;
-			},
-			/**
-			 * 生命周期函数--监听页面加载
-			 */
-			onLoad: function(options) {
-				if (options.status) this.orderStatus = options.status;
 			},
 			/**
 			 * 获取订单统计数据
@@ -333,7 +359,6 @@
 			getOrderList: function() {
 				let that = this;
 				if (that.loadend) return;
-				if (that.loading) return;
 				that.loading = true;
 				that.loadTitle = "加载更多";
 				getOrderList({

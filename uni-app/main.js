@@ -20,7 +20,6 @@ urlShopKey = query["shop_key"];
 console.log("url shopKey:",urlShopKey);
 setShopKey(urlShopKey);
 
-
 Auth.isWeixin() && Auth.oAuth();
 
 // #endif

@@ -34,22 +34,6 @@
 		          <view>备注说明</view>
 		          <textarea placeholder='填写备注信息，100字以内' class='num' name="refund_reason_wap_explain" placeholder-class='填写备注信息，100字以内'></textarea>
 		        </view>
-		        <view class='item acea-row row-between'>
-		          <view class='title acea-row row-between-wrapper'>
-		              <view>上传凭证</view>
-		              <view class='tip'>( 最多可上传3张 )</view>
-		          </view>
-		          <view class='upload acea-row row-middle'>
-		              <view class='pictrue' v-for="(item,index) in refund_reason_wap_img" :key="index">
-		                <image :src='item'></image>
-		                <view class='iconfont icon-guanbi1 font-color' @tap='DelPic(index)'></view>
-		              </view>
-		              <view class='pictrue acea-row row-center-wrapper row-column' @tap='uploadpic' v-if="refund_reason_wap_img.length < 3">
-		                <text class='iconfont icon-icon25201'></text>
-		                <view>上传凭证</view>
-		              </view>
-		          </view>
-		        </view>
 		    </view>
 		    <button class='returnBnt bg-color' form-type="submit">申请退款</button>
 		  </view>
@@ -113,6 +97,7 @@
 			    this.getOrderInfo();
 			    this.getRefundReason();
 			  },
+
 			  /**
 			     * 获取订单详情
 			     * 
@@ -149,12 +134,11 @@
 			    */
 			    uploadpic:function(){
 			      let that=this;
-			      this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
+			      this.$util.uploadImageOne('upload/image',function(res){
 			        that.refund_reason_wap_img.push(res.data.url);
 					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
 			      });
 			    },
-
 			    /**
 			     * 申请退货
 			    */
@@ -173,17 +157,17 @@
 				  		money:t.goodsDetail.most_return_money,
 				  		text:t.RefundArray[t.index] || '',
 				  		remark:value.refund_reason_wap_explain,
-				  		refund_reason_wap_img:t.refund_reason_wap_img.join(',')
+				  		aftersale:t.refund_reason_wap_img.join(',')
 				  	},
 				  	dataType:'json',
 				  	header : {'content-type':'application/x-www-form-urlencoded'},
 				      success: function(e) {
 				  		console.log(e);
 				  		if (e.data.status == 200) {
-				  			uni.navigateTo({
-				  				url: '/pages/users/order_list/index',
-				  			});
-							//return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
+							uni.navigateTo({
+								url: '/pages/users/order_list/index',
+							});
+				  			//return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
 				  		} else {
 				  			uni.showToast({
 				  				title: e.data.msg,

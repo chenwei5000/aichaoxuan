@@ -16,6 +16,20 @@
 			   <scroll-view :scroll-top="scrollTop" scroll-y='true' scroll-with-animation="true" :style='"height:"+height+"px;"' @scroll="scroll">
 				<view id="past0">
 					<productConSwiper :imgUrls="storeInfo.slider_image" :videoline="storeInfo.video_link"></productConSwiper>
+					<block v-if="storeInfo.is_seckill==1">
+						<image style="width: 750rpx;height: 84rpx;" src="../../static/images/skillbg.png"></image>
+					<view style="display: flex;flex-direction: row;position: absolute;margin-top: -94rpx;">
+						<view style="width: 400rpx;height: 84rpx;display: flex;align-items: center;">
+							<image style="width: 126rpx;height: 32rpx;margin-left: 34rpx;" src="../../static/images/xsms.png"></image>
+						</view>
+						<view style="height: 84rpx;display: flex;align-items: center;" v-if="storeInfo.is_seckill==1">
+							<view style="margin-right: 26rpx;">
+								
+								<text class="jljs">距离结束还有</text>
+							</view>
+						</view>
+					</view>
+					</block>
 					<view class='wrapper'>
 						<view class='share acea-row row-between row-bottom'>
 							<view class='money font-color'>
@@ -564,12 +578,15 @@
 			      // }
 			      query.select(idView).boundingClientRect();
 			      query.exec(function (res) {
-			        var top = res[0].top;
-			        var height = res[0].height;
-			        topArr.push(top);
-			        heightArr.push(height);
+				      if(res !== undefined && res !== null && res[0]!==null && res[0] !== undefined)
+				      {
+					var top = res[0].top;
+					var height = res[0].height;
+					topArr.push(top);
+					heightArr.push(height);
 					that.$set(that,'topArr',topArr);
 					that.$set(that,'heightArr',heightArr);
+				    }
 			      });
 			    };
 			  },
@@ -1432,5 +1449,13 @@
 			width: 100%;
 			height: 100%;
 		}
+	}
+	.jljs{
+		height:34rpx;
+		font-size:24rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(255,255,255,1);
+		line-height:34rpx;
 	}
 </style>

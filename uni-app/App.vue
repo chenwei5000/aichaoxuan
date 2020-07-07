@@ -13,6 +13,7 @@
 	export default {
 		globalData: {
 			spid: 0,
+			shopKey:'',
 			code:0,
 			isLogin:false,
 			userInfo:{},
@@ -34,8 +35,9 @@
 			      switch (option.scene) {
 			        //扫描小程序码
 			        case 1047:
-								let val = that.$util.getUrlParams(decodeURIComponent(option.query.scene));
-			          that.globalData.code = val.pid;
+				  let val = that.$util.getUrlParams(decodeURIComponent(option.query.scene));
+				  if(val.shop_key) setShopKey(val.shop_key);
+			          if(val.pid) that.globalData.code = val.pid;
 			          break;
 			        //长按图片识别小程序码
 			        case 1048:
@@ -75,20 +77,7 @@
 						// 取到分享自定义参数里的shop_key,设置好，如果没有带，则用默认shop_key
 						let urlShopKey = decodeURIComponent(res.custom_params.shop_key);
 						console.log('分享直播的店铺Key:',urlShopKey);
-						if (urlShopKey !== undefined && urlShopKey.length>10) {
-							var LastShopKey = Cache.get(SHOP_KEY);
-							if (LastShopKey !== urlShopKey ) {
-								Cache.set(SHOP_KEY, urlShopKey || 0);
-							} 
-						}else
-						{
-							var LastShopKey = Cache.get(SHOP_KEY);
-							// 既没有参数，也没有缓存，则默认shop_key 
-							if(LastShopKey === undefined)
-							{
-								Cache.set(SHOP_KEY, '5pSMIG2RFGPfzcz5KeCUhQ==' || 0);
-							}
-						}
+						setShopKey(urlShopKey);
 		            }).catch(err => {
 		                console.log('get share params', err)
 		            })

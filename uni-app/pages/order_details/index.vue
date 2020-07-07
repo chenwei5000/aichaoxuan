@@ -191,14 +191,6 @@
 			<view class='footer acea-row row-right row-middle' v-if="isGoodsReturn==false || status.type == 9">
 				<view class="qs-btn" v-if="status.type == 0 || status.type == -9" @click.stop="cancelOrder">取消订单</view>
 				<view class='bnt bg-color' v-if="status.type==0" @tap='pay_open(orderInfo.order_id)'>立即付款</view>
-				<!-- #ifdef MP -->
-				<!-- <view @tap="openSubcribe('/pages/users/goods_return/index?orderId='+orderInfo.order_id)" class='bnt cancel'
-				 v-else-if="orderInfo.paid === 1 && orderInfo.refund_status === 0">申请退款</view> -->
-				<!-- #endif -->
-				<!-- #ifndef MP -->
-				<!-- <navigator hover-class="none" :url="'/pages/users/goods_return/index?orderId='+orderInfo.order_id" class='bnt cancel'
-				 v-else-if="orderInfo.paid === 1 && orderInfo.refund_status === 0">申请退款</navigator> -->
-				<!-- #endif -->
 				<view class='bnt bg-color' v-if="status.class_status==1" @tap='goJoinPink'>查看拼团</view>
 				<navigator class='bnt cancel' v-if="orderInfo.delivery_type == 'express' && status.class_status==3 && status.type==2"
 				 hover-class='none' :url="'/pages/users/goods_logistics/index?orderId='+ orderInfo.order_id">查看物流</navigator>
@@ -270,19 +262,13 @@
 						icon: "icon-weixinzhifu",
 						value: 'weixin',
 						title: '微信快捷支付'
-					},
-					{
-						name: "余额支付",
-						icon: "icon-yuezhifu",
-						value: 'yue',
-						title: '可用余额:',
-						number: 0
-					},
+					}
 				],
 				pay_close: false,
 				pay_order_id: '',
 				totalPrice: '0',
 				pay_code:'',
+				code:'',
 				isAuto: false, //没有授权的不会自动授权
 				isShowAuth: false //是否隐藏授权
 			};
@@ -292,8 +278,25 @@
 			if (options.order_id) {
 				this.$set(this, 'order_id', options.order_id);
 			}
+			// #ifdef H5
+			if (this.$wechat.isWeixin()){
+				if (options.code){
+					this.code = options.code;
+					uni.setStorageSync('jsapi_code',options.code)
+				}
+				this.$wechat.oAuth();
+			}
+			// #endif
 		},
 		onShow() {
+			// #ifdef  H5
+			if (this.$wechat.isWeixin()){
+				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/order_details/index?order_id='+this.order_id)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					location.href = url;
+				}
+			}
+			// #endif
 			if (this.isLogin) {
 				this.getOrderInfo();
 				this.getUserInfo();

@@ -1,25 +1,24 @@
 <template>
 	<view>
-		<view class='return-list' v-if="orderList.length">
-			<view class='goodWrapper' v-for="(item,index) in orderList" :key="index" @click='goOrderDetails(item.order_id)'>
-				<view class='iconfont icon-tuikuanzhong powder' v-if="item._status._type==-1"></view>
-				<view class='iconfont icon-yituikuan' v-if="item._status._type==-2"></view>
-				<view class='orderNum'>订单号：{{item.order_id}}</view>
-				<view class='item acea-row row-between-wrapper' v-for="(item,index) in item.cartInfo" :key="index">
+		<view class='return-list' v-if="aftersaleList.length">
+			<view class='goodWrapper' v-for="(item,index) in aftersaleList" :key="index" @click='goOrderDetails(item.og_id)'>
+				<view class='iconfont icon-tuikuanzhong powder' v-if="item.apply_state==1||item.apply_state==2"></view>
+				<view class='iconfont icon-yituikuan' v-if="item.apply_state==4"></view>
+				<view class='orderNum'>订单号：{{item.order_code}}</view>
+				<view class='item acea-row row-between-wrapper'>
 					<view class='pictrue'>
-						<image :src='item.productInfo.image'></image>
+						<image :src='item.goods_image'></image>
 					</view>
 					<view class='text'>
 						<view class='acea-row row-between-wrapper'>
-							<view class='name line1'>{{item.productInfo.store_name}}</view>
-							<view class='num'>x {{item.cart_num}}</view>
+							<view class='name line1'>{{item.goods_name}}</view>
+							<view class='num'>x {{item.goods_num}}</view>
 						</view>
-						<view class='attr line1' v-if="item.productInfo.attrInfo">{{item.productInfo.attrInfo.suk}}</view>
-						<view class='attr line1' v-else>{{item.productInfo.store_name}}</view>
-						<view class='money'>￥{{item.productInfo.price}}</view>
+						<view class='attr line1' v-if="item.goods_spec">{{item.goods_spec}}</view>
+						<view class='money'>￥{{item.goods_price}}</view>
 					</view>
 				</view>
-				<view class='totalSum'>共{{item.cartInfo.length || 0}}件商品，总金额 <text class='font-color price'>￥{{item.pay_price}}</text></view>
+				<view class='totalSum'>共{{item.goods_num || 0}}件商品，总金额 <text class='font-color price'>￥{{item.goods_price}}</text></view>
 			</view>
 		</view>
 		<view class='loadingicon acea-row row-center-wrapper'>
@@ -35,7 +34,7 @@
 <script>
 	import home from '@/components/home';
 	import {
-		getOrderList
+		getAfterSaleList2
 	} from '@/api/order.js';
 	import {
 		toLogin
@@ -58,7 +57,7 @@
 				loading: false,
 				loadend: false,
 				loadTitle: '加载更多', //提示语
-				orderList: [], //订单数组
+				aftersaleList: [], //订单数组
 				orderStatus: -3, //订单状态
 				page: 1,
 				limit: 20,
@@ -69,7 +68,7 @@
 		computed: mapGetters(['isLogin']),
 		onLoad() {
 			if (this.isLogin) {
-				this.getOrderList();
+				this.getAftersaleList();
 			} else {
 				// #ifdef H5 || APP-PLUS
 				toLogin();
@@ -84,11 +83,11 @@
 		 * 页面上拉触底事件的处理函数
 		 */
 		onReachBottom: function() {
-			this.getOrderList();
+			this.getAftersaleList();
 		},
 		methods: {
 			onLoadFun() {
-				this.getOrderList();
+				this.getAftersaleList();
 			},
 			// 授权关闭
 			authColse: function(e) {
@@ -97,33 +96,32 @@
 			/**
 			 * 去订单详情
 			 */
-			goOrderDetails: function(order_id) {
-				if (!order_id) return that.$util.Tips({
-					title: '缺少订单号无法查看订单详情'
+			goOrderDetails: function(og_id) {
+				if (!og_id) return that.$util.Tips({
+					title: '缺少售后编号无法查看售后详情'
 				});
 				uni.navigateTo({
-					url: '/pages/order_details/index?order_id=' + order_id + '&isReturen=1'
+					url: '/pages/users/user_return_detail/index?og_id=' + og_id
 				})
 			},
 
 			/**
-			 * 获取订单列表
+			 * 获取售后列表
 			 */
-			getOrderList: function() {
+			getAftersaleList: function() {
 				let that = this;
 				if (that.loadend) return;
 				if (that.loading) return;
 				that.loading = true;
 				that.loadTitle = "";
-				getOrderList({
-					type: that.orderStatus,
-					page: that.page,
-					limit: that.limit,
+				getAfterSaleList2({
+					page_no: that.page,
+					page_size: that.limit,
 				}).then(res => {
-					let list = res.data || [];
+					let list = res.data.aftersale_list || [];
 					let loadend = list.length < that.limit;
-					that.orderList = that.$util.SplitArray(list, that.orderList);
-					that.$set(that,'orderList',that.orderList);
+					that.aftersaleList = that.$util.SplitArray(list, that.aftersaleList);
+					that.$set(that,'aftersaleList',that.aftersaleList);
 					that.loadend = loadend;
 					that.loading = false;
 					that.loadTitle = loadend ? "我也是有底线的" : '加载更多';

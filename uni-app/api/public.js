@@ -6,11 +6,17 @@ import request_new from "@/utils/request_new.js";
  * @returns {*}
  */
 export function getWechatConfig() {
-  return request.get(
-    "wechat/config",
+  //return request.get(
+  //  "wechat/config",
+  //  { url: document.location.href },
+  //  { noAuth: true }
+  //);
+  return request_new.get(
+    "Site.GetWechatConfig",
     { url: document.location.href },
     { noAuth: true }
   );
+ 
 }
 
 /**
@@ -51,7 +57,8 @@ export function login(data) {
  * @returns {*}
  */
 export function getShare() {
-  return request.get("share", {}, { noAuth: true });
+  //return request.get("share", {}, { noAuth: true });
+  return request_new.get("Site.GetWechatShareInfo", {}, { noAuth: true });
 }
 
 /**

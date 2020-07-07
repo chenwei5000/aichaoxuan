@@ -265,11 +265,11 @@ import {
  					title: '图片上传中',
  				});
 				uni.uploadFile({
-					url: HTTP_REQUEST_URL + '/api/' + uploadUrl,
+					url: HTTP_REQUEST_URL + '/h5api/web/?method=' + uploadUrl,
 					filePath: res.tempFilePaths[0],
 					name: inputName,
 					formData: {
-						'filename': inputName
+						'biz_type': inputName
 					},
 					header: {
 						// #ifdef MP

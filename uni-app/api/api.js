@@ -104,3 +104,7 @@ export function getLiveLists(page,limit) {
 export async function get_Lives(type, page,limit) {
   return request_new.get('Live.ListLive', { type, page, limit}, { noAuth: true });
 }
+
+export async function getFlashSale(data) {
+  return request_new.get('FlashSale.ListGoods', data, { noAuth: true });
+}

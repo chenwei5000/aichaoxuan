@@ -1,62 +1,36 @@
 <template>
 	<view>
 		<view class="lives-head">
-			<tabNav 
-				class="tabNav" 
-				:class="{'fixed':isFixed}" 
-				:tabTitle="navTop" 
-				@changeTab='changeTab' 
-				@emChildTab='emChildTab'
-				@childTab='childTab'>
-			</tabNav>
+			 <gTabs :tabData="tabs" bgColor="#e93323" activeColor="#fff" :defaultIndex="0" :underLinePadding='70' :height="80" :itemNumber="2" @tabClick='tabClick' />
 		</view>
 		
-		
-		<view class="live-content">
-			<view class="lives-list" v-for="item in list" :key="item.id">
-				
-				<navigator>
-					<view class="live-item">
-						<view class="item-left">
-							<view class="tips">
-								<view class="tips-left">
-									<text v-if="num === 1">直播中</text>
-									<text v-else-if="num === 2">直播预告</text>
-									<text v-else>精彩回放</text>
-								</view>
+		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
+			<image
+				style="width: 690rpx;height: 260rpx;border-top-left-radius: 16rpx;border-top-right-radius: 16rpx;margin-left: 30rpx;margin-right: 30rpx;"
+				@tap="detail(item.sku_id)"
+				:src="item.goods_image"
+			></image>
+			<view class="list-box" style="margin-left: 30rpx;margin-right: 30rpx;">
+				<view>
+					<view style="margin-left: 30rpx;margin-right: 30rpx;">
+						<text class="pname" @tap="detail(item.sku_id)">{{ item.goods_name }}</text>
+					</view>
+					<view class="price-box">
+						
+						<view style="margin-top: 10rpx;display: flex;justify-content: space-between;">
+							<view class="ai-c">
+								<text class="price" :style="item.time_text ? 'color: #27B232' : ''">
+									秒 ¥{{ item.flash_sale_price }}
+								</text>
 							</view>
-							<view class="like">
-								<text class="join-live" v-if="num === 1">进入直播</text>
-								<text class="join-live" v-else-if="num === 2">订阅直播</text>
-								<text class="join-live" v-else>点击回放</text>
-							</view>
-							<image :src="item.share_img" mode=""></image>
-						</view>
-						<view class="item-right">
-							<text>{{ item.name }}</text>
-							<view>
-								<!-- start_time -->
-								<view>
-									<image :src="item.cover_img" mode=""></image>
-								</view>
-								<text>{{ item.anchor_name }}</text>
-							</view>
-							<view class="item-pro">
-								<view>
-									<text>￥{{ item.goods[0].price }}</text>
-									<image :src="item.goods[0].cover_img" mode=""></image>
-								</view>
-								<view v-if="item.goods.length >= 2">
-									<view class="mask-view">
-										<text>{{ item.goods.length }}</text>
-										<text>宝贝</text>
-									</view>
-									<image :src="item.goods[0].cover_img" mode=""></image>
+							<view class="ai-c" style="margin-right: 16rpx;" @tap="detail(item.sku_id)">
+								<view class="bnt">
+									<text>了解详情</text>
 								</view>
 							</view>
 						</view>
 					</view>
-				</navigator>
+				</view>
 			</view>
 		</view>
 		
@@ -65,26 +39,27 @@
 </template>
 
 <script>
-	import { get_Lives } from '@/api/api.js'
+	import { getFlashSale } from '@/api/api.js'
 	import store from '@/store'
 	import { mapGetters } from "vuex";
-	import tabNav from '@/components/tabNav.vue'
 	export default {
 		computed: mapGetters(['isLogin', 'uid']),
-		components: {
-			tabNav
-		},
 		data() {
 			return {
-				isFixed: false,
-				navTop:[
-					{cate_name: "秒杀中",children: [],icon: "",id: "1",pic: "",pid: "0"
+				index: 0,
+				tabs: [
+					{
+						state: 1,
+						text: '秒杀中',
 					},
-					{cate_name: "秒杀预告",children: [],icon: "",id: "2",pic: "",pid: "0"
-					}
+					{
+						state: 2,
+						text: '预热中'
+					},
 				],
+				data:{},
 				list:{},
-				num: 1,
+				type: 1,
 			}
 		},
 		onLoad(){
@@ -101,25 +76,34 @@
 		mounted() {
 		},
 		methods: {
-			async getFlashSale() {
-				await getFlashSale().then(res => {
-					this.data = res.data;
-					this.list = res.data.lists
+			async getFlashSale(type) {
+				var t = this;
+				await getFlashSale({type:t.type}).then(res => {
+					console.log(res.data)
+					t.list = res.data[0].lists
 				}).catch(res => {
-				
+					
 				})
 				
-				console.log(this.list, 1111)
+				console.log(t.list, 1111)
 			},
-			changeTab(e) {
-				this.num = e.index + 1
-				this.getLivesHosue(this.num)
+			tabClick(index) {
+				console.log('tabClick : index = ' + index);
+				this.index = index
+				var t = this;
+				t.type = parseInt(index)+1;
+				t.getFlashSale();
+			},
+			detail(id){
+				uni.navigateTo({
+					url:'../goods_details/index?id='+id
+				})
 			}
 		}
 	}
 </script>
 
-<style lang="scss">
+<style>
 	page{
 		background-color: #F8F8F8;
 	}
@@ -128,164 +112,78 @@
 		height: 96rpx;
 		background-color: #e93323;
 	}
+	.tabClass{
+		color: #FFFFFF;
+	}
+	.selectClass{
+		color: #FFFFFF;
+		font-weight: 600;
+	}
+	.list-box{
+		width: 690rpx;
+		background-color: #fff;
+		margin-top: -20rpx;;
+		padding-top: 30rpx;
+	}
+	.pname{
+		font-size:28rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(51,51,51,1);
+	}
+	.price-box{
+		margin-top: 30rpx;
+		margin-left: 30rpx;
+		padding-bottom: 20rpx;
+	}
+	.price{
+		font-size:32rpx;
+		font-family:PingFangSC-Medium,PingFang SC;
+		font-weight:500;
+		color:rgba(221,25,34,1);
+	}
+	.oprice{
+		width: 330rpx;
+		font-size:28rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(85,85,85,1);
+		line-height:40rpx;
+	}
 	
-	.live-content {
-		
-		.live-item {
-			margin: 32rpx 32rpx 0 32rpx;
-			width: 686rpx;
-			height: 340rpx;
-			background: rgba(255,255,255,1);
-			border-radius:16rpx;
-			display: flex;
-			
-			.item-left {
-				position: relative;
-				width: 340rpx;
-				height: 340rpx;
-				border-radius:16rpx;
-				overflow: hidden;
-				
-				.tips {
-					position: absolute;
-					top: 8rpx;
-					left: 8rpx;
-					height: 36rpx;
-					line-height: 36rpx;
-					background-color: #FF2803;
-					// padding: 0 18rpx 0 0;
-					border-radius: 18rpx;
-					font-size: 24rpx;
-					color: #fff;
-					.tips-left {
-						float: left;
-						background-color: #FFF4F4;
-						padding: 0 18rpx;
-						border-radius: 18rpx;
-						color: #FF2803;
-					}
-					view:nth-last-of-type(1) {
-						line-height: 36rpx;
-						float: left;
-						// padding-left: 18rpx;
-						text-align: right;
-					}
-				}
-				
-				.like {
-					position: absolute;
-					right: 20rpx;
-					bottom: 20rpx;
-					
-					.join-live {
-						display: block;
-						height: 36rpx;
-						line-height: 36rpx;
-						color: #fff;
-						background-color: #FF2803;
-						padding: 0 18rpx;
-						border-radius: 18rpx;
-						font-size: 24rpx;
-					}
-				}
-				navigator {
-					height: 100%;
-				}
-				image {
-					width: 340rpx !important;
-					height: 340rpx !important;
-				}
-			}
-			.item-right {
-				width: 294rpx;
-				margin-left: 32rpx;
-				padding-top: 30rpx;
-				display: flex;
-				flex-direction: column;
-				box-sizing: border-box;
-				> text {
-					font-size:24rpx;
-					color:rgba(51,51,51,1);
-					line-height:34rpx;
-				}
-				> view:nth-of-type(1) {
-					height: 80rpx;
-					padding: 30rpx 0;
-					display: flex;
-					align-items: center;
-					view {
-						width:40rpx;
-						height:40rpx;
-						background:rgba(216,216,216,1);
-						border-radius: 50%;
-						margin-left: 20rpx;
-						margin-right: 20rpx;
-						overflow: hidden;
-						padding-left: 20rpx;
-						
-						image {
-							width: 100%;
-							height: 100%;
-						}
-					}
-					text {
-						font-size:24rpx;
-						color:rgba(85,85,85,1);
-					}
-				}
-				.item-pro {
-					width: 294rpx;
-					display: flex;
-					flex-wrap: wrap;
-					view {
-						position: relative;
-						width:140rpx;
-						height:140rpx;
-						background:rgba(216,216,216,1);
-						border-radius: 16rpx;
-						margin-right: 14rpx;
-						margin-bottom: 14rpx;
-						overflow: hidden;
-						
-						.mask-view {
-							position: absolute;
-							top: 0;
-							left: 0;
-							width: 100%;
-							height: 100%;
-							background-color: rgba(0, 0, 0, .4);
-							text-align: center;
-							padding-top: 40rpx;
-							box-sizing: border-box;
-							
-							text {
-								position: static;
-								display: block;
-								background: transparent;
-								font-size: 28rpx;
-							}
-						}
-						
-						> text{
-							width: 100%;
-							position: absolute;
-							bottom: 10rpx;
-							font-size: 12px;
-							text-align: center;
-							color: #fff;
-							background-color: rgba(0, 0, 0, .4);
-						}
-						image {
-							width: 100%;
-							height: 100%;
-						}
-					}
-					view:nth-of-type(2n) {
-						margin-right: 0;
-						
-					}
-				}
-			}
-		}
+	.bnt {
+		width: 176rpx;
+		height: 60rpx;
+		text-align: center;
+		line-height: 60rpx;
+		border-radius: 50rpx;
+		color: rgba(221,25,34,1);
+		border: 1rpx solid rgba(221,25,34,1);
+		font-size: 27rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.bnt text{
+		font-size: 28rpx;
+		color: rgba(221,25,34,1);
+	}
+	
+	.jc-c{
+		display: flex;
+		justify-content: center;
+	}
+	.ai-c{
+		display: flex;
+		align-items: center;
+	}
+	.fd-r{
+		display: flex;
+		flex-direction: row;
+	}
+	.fd-c {
+		display: flex;
+		flex-direction: column;
 	}
 </style>

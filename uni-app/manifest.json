@@ -65,12 +65,12 @@
             "postcss" : true,
             "es6" : true
         },
-		"plugins": {
-		    "live-player-plugin": {
-		        "version": "1.1.0", 
-		        "provider": "wx2b03c6e691cd7370" 
-			}
-		},
+        "plugins" : {
+            "live-player-plugin" : {
+                "version" : "1.1.0",
+                "provider" : "wx2b03c6e691cd7370"
+            }
+        },
         "permission" : {},
         "usingComponents" : true
     },
@@ -95,6 +95,6 @@
         "sdkConfigs" : {
             "maps" : {}
         },
-        "title" : "超选小店铺"
+        "title" : "亲测好物"
     }
 }
