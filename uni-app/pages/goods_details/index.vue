@@ -134,7 +134,7 @@
 			<image src="/static/images/share-info.png" @click="H5ShareBox = false"></image>
 		</view>
 		<view class="floatright">
-			<image src="/static/images/share-info.png" @tap="open('mini')"></image>
+			<image src="/static/images/minishare.png" @tap="open('mini')"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
 			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
