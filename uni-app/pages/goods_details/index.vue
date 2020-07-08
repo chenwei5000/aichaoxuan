@@ -133,6 +133,12 @@
 		<view class="share-box" v-if="H5ShareBox">
 			<image src="/static/images/share-info.png" @click="H5ShareBox = false"></image>
 		</view>
+		<view class="floatright">
+			<image src="/static/images/share-info.png" @tap="open('mini')"></image>
+		</view>
+		<uni-popup ref="showmini" type="center">
+			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
+		</uni-popup>
 	</view>
 </template>
 
@@ -142,7 +148,8 @@
 		getProductCode,
 		collectAdd,
 		collectDel,
-		postCartAdd
+		postCartAdd,
+		getWechatShareInfo
 	} from '@/api/store.js';
 	import {
 		getUserInfo,
@@ -246,7 +253,8 @@
 				height: 0,
 				heightArr: [],
 				lock: false,
-				scrollTop:0
+				scrollTop:0,
+				wxa_code_image:''
 			};
 		},
 		computed: mapGetters(['isLogin']),
@@ -553,6 +561,7 @@
 					that.downloadFilestoreImage();
 					// #endif
 					that.DefaultSelect();
+					that.getWechatShareInfo();
 				}).catch(err => {
 					//状态异常返回上级页面
 					return that.$util.Tips({
@@ -562,6 +571,13 @@
 						url: 1
 					});
 				})
+			},
+			getWechatShareInfo: function() {
+				let that = this;
+				getWechatShareInfo(this.id).then(res => {
+					
+					that.wxa_code_image = res.data.wxa.wxa_code_image;
+				});
 			},
 			  infoScroll: function () {
 			    var that = this, topArr = [], heightArr = [];
@@ -918,7 +934,12 @@
 			goFriend: function() {
 				this.posters = false;
 			},
-
+			open(type) {
+				this.$refs['show' + type].open()
+			},
+			cancel(type) {
+				this.$refs['show' + type].close()
+			},
 			//#ifdef H5
 			ShareInfo() {
 				let data = this.storeInfo;
@@ -1453,5 +1474,16 @@
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:34rpx;
+	}
+	.floatright{
+		position: fixed;
+		z-index: 10;
+		right:30rpx;
+		bottom: 100rpx;
+		
+		image {
+			width: 100rpx;
+			height: 100rpx;
+		}
 	}
 </style>

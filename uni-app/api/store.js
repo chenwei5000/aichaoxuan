@@ -90,3 +90,6 @@ export function getSearchKeyword(){
   return request_new.get('Home.ListSearchKeyword',{},{noAuth:true});
 }
 
+export function getWechatShareInfo(goods_id) {
+  return request_new.get('Share.GetWechatShareInfo', { goods_id:goods_id}, { noAuth: true });
+}
