@@ -277,6 +277,7 @@
 			// #ifndef MP
 			this.navH = 96;
 			// #endif
+			this.id = options.id;
 			uni.getSystemInfo({
 				success: function(res) {
 					that.height = res.windowHeight
