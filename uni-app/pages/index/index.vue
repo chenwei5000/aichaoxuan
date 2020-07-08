@@ -202,7 +202,12 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
 		<!-- #endif -->
-		
+		<view class="floatright">
+			<image src="/static/images/minishare.png" @tap="open('mini')"></image>
+		</view>
+		<uni-popup ref="showmini" type="center">
+			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
+		</uni-popup>
 		<uni-popup ref="showset" :mask-click="true">
 			<view class="shop-mask" >
 				<icon class="close-mask" @click="closeMask" type="clear" size="22"/>
@@ -251,7 +256,8 @@
 		getCategoryList,
 		getProductslist,
 		getProductHot,
-		getIndexProductList
+		getIndexProductList,
+		getWechatShareInfo
 	} from '@/api/store.js';
 	import {
 		setVisit
@@ -353,7 +359,8 @@
 				headerConfig: {
 					navTop: [],
 					isFixed: false,
-				}
+				},
+				wxa_code_image:''
 			}
 		},
 		onLoad() {
@@ -370,7 +377,7 @@
 			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			this.getLiveList()
 			// #endif
-			
+			this.getWechatShareInfo()
 		},
 		onShow() {
 			let self = this
@@ -622,7 +629,19 @@
 					this.params.page++
 					this.tempArr = this.tempArr.concat(data.list)
 				})
-			}
+			},
+			getWechatShareInfo: function() {
+				let that = this;
+				getWechatShareInfo(0).then(res => {
+					that.wxa_code_image = res.data.wxa.wxa_code_image;
+				});
+			},
+			open(type) {
+				this.$refs['show' + type].open()
+			},
+			cancel(type) {
+				this.$refs['show' + type].close()
+			},
 		},
 		// 滚动到底部
 		onReachBottom() {
@@ -1803,5 +1822,16 @@
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:34rpx;
+	}
+	.floatright{
+		position: fixed;
+		z-index: 10;
+		right:30rpx;
+		bottom: 100rpx;
+		
+		image {
+			width: 100rpx;
+			height: 100rpx;
+		}
 	}
 </style>
