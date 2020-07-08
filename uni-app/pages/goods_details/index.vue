@@ -260,11 +260,15 @@
 			}
 			// #ifdef MP
 			this.navH = app.globalData.navHeight;
+			// 小程序码携带参数的处理
+			if(options.scene)
+			{
+			    options.id= app.globalData.pid;
+			}
 			// #endif
 			// #ifndef MP
 			this.navH = 96;
 			// #endif
-			this.id = options.id;
 			uni.getSystemInfo({
 				success: function(res) {
 					that.height = res.windowHeight
@@ -273,12 +277,6 @@
 			});
 			//扫码携带参数处理
 			// #ifdef MP
-			if (options.scene) {
-				let value = this.$util.getUrlParams(decodeURIComponent(options.scene));
-				if (value.id) options.id = value.id;
-				//记录推广人uid
-				if (value.pid) app.globalData.spid = value.pid;
-			}
 			if (!options.id){
 				return this.$util.Tips({
 					title: '缺少参数无法查看商品'
@@ -289,8 +287,6 @@
 			}else{
 				this.id = options.id
 			}
-			//记录推广人uid
-			if (options.spid) app.globalData.spid = options.spid;
 			// #endif
 			this.getGoodsDetails();
 			//#ifdef H5

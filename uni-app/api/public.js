@@ -63,7 +63,7 @@ export function getShare() {
 
 export function getMiniappShareInfo(code)
 {
-    return request_new.get("Site.GetMiniappShareInfo",{code:code}, { noAuth: true });
+    return request_new.get("Share.ParseWxaScene",{scene:code}, { noAuth: true });
 }
 
 /**

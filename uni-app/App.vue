@@ -2,7 +2,7 @@
 <script>
 	// #ifdef MP
 	let livePlayer = requirePlugin('live-player-plugin');
-	import { getMiniappShareInfo } from 'libs/public.js';
+	import { getMiniappShareInfo } from './api/public';
 	// #endif
 	import { 
 		setShopKey
@@ -14,6 +14,7 @@
 	export default {
 		globalData: {
 			spid: 0,
+			pid: 0,
 			shopKey:'',
 			code:0,
 			isLogin:false,
@@ -46,9 +47,11 @@
 			          //break;
 			        //直接进入小程序
 			        case 1001:
-				  let val = getMiniappShareInfo(decodeURIComponent(option.query.scene));
-				  if(val.data.shop_key) setShopKey(val.data.shop_key);
-			          //if(val.pid) that.globalData.code = val.pid;
+				  getMiniappShareInfo(decodeURIComponent(option.query.scene)).then(res => {
+				console.log(res);
+				  if(res.data.shop_key) setShopKey(res.data.shop_key);
+			          if(res.data.goods_id) that.globalData.pid = res.data.goods_id;
+				});
 			          break;
 			      }
 			    }
