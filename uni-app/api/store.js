@@ -93,3 +93,7 @@ export function getSearchKeyword(){
 export function getWechatShareInfo(goods_id) {
   return request_new.get('Share.GetWechatShareInfo', { goods_id:goods_id}, { noAuth: true });
 }
+
+export function getShareInfo() {
+  return request_new.get('Site.GetWechatShareInfo', {}, { noAuth: true });
+}

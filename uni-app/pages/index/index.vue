@@ -207,8 +207,10 @@
 			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
-			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
-			<view style="margin-top: 10rpx;font-size: 28rpx;background: #fff;text-align: center;">长按保存或识别进入小程序</view>
+			<view style="width: 600rpx;background: #fff;display: flex;flex-direction: column;align-items: center;">
+				<image style="width: 500rpx;height: 500rpx;margin: 20rpx;" :src="wxa_code_image"></image>
+				<view style="margin: 20rpx;font-size: 28rpx;text-align: center;">长按保存或识别进入小程序</view>
+			</view>
 		</uni-popup>
 		<!-- #endif -->
 		<uni-popup ref="showset" :mask-click="true">
@@ -261,7 +263,8 @@
 		getProductslist,
 		getProductHot,
 		getIndexProductList,
-		getWechatShareInfo
+		getWechatShareInfo,
+		getShareInfo
 	} from '@/api/store.js';
 	import {
 		setVisit
@@ -365,7 +368,9 @@
 					navTop: [],
 					isFixed: false,
 				},
-				wxa_code_image:''
+				wxa_code_image:'',
+				configAppMessage:{},
+				shop_key:''
 			}
 		},
 		onLoad(options) {
@@ -403,10 +408,21 @@
 			let self = this
 			uni.setNavigationBarTitle({
 				title: self.shopName
-			})			 
+			})
+			self.shop_key = getShopKey();
+			console.log(self.shop_key);
 		},
+		// #ifdef MP
+		onShareAppMessage: function() {
+		    let that = this;
+		    return {
+		        title: that.configAppMessage.title || '',
+		        imageUrl: that.configAppMessage.imgUrl || '',
+		        path: '/pages/index/index?shop_key=' + that.shop_key + '&spid=' + that.uid,
+		    }
+		},
+		// #endif
 		methods: {
-
 			// 记录会员访问
 			setVisit() {
 				setVisit({
@@ -473,7 +489,7 @@
 					})
 					that.$set(that, "shopName", res.data);
 					that.$set(that, "imgUrls", res.data.banner);
-					
+					//that.setOpenShare();
 					// #ifdef H5
 					that.subscribe = res.data.subscribe;
 					that.setOpenShare();
@@ -490,6 +506,15 @@
 							}
 						}
 					});
+					getShareInfo().then(res => {
+						let data = res.data;
+						let configAppMessage = {
+							desc: data.synopsis,
+							title: data.title,
+							imgUrl: data.img
+						};
+						that.configAppMessage = configAppMessage;
+					})
 					// #endif
 					// #ifndef MP
 					if (that.isLogin) {
@@ -548,7 +573,7 @@
 			// 获取高度
 			headerHeight(num, num1) {
 				this.searchH = num
-				this.prodeuctTop = num1
+				this.prodeuctTop = 170;//num1
 			},
 			
 			// 打开面板
@@ -564,7 +589,7 @@
 			setOpenShare: function() {
 				let that = this;
 				if (that.$wechat.isWeixin()) {
-					getShare().then(res => {
+					getShareInfo().then(res => {
 						let data = res.data.data;
 						let configAppMessage = {
 							desc: data.synopsis,
@@ -1696,7 +1721,7 @@
 	}
 
 	.productList {
-		background-color: #fff;
+		// background-color: #fff;
 	}
 
 	.productList .list {
