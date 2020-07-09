@@ -296,6 +296,11 @@
 					location.href = url;
 				}
 			}
+			if (uni.getStorageSync('goPages')){
+				var goPages = uni.getStorageSync('goPages');
+				uni.removeStorageSync('goPages');
+				location.href = 'https://youpin.xiaosongzhixue.com/store'+goPages;
+			}
 			// #endif
 			if (this.isLogin) {
 				this.getOrderInfo();

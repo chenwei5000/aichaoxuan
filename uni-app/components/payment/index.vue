@@ -2,7 +2,7 @@
 	<view>
 		<view class="payment" :class="pay_close ? 'on' : ''">
 			<view class="title acea-row row-center-wrapper">
-				选择付款方式{{pay_code}}<text class="iconfont icon-guanbi" @click='close'></text>
+				选择付款方式<text class="iconfont icon-guanbi" @click='close'></text>
 			</view>
 			<view class="item acea-row row-between-wrapper" @click='goPay(item.number || 0 , item.value)' v-for="(item,index) in payMode"
 			 :key="index">
@@ -221,17 +221,15 @@
 						// #ifdef H5
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
+						uni.removeStorageSync('jsapi_code');
+						uni.setStorageSync('goPages',goPages);
 						this.$wechat.pay(jsConfig).then(res => {
 							uni.showToast({
 								title: '支付成功',
 								icon: 'success',
 							})
-							setTimeout(function() {
-								uni.navigateTo({
-									url: goPages
-								})
-							}, 1000)
 						}).cache(res => {
+							uni.removeStorageSync('goPages');
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
 							}, {
