@@ -133,12 +133,14 @@
 		<view class="share-box" v-if="H5ShareBox">
 			<image src="/static/images/share-info.png" @click="H5ShareBox = false"></image>
 		</view>
+		<!-- #ifdef H5 -->
 		<view class="floatright">
-			<image src="/static/images/minishare.png" @tap="open('mini')"></image>
+			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
 			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
 		</uni-popup>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -581,7 +583,6 @@
 					that.downloadFilestoreImage();
 					// #endif
 					that.DefaultSelect();
-					that.getWechatShareInfo();
 				}).catch(err => {
 					//状态异常返回上级页面
 					return that.$util.Tips({
@@ -592,11 +593,11 @@
 					});
 				})
 			},
-			getWechatShareInfo: function() {
+			openminishare: function() {
 				let that = this;
 				getWechatShareInfo(this.id).then(res => {
-					
 					that.wxa_code_image = res.data.wxa.wxa_code_image;
+					that.open('mini');
 				});
 			},
 			  infoScroll: function () {

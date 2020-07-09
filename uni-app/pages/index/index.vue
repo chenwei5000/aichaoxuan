@@ -202,12 +202,14 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
 		<!-- #endif -->
+		<!-- #ifdef H5 -->
 		<view class="floatright">
-			<image src="/static/images/minishare.png" @tap="open('mini')"></image>
+			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
 			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
 		</uni-popup>
+		<!-- #endif -->
 		<uni-popup ref="showset" :mask-click="true">
 			<view class="shop-mask" >
 				<icon class="close-mask" @click="closeMask" type="clear" size="22"/>
@@ -385,7 +387,6 @@
 			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			this.getLiveList()
 			// #endif
-			this.getWechatShareInfo()
 		},
 		onShow() {
 			let self = this
@@ -641,10 +642,11 @@
 					this.tempArr = this.tempArr.concat(data.list)
 				})
 			},
-			getWechatShareInfo: function() {
+			openminishare: function() {
 				let that = this;
 				getWechatShareInfo(0).then(res => {
 					that.wxa_code_image = res.data.wxa.wxa_code_image;
+					that.open('mini');
 				});
 			},
 			open(type) {
