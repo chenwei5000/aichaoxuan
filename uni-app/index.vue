@@ -202,14 +202,12 @@
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse" :isGoIndex="false"></authorize>
 		<!-- #endif -->
-		<!-- #ifdef H5 -->
 		<view class="floatright">
-			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
+			<image src="/static/images/minishare.png" @tap="open('mini')"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
 			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
 		</uni-popup>
-		<!-- #endif -->
 		<uni-popup ref="showset" :mask-click="true">
 			<view class="shop-mask" >
 				<icon class="close-mask" @click="closeMask" type="clear" size="22"/>
@@ -247,8 +245,7 @@
 	} from '@/api/public.js';
 	// #endif
 	import { 
-		getShopKey,
-		setShopKey
+		getShopKey
 	} from '../../libs/public.js'
 	import goodList from '@/components/goodList';
 	import promotionGood from '@/components/promotionGood';
@@ -267,7 +264,9 @@
 	} from '@/api/user.js'
 	import recommend from '@/components/recommend';
 	// #ifdef MP
-	import { getMiniappShareInfo } from "@/api/public";
+	import {
+		getMiniappShareInfo
+	} from "@/api/public";
 	import authorize from '@/components/Authorize';
 	import store from '@/store';
 	import Cache from '@/utils/cache'
@@ -370,33 +369,22 @@
 		onLoad(options) {
 			// #ifndef MP
 			this.navH = 0;
-			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ]);
 			// #endif
+						
+			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ])
 			
 			// #ifdef MP
-			// 小程序码携带参数的处理
 			if(options.scene)
 			{
-				//有小程序码
-				  getMiniappShareInfo(decodeURIComponent(options.scene)).then(res => {
-					console.log(res);
-				  if(res.data.shop_key) setShopKey(res.data.shop_key);
-				  Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ]);
-				  let shop_key="";
-				  shop_key = getShopKey();
-				  this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
-				  
-				  });
-			}else
-			{		
-				Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ]);
-				let shop_key="";
-				shop_key = getShopKey();
-				this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
+				this.init(options.scene);
 			}
-			
+			console.log("after decode");
+			let shop_key="";
+			shop_key = getShopKey();
+			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			this.getLiveList()
 			// #endif
+			this.getWechatShareInfo()
 		},
 		onShow() {
 			let self = this
@@ -405,7 +393,19 @@
 			})			 
 		},
 		methods: {
-
+			// #ifdef MP
+			async init(scene)
+			{
+				let sceneResult = await this.decodeScene(scene);
+				sceneResult.then(res => {
+					console.log("get Api resutl ",res);
+					if(res.data.shop_key) setShopKey(res.data.shop_key);
+				  });
+			},
+			async decodeScene(scene){
+				return getMiniappShareInfo(decodeURIComponent(scene));
+			},
+			// #endif
 			// 记录会员访问
 			setVisit() {
 				setVisit({
@@ -650,11 +650,10 @@
 					this.tempArr = this.tempArr.concat(data.list)
 				})
 			},
-			openminishare: function() {
+			getWechatShareInfo: function() {
 				let that = this;
 				getWechatShareInfo(0).then(res => {
 					that.wxa_code_image = res.data.wxa.wxa_code_image;
-					that.open('mini');
 				});
 			},
 			open(type) {
