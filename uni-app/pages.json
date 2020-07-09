@@ -161,13 +161,13 @@
 				{
 					"path": "user_return_list/index",
 					"style": {
-						"navigationBarTitleText": "退货列表"
+						"navigationBarTitleText": "退款/退货列表"
 					}
 				},
 				{
 					"path": "user_return_detail/index",
 					"style": {
-						"navigationBarTitleText": "退款/退货"
+						"navigationBarTitleText": "退款/退货详情"
 					}
 				},
 				{
