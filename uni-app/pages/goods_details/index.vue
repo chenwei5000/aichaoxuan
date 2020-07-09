@@ -139,6 +139,7 @@
 		</view>
 		<uni-popup ref="showmini" type="center">
 			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
+			<view style="margin-top: 10rpx;font-size: 28rpx;background: #fff;text-align: center;">长按保存或识别进入小程序</view>
 		</uni-popup>
 		<!-- #endif -->
 	</view>
