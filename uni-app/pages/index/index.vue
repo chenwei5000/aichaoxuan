@@ -11,10 +11,10 @@
 		
 		<!-- 2.0 首页展示 -->
 		<!-- #ifdef H5 -->
-			<view class="page_content" :style="'position: relative; top: '+ scrollHeight +'px;'" v-if="navIndex == 0">
+			<view class="page_content" style="position: relative;" v-if="navIndex == 0">
 		<!-- #endif -->
 		<!-- #ifdef MP -->
-			<view class="page_content" :style="'padding-top: '+ prodeuctTop +'px !important;'" v-if="navIndex == 0">
+			<view class="page_content" :style="'padding-top: 355rpx !important;'" v-if="navIndex == 0">
 		<!-- #endif -->
 			<view class="swiper">
 				<swiper 
