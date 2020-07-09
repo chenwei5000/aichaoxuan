@@ -633,7 +633,7 @@
 			// 直播
 			getLiveList: function() {
 				getLiveLists(1, 20).then(res => {
-					this.liveList = res.data.live_list
+					this.liveList = res.data.live_list.splice(0, 2)
 				}).catch(res => {
 
 				})
@@ -791,12 +791,14 @@
 	
 	// 直播列表内容
 	.live-content {
-		
+		padding-top: 1rpx;
+		padding-bottom: 20rpx;
+		background-color: #f4f4f4;
 		.live-item {
-			margin: 32rpx 32rpx 0 32rpx;
+			margin: 20rpx 32rpx 0 32rpx;
 			width: 686rpx;
 			height: 340rpx;
-			background: rgba(255,255,255,1);
+			background-color: #fff;
 			border-radius:16rpx;
 			display: flex;
 			
@@ -804,7 +806,7 @@
 				position: relative;
 				width: 340rpx;
 				height: 340rpx;
-				border-radius:16rpx;
+				border-radius:16rpx 0 0 16rpx;
 				overflow: hidden;
 				
 				.tips {
@@ -879,7 +881,6 @@
 						height:40rpx;
 						background:rgba(216,216,216,1);
 						border-radius: 50%;
-						margin-left: 20rpx;
 						margin-right: 20rpx;
 						overflow: hidden;
 						padding-left: 20rpx;
@@ -898,6 +899,7 @@
 					width: 294rpx;
 					display: flex;
 					flex-wrap: wrap;
+					
 					view {
 						position: relative;
 						width:140rpx;
@@ -930,7 +932,7 @@
 						> text{
 							width: 100%;
 							position: absolute;
-							bottom: 10rpx;
+							bottom: 0;
 							font-size: 12px;
 							text-align: center;
 							color: #fff;
