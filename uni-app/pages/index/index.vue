@@ -366,9 +366,17 @@
 		onLoad() {
 			// #ifndef MP
 			this.navH = 0;
+			if(options.scene)
+			{
+				let sceneResult = await this.decodeScene(options.scene);
+				sceneResult.then(res => {
+					console.log("get Api resutl ",res);
+					if(res.data.shop_key) setShopKey(res.data.shop_key);
+				  });
+			}
+			console.log("after decode");
 			// #endif
-			
-			
+						
 			Promise.all([ this.getAllCategory(), this.getIndexConfig(), this.setVisit() ])
 			
 			// #ifdef MP
@@ -386,6 +394,9 @@
 			})			 
 		},
 		methods: {
+			async decodeScene(scene){
+				return getMiniappShareInfo(decodeURIComponent(scene));
+			},
 			// 记录会员访问
 			setVisit() {
 				setVisit({

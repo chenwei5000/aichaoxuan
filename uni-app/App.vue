@@ -34,6 +34,7 @@
 			      console.error("请配置根目录下的config.js文件中的 'HTTP_REQUEST_URL'\n\n请修改开发者工具中【详情】->【AppID】改为自己的Appid\n\n请前往后台【小程序】->【小程序配置】填写自己的 appId and AppSecret");
 			      return false;
 			    }
+			console.log("enter scene",option.scene);
 			 if (option.query.hasOwnProperty('scene')){
 			      switch (option.scene) {
 			        //扫描小程序码
@@ -47,12 +48,12 @@
 			          //break;
 			        //直接进入小程序
 			        case 1001:
-				  getMiniappShareInfo(decodeURIComponent(option.query.scene)).then(res => {
-				console.log(res);
-				  if(res.data.shop_key) setShopKey(res.data.shop_key);
-			          if(res.data.goods_id) that.globalData.pid = res.data.goods_id;
-				});
-			          break;
+						getMiniappShareInfo(decodeURIComponent(option.query.scene)).then(res => {
+							console.log(res);
+							if(res.data.shop_key) setShopKey(res.data.shop_key);
+							if(res.data.goods_id) that.globalData.pid = res.data.goods_id;
+						});
+						break;
 			      }
 			    }
 				// #endif
@@ -66,6 +67,7 @@
 		mounted() {
 		},
 		onShow(options) {
+		    console.log('on show');
 			// #ifdef MP	
 		    // 分享卡片入口场景才调用getShareParams接口获取以下参数
 		    if (options.scene == 1007 || options.scene == 1008 || options.scene == 1044) {

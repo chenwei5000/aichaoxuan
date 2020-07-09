@@ -162,17 +162,20 @@
 		toLogin
 	} from '@/libs/login.js';
 	import {
+		setShopKey
+	} from '@/libs/public.js';
+	import {
 		mapGetters
 	} from "vuex";
 	import {
-		imageBase64
+		imageBase64,
+		getMiniappShareInfo
 	} from "@/api/public";
 	import productConSwiper from '@/components/productConSwiper';
 	import productWindow from '@/components/productWindow';
 	import userEvaluation from '@/components/userEvaluation';
 	import shareRedPackets from '@/components/shareRedPackets';
 	import home from '@/components/home';
-	import { silenceBindingSpread } from "@/utils";
 	import parser from "@/components/jyf-parser/jyf-parser";
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
@@ -266,41 +269,57 @@
 			if (pages.length <= 1) {
 				that.retunTop = false
 			}
+			
 			// #ifdef MP
 			this.navH = app.globalData.navHeight;
 			// 小程序码携带参数的处理
 			if(options.scene)
 			{
-			    options.id= app.globalData.pid;
+				//有小程序码
+				  getMiniappShareInfo(decodeURIComponent(options.scene)).then(res => {
+					console.log(res);
+				  if(res.data.shop_key) setShopKey(res.data.shop_key);
+			      if(res.data.goods_id) 
+				  {
+					console.log('set pid',res.data.goods_id);
+				    this.id= res.data.goods_id;
+				  }
+				  console.log('product id =',this.id);
+				  if (!this.id){
+				  	return this.$util.Tips({
+				  		title: '缺少参数无法查看商品'
+				  	}, {
+				  		tab: 3,
+				  		url: 1
+				  	});
+				  }
+				  this.getGoodsDetails();
+				});
+			}else
+			{  // 没有小程序码
+			   this.id=options.id;
+			   if (!this.id){
+			   	return this.$util.Tips({
+			   		title: '缺少参数无法查看商品'
+			   	}, {
+			   		tab: 3,
+			   		url: 1
+			   	});
+			   }
+			   this.getGoodsDetails();
 			}
 			// #endif
 			// #ifndef MP
 			this.navH = 96;
-			// #endif
 			this.id = options.id;
+			this.getGoodsDetails();
+			// #endif
 			uni.getSystemInfo({
 				success: function(res) {
 					that.height = res.windowHeight
 					//res.windowHeight:获取整个窗口高度为px，*2为rpx；98为头部占据的高度；
 				},
 			});
-			//扫码携带参数处理
-			// #ifdef MP
-			if (!options.id){
-				return this.$util.Tips({
-					title: '缺少参数无法查看商品'
-				}, {
-					tab: 3,
-					url: 1
-				});
-			}else{
-				this.id = options.id
-			}
-			// #endif
-			this.getGoodsDetails();
-			//#ifdef H5
-			this.isLogin && silenceBindingSpread();
-			//#endif
 		},
 		onReady(){
 		},
