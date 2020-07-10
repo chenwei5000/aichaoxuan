@@ -51,6 +51,7 @@
 				<!-- #endif -->
 			</view>
 		</view>
+		<home></home>
 		<!-- #ifdef MP -->
 		<authorize @onLoadFun="onLoadFun" :isAuto="isAuto" :isShowAuth="isShowAuth" @authColse="authColse"></authorize>
 		<!-- #endif -->
@@ -71,13 +72,15 @@
 	import {
 		mapGetters
 	} from "vuex";
+	import home from '@/components/home';
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
 	// #endif
 	export default {
 		components: {
+			home
 			// #ifdef MP
-			authorize
+			,authorize
 			// #endif
 		},
 		data() {

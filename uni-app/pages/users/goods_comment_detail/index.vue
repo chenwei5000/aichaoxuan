@@ -29,12 +29,16 @@
 		</view>
 	</view>
 </template>
-
+<home></home>
 <script>
 	import {
 		get_ReviewDetail
-	} from '@/api/api.js'
+	} from '@/api/api.js';
+	import home from '@/components/home';
 	export default {
+		components:{
+			home
+		},
 		data() {
 			return {
 				commentDetail: {}

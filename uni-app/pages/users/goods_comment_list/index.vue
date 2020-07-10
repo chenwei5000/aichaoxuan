@@ -8,11 +8,13 @@
 				<text class='loading iconfont icon-jiazai' :hidden='loading==false'></text>{{loadTitle}}
 			</view>
 		</view>
+		<home></home>
 		<view class='noCommodity' v-if="!replyData.sum_count && page > 1">
 			<view class='pictrue'>
 				<image src='/images/noEvaluate.png'></image>
 			</view>
 		</view>
+		
 	</view>
 </template>
 
@@ -20,10 +22,12 @@
 	import {
 		getReplyList
 	} from '@/api/store.js';
+	import home from '@/components/home';
 	import userEvaluation from '@/components/userEvaluation';
 	export default {
 		components: {
-			userEvaluation
+			userEvaluation,
+			home
 		},
 		data() {
 			return {
