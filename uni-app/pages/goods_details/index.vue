@@ -117,7 +117,6 @@
 		<!-- 组件 -->
 		<productWindow :attr="attr" :isShow='1' :iSplus='1' @myevent="onMyEvent" @ChangeAttr="ChangeAttr" @ChangeCartNum="ChangeCartNum"
 		 @attrVal="attrVal" @iptCartNum="iptCartNum" id='product-window'></productWindow>
-		<home></home>
 		<!-- 分享按钮 -->
 		<view class="generate-posters acea-row row-middle" :class="posters ? 'on' : ''">
 			<!-- #ifndef MP -->
@@ -200,7 +199,6 @@
 	import productWindow from '@/components/productWindow';
 	import userEvaluation from '@/components/userEvaluation';
 	import shareRedPackets from '@/components/shareRedPackets';
-	import home from '@/components/home';
 	import parser from "@/components/jyf-parser/jyf-parser";
 	// #ifdef MP
 	import authorize from '@/components/Authorize';
@@ -212,7 +210,6 @@
 			productWindow,
 			userEvaluation,
 			shareRedPackets,
-			home,
 			"jyf-parser": parser,
 			// #ifdef MP
 			authorize
