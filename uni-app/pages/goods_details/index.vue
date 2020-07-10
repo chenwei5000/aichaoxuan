@@ -77,7 +77,7 @@
 							<text class='iconfont icon-jiantou'></text>
 						</navigator>
 					</view>
-					<block v-if="replyCount">
+					<block v-if="replyCount>0">
 						<userEvaluation :reply="reply"></userEvaluation>
 					</block>
 				</view>
