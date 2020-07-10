@@ -995,19 +995,20 @@
 			ShareInfo() {
 				let data = this.storeInfo;
 				let href = location.href;
+				let shop_key= getShopKey();
 				console.log(data);
 				if (this.$wechat.isWeixin()) {
 					getUserInfo().then(res => {
 						href =
 							href.indexOf("?") === -1 ?
-							href + "?spread=" + res.data.uid :
-							href + "&spread=" + res.data.uid;
-
+							href + "?shop_key="+shop_key+"&spread=" + res.data.uid :
+							href + "&shop_key="+shop_key+"&spread=" + res.data.uid;
+				
 						let configAppMessage = {
-							desc: data.store_info,
+							desc: data.store_name,
 							title: data.store_name,
 							link: href,
-							imgUrl: data.image
+							imgUrl: data.slider_image[0]
 						};
 						this.$wechat.wechatEvevt([
 							"updateAppMessageShareData",
