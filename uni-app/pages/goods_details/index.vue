@@ -24,9 +24,30 @@
 						</view>
 						<view style="height: 84rpx;display: flex;align-items: center;" v-if="storeInfo.is_seckill==1">
 							<view style="margin-right: 26rpx;">
-								
-								<text class="jljs">距离结束还有</text>
+								<text class="jljs" v-if="storeInfo.start_time>0">距离开始还有</text>
+								<text class="jljs" v-else>距离结束还有</text>
 							</view>
+							<countdown-timer ref="countdown" :time="count_down">
+								<template v-slot="{day, hour, minute, second}">
+								<view style="display: flex;flex-direction: row;align-items: center;">
+									<view class="djsbox">
+										<text class="djstext">{{hour<10?'0':''}}{{hour}}</text>
+									</view>
+									<view class="mh">
+										<text class="mhtext">:</text>
+									</view>
+									<view class="djsbox">
+										<text class="djstext">{{minute<10?'0':''}}{{minute}}</text>
+									</view>
+									<view class="mh">
+										<text class="mhtext">:</text>
+									</view>
+									<view class="djsbox">
+										<text class="djstext">{{second<10?'0':''}}{{second}}</text>
+									</view>
+								</view>
+								</template>
+							</countdown-timer>
 						</view>
 					</view>
 					</block>
@@ -262,7 +283,8 @@
 				heightArr: [],
 				lock: false,
 				scrollTop:0,
-				wxa_code_image:''
+				wxa_code_image:'',
+				count_down:0
 			};
 		},
 		computed: mapGetters(['isLogin']),
@@ -556,6 +578,7 @@
 					that.$set(that, 'good_list', goodArray);
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
 					that.$set(that, 'activity', data.activity ? data.activity : []);
+					that.$set(that, 'count_down', storeInfo.count_down+'000');
 					uni.setNavigationBarTitle({
 						title: storeInfo.store_name.substring(0, 7) + "..."
 					})
@@ -1498,6 +1521,25 @@
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:34rpx;
+	}
+	.djsbox{
+		width:34rpx;
+		height:34rpx;
+		background-color:rgba(255,255,255,1);
+		border-radius:4rpx;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		justify-content: center;
+		align-items: center;
+	}
+	.djstext{
+		height:28rpx;
+		font-size:20rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(236,39,79,1);
+		line-height:28rpx;
 	}
 	.floatright{
 		position: fixed;
