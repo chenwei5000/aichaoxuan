@@ -11,14 +11,6 @@ export function getUserInfo(){
 }
 
 /**
- * 设置用户分享
- * 
-*/
-export function userShare(){
-  return request.post('user/share');
-}
-
-/**
  * h5用户登录
  * @param data object 用户账号密码
  */

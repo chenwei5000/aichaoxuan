@@ -24,9 +24,30 @@
 						</view>
 						<view style="height: 84rpx;display: flex;align-items: center;" v-if="storeInfo.is_seckill==1">
 							<view style="margin-right: 26rpx;">
-								
-								<text class="jljs">距离结束还有</text>
+								<text class="jljs" v-if="!skill_start">距离开始还有</text>
+								<text class="jljs" v-else>距离结束还有</text>
 							</view>
+							<countdown-timer ref="countdown" :time="count_down">
+								<template v-slot="{day, hour, minute, second}">
+								<view style="display: flex;flex-direction: row;align-items: center;">
+									<view class="djsbox">
+										<text class="djstext">{{hour<10?'0':''}}{{hour}}</text>
+									</view>
+									<view class="mh">
+										<text class="mhtext">:</text>
+									</view>
+									<view class="djsbox">
+										<text class="djstext">{{minute<10?'0':''}}{{minute}}</text>
+									</view>
+									<view class="mh">
+										<text class="mhtext">:</text>
+									</view>
+									<view class="djsbox">
+										<text class="djstext">{{second<10?'0':''}}{{second}}</text>
+									</view>
+								</view>
+								</template>
+							</countdown-timer>
 						</view>
 					</view>
 					</block>
@@ -138,8 +159,10 @@
 			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
 		</view>
 		<uni-popup ref="showmini" type="center">
-			<image style="width: 400rpx;height: 400rpx;" :src="wxa_code_image"></image>
-			<view style="margin-top: 10rpx;font-size: 28rpx;background: #fff;text-align: center;">长按保存或识别进入小程序</view>
+			<view style="width: 600rpx;background: #fff;display: flex;flex-direction: column;align-items: center;">
+				<image style="width: 500rpx;height: 500rpx;margin: 20rpx;" :src="wxa_code_image"></image>
+				<view style="margin: 20rpx;font-size: 28rpx;text-align: center;">长按保存或识别进入小程序</view>
+			</view>
 		</uni-popup>
 		<!-- #endif -->
 	</view>
@@ -155,8 +178,7 @@
 		getWechatShareInfo
 	} from '@/api/store.js';
 	import {
-		getUserInfo,
-		userShare
+		getUserInfo
 	} from '@/api/user.js';
 	import {
 		getCartCounts
@@ -165,7 +187,7 @@
 		toLogin
 	} from '@/libs/login.js';
 	import {
-		setShopKey
+		setShopKey,getShopKey
 	} from '@/libs/public.js';
 	import {
 		mapGetters
@@ -260,7 +282,9 @@
 				heightArr: [],
 				lock: false,
 				scrollTop:0,
-				wxa_code_image:''
+				wxa_code_image:'',
+				skill_start:false,
+				count_down:0
 			};
 		},
 		computed: mapGetters(['isLogin']),
@@ -335,12 +359,12 @@
 		// #ifdef MP
 		onShareAppMessage: function() {
 			let that = this;
+			let shop_key= getShopKey();
 			that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
-			userShare();
 			return {
 				title: that.storeInfo.store_name || '',
 				imageUrl: that.storeInfo.image || '',
-				path: '/pages/goods_details/index?id=' + that.id + '&spid=' + that.uid,
+				path: '/pages/goods_details/index?id=' + that.id + '&shop_key=' + shop_key,
 			}
 		},
 		// #endif
@@ -554,6 +578,14 @@
 					that.$set(that, 'good_list', goodArray);
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
 					that.$set(that, 'activity', data.activity ? data.activity : []);
+					if (storeInfo.is_seckill==1){
+						let timestamp = (new Date()).valueOf();
+						if (timestamp>storeInfo.start_time){
+							that.$set(that, 'skill_start', true);
+						}
+						that.$set(that, 'count_down', storeInfo.count_down+'000');
+					}
+					
 					uni.setNavigationBarTitle({
 						title: storeInfo.store_name.substring(0, 7) + "..."
 					})
@@ -1496,6 +1528,25 @@
 		font-weight:400;
 		color:rgba(255,255,255,1);
 		line-height:34rpx;
+	}
+	.djsbox{
+		width:34rpx;
+		height:34rpx;
+		background-color:rgba(255,255,255,1);
+		border-radius:4rpx;
+		/* #ifndef APP-NVUE */
+		display: flex;
+		/* #endif */
+		justify-content: center;
+		align-items: center;
+	}
+	.djstext{
+		height:28rpx;
+		font-size:20rpx;
+		font-family:PingFangSC-Regular,PingFang SC;
+		font-weight:400;
+		color:rgba(236,39,79,1);
+		line-height:28rpx;
 	}
 	.floatright{
 		position: fixed;

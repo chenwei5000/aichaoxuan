@@ -177,10 +177,17 @@
 					location.href = url;
 				}
 			}
+			if (uni.getStorageSync('goPages')){
+				var goPages = uni.getStorageSync('goPages');
+				uni.removeStorageSync('goPages');
+				location.href = 'https://youpin.xiaosongzhixue.com/store'+goPages;
+			}
 			// #endif
 			if (this.isLogin) {
+				// #ifdef H5 || APP-PLUS
 				this.getOrderData();
 				this.getOrderList();
+				// #endif 
 				//this.getUserInfo();
 			} else {
 				// #ifdef H5 || APP-PLUS

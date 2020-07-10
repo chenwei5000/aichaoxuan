@@ -293,6 +293,11 @@
 					this.code = uni.getStorageSync('jsapi_code')
 				}
 			}
+			if (uni.getStorageSync('goPages')){
+				var goPages = uni.getStorageSync('goPages');
+				uni.removeStorageSync('goPages');
+				location.href = 'https://youpin.xiaosongzhixue.com/store'+goPages;
+			}
 			// #endif
 			this.textareaStatus = true;
 			if (this.isLogin && this.toPay == false) {
@@ -690,17 +695,16 @@
 						// #ifdef H5
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
+						uni.removeStorageSync('jsapi_code');
+						uni.setStorageSync('goPages',goPages);
+						
 						this.$wechat.pay(jsConfig).then(res => {
 							uni.showToast({
 								title: '支付成功',
 								icon: 'success',
 							})
-							setTimeout(function() {
-								uni.navigateTo({
-									url: goPages
-								})
-							}, 1000)
 						}).cache(res => {
+							uni.removeStorageSync('goPages');
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
 							}, {

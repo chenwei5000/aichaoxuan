@@ -67,9 +67,19 @@
 		mounted() {
 		},
 		onShow(options) {
-		    console.log('on show');
+		    //console.log('on show');
 			// #ifdef MP	
+			// 如果参数中有shop_key则重新设置shop_key
+			console.log('on show options:',options);
+			if(options.query.shop_key)
+			{
+				let urlShopKey = options.query.shop_key;
+				setShopKey(urlShopKey);
+				console.log('shopKey from url:',urlShopKey);
+			}
+
 		    // 分享卡片入口场景才调用getShareParams接口获取以下参数
+			console.log(options.scene == 1007 || options.scene == 1008 || options.scene == 1044);
 		    if (options.scene == 1007 || options.scene == 1008 || options.scene == 1044) {
 		        livePlayer.getShareParams()
 		            .then(res => {

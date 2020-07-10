@@ -63,14 +63,6 @@
 			}
 		},
 		onLoad(){
-			// #ifdef MP
-			let shop_key="";
-			if (store.state.app.shopKey) {
-				shop_key = encodeURIComponent(store.state.app.shopKey);
-			}else{
-				shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
-			}
-			// #endif
 			this.getFlashSale()
 		},
 		mounted() {
@@ -92,6 +84,7 @@
 				this.index = index
 				var t = this;
 				t.type = parseInt(index)+1;
+				t.list=[];
 				t.getFlashSale();
 			},
 			detail(id){

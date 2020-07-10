@@ -199,7 +199,7 @@
 	}
 
 	.product-window .productWinList {
-		max-height: 395rpx;
+		max-height: 445rpx;
 		overflow: auto;
 		margin-top: 36rpx;
 	}
