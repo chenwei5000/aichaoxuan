@@ -213,7 +213,7 @@
 			</view>
 		</uni-popup>
 		<!-- #endif -->
-		<uni-popup ref="showset" :mask-click="true">
+		<uni-popup ref="showset" type="center" :mask-click="true">
 			<view class="shop-mask" >
 				<icon class="close-mask" @click="closeMask" type="clear" size="22"/>
 				<view class="mask-head">
@@ -223,7 +223,7 @@
 				<view class="wechat-code">
 					<image :src="shopName.shopWechatBarcode"></image>
 				</view>
-				<text class="tips"> 截图保存二维码 </text>
+				<text class="tips">长按保存图片或识别二维码</text>
 			</view>
 		</uni-popup>
 	</view>
@@ -761,7 +761,7 @@
 		width: 528rpx;
 		height: 704rpx;
 		background-color: #fff;
-		transform: translate(-50%, -35%);
+		transform: translate(-50%, -60%);
 		overflow: hidden;
 		
 		.close-mask {
@@ -776,8 +776,8 @@
 			
 			view {
 				float: left;
-				width: 120rpx;
-				height: 120rpx;
+				width: 100rpx;
+				height: 100rpx;
 				border-radius: 50%;
 				overflow: hidden;
 				border: 1px solid #d8d8d8;
