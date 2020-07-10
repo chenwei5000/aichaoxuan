@@ -369,6 +369,7 @@
 					isFixed: false,
 				},
 				wxa_code_image:'',
+				liveDeail: '/pages/live-detail/index'
 				configAppMessage:{},
 				shop_key:''
 			}
