@@ -188,7 +188,7 @@
 		toLogin
 	} from '@/libs/login.js';
 	import {
-		setShopKey
+		setShopKey,getShopKey
 	} from '@/libs/public.js';
 	import {
 		mapGetters
@@ -360,12 +360,13 @@
 		// #ifdef MP
 		onShareAppMessage: function() {
 			let that = this;
+			let shop_key=getShopKey();
 			that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
 			userShare();
 			return {
 				title: that.storeInfo.store_name || '',
 				imageUrl: that.storeInfo.image || '',
-				path: '/pages/goods_details/index?id=' + that.id + '&spid=' + that.uid,
+				path: '/pages/goods_details/index?id=' + that.id + '&shop_key=' + shop_key,
 			}
 		},
 		// #endif

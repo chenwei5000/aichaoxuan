@@ -418,7 +418,7 @@
 		    return {
 		        title: that.configAppMessage.title || '',
 		        imageUrl: that.configAppMessage.imgUrl || '',
-		        path: '/pages/index/index?shop_key=' + that.shop_key + '&spid=' + that.uid,
+		        path: '/pages/index/index?shop_key=' + that.shop_key,
 		    }
 		},
 		// #endif
@@ -683,6 +683,7 @@
 					that.open('mini');
 				});
 			},
+
 			open(type) {
 				this.$refs['show' + type].open()
 			},
