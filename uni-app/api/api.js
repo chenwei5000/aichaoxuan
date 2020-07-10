@@ -109,6 +109,15 @@ export async function getFlashSale(data) {
   return request_new.get('FlashSale.ListGoods', data, { noAuth: true });
 }
 
+// 直播详情
+export async function get_Lives_Detail(data) {
+  return request_new.get('Live.GetLiveDetail', data, { noAuth: true });
+}
+
+// 直播商品列表
+export async function get_Lives_Prolist(data) {
+  return request_new.get('Live.ListLiveGoods', data, { noAuth: true });
+}
 
 /*
  * 获取我的评价  待评价 / 已评价 / 评论详情
