@@ -24,7 +24,7 @@
 						</view>
 						<view style="height: 84rpx;display: flex;align-items: center;" v-if="storeInfo.is_seckill==1">
 							<view style="margin-right: 26rpx;">
-								<text class="jljs" v-if="storeInfo.start_time>0">距离开始还有</text>
+								<text class="jljs" v-if="!skill_start">距离开始还有</text>
 								<text class="jljs" v-else>距离结束还有</text>
 							</view>
 							<countdown-timer ref="countdown" :time="count_down">
@@ -284,6 +284,7 @@
 				lock: false,
 				scrollTop:0,
 				wxa_code_image:'',
+				skill_start:false,
 				count_down:0
 			};
 		},
@@ -578,6 +579,10 @@
 					that.$set(that, 'good_list', goodArray);
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
 					that.$set(that, 'activity', data.activity ? data.activity : []);
+					let timestamp = (new Date()).valueOf();
+					if (timestamp>storeInfo.start_time){
+						that.$set(that, 'skill_start', true);
+					}
 					that.$set(that, 'count_down', storeInfo.count_down+'000');
 					uni.setNavigationBarTitle({
 						title: storeInfo.store_name.substring(0, 7) + "..."
