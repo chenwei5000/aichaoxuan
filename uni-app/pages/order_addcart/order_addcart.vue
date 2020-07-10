@@ -2,8 +2,8 @@
 	<view>
 		<view class='shoppingCart'>
 			<view class='labelNav acea-row row-around row-middle'>
-				<view class='item'><text class='iconfont icon-xuanzhong'></text>100%正品保证</view>
-				<view class='item'><text class='iconfont icon-xuanzhong'></text>所有商品精挑细选</view>
+				<view class='item'><text class='iconfont icon-xuanzhong'></text>工厂直供</view>
+				<view class='item'><text class='iconfont icon-xuanzhong'></text>100%质检</view>
 				<view class='item'><text class='iconfont icon-xuanzhong'></text>售后无忧</view>
 			</view>
 			<view class='nav acea-row row-between-wrapper'>
