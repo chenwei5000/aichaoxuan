@@ -178,8 +178,7 @@
 		getWechatShareInfo
 	} from '@/api/store.js';
 	import {
-		getUserInfo,
-		userShare
+		getUserInfo
 	} from '@/api/user.js';
 	import {
 		getCartCounts
@@ -360,9 +359,8 @@
 		// #ifdef MP
 		onShareAppMessage: function() {
 			let that = this;
-			let shop_key=getShopKey();
+			let shop_key= getShopKey();
 			that.$set(that, 'actionSheetHidden', !that.actionSheetHidden);
-			userShare();
 			return {
 				title: that.storeInfo.store_name || '',
 				imageUrl: that.storeInfo.image || '',

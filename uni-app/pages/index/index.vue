@@ -103,6 +103,7 @@
 			</block>
 			<!-- #endif -->
 			<!-- 限时秒杀 -->
+
 			<view class="spike-box" v-if="spikeList.length>0">
 				<view class="hd">
 					<view class="left">

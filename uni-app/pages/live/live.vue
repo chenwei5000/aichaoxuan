@@ -67,6 +67,9 @@
 <script>
 	import { get_Lives } from '@/api/api.js'
 	import store from '@/store'
+	import {
+		getShopKey
+	} from '@/libs/public.js';
 	import { mapGetters } from "vuex";
 	import tabNav from '@/components/tabNav.vue'
 	export default {
@@ -95,11 +98,7 @@
 		onLoad(){
 			// #ifdef MP
 			let shop_key="";
-			if (store.state.app.shopKey) {
-			  shop_key = encodeURIComponent(store.state.app.shopKey);
-			}else{
-				shop_key = encodeURIComponent('5pSMIG2RFGPfzcz5KeCUhQ==');
-			}
+			shop_key=getShopKey();
 			this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			// #endif
 			this.getLivesHosue(this.num)
