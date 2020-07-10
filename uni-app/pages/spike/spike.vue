@@ -92,6 +92,7 @@
 				this.index = index
 				var t = this;
 				t.type = parseInt(index)+1;
+				t.list=[];
 				t.getFlashSale();
 			},
 			detail(id){

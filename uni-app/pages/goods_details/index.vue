@@ -579,11 +579,14 @@
 					that.$set(that, 'good_list', goodArray);
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
 					that.$set(that, 'activity', data.activity ? data.activity : []);
-					let timestamp = (new Date()).valueOf();
-					if (timestamp>storeInfo.start_time){
-						that.$set(that, 'skill_start', true);
+					if (storeInfo.is_seckill==1){
+						let timestamp = (new Date()).valueOf();
+						if (timestamp>storeInfo.start_time){
+							that.$set(that, 'skill_start', true);
+						}
+						that.$set(that, 'count_down', storeInfo.count_down+'000');
 					}
-					that.$set(that, 'count_down', storeInfo.count_down+'000');
+					
 					uni.setNavigationBarTitle({
 						title: storeInfo.store_name.substring(0, 7) + "..."
 					})
