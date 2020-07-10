@@ -14,8 +14,8 @@
 		<!-- 直播列表 -->
 		<view class="live-content">
 			<view class="lives-list" v-for="item in liveList" :key="item.id">
-				
-				<navigator :url="liveUrl + item.roomid + '&custom_params=' + LiveCustomParams">
+				<subscribe class="scribe-btn" v-if="num === 2" :room-id="item.roomid"></subscribe>
+				<navigator :url="num === 2 ? (liveDeail + '?roomId=' + item.roomid) :  (liveUrl + item.roomid + '&custom_params=' + LiveCustomParams)">
 					<view class="live-item">
 						<view class="item-left">
 							<view class="tips">
@@ -27,8 +27,7 @@
 							</view>
 							<view class="like">
 								<text class="join-live" v-if="num === 1">进入直播</text>
-								<text class="join-live" v-else-if="num === 2">订阅直播</text>
-								<text class="join-live" v-else>点击回放</text>
+								<text class="join-live" v-else-if="num === 3">点击回放</text>
 							</view>
 							<image :src="item.share_img" mode=""></image>
 						</view>
@@ -76,6 +75,7 @@
 		},
 		data() {
 			return {
+				liveDeail: '/pages/live-detail/index',
 				liveUrl: 'plugin-private://wx2b03c6e691cd7370/pages/live-player-plugin?room_id=',
 				isFixed: false,
 				navTop:[
@@ -135,20 +135,23 @@
 	}
 	
 	.live-content {
+		.lives-list {
+			position: relative;
+		}
 		
 		.live-item {
 			margin: 32rpx 32rpx 0 32rpx;
 			width: 686rpx;
 			height: 340rpx;
 			background: rgba(255,255,255,1);
-			border-radius:16rpx;
+			// border-radius:16rpx;
 			display: flex;
 			
 			.item-left {
 				position: relative;
 				width: 340rpx;
 				height: 340rpx;
-				border-radius:16rpx;
+				border-radius:16rpx 0 0 16px;
 				overflow: hidden;
 				
 				.tips {
@@ -223,7 +226,7 @@
 						height:40rpx;
 						background:rgba(216,216,216,1);
 						border-radius: 50%;
-						margin-left: 20rpx;
+						// margin-left: 20rpx;
 						margin-right: 20rpx;
 						overflow: hidden;
 						padding-left: 20rpx;
@@ -274,7 +277,7 @@
 						> text{
 							width: 100%;
 							position: absolute;
-							bottom: 10rpx;
+							bottom: 0;
 							font-size: 12px;
 							text-align: center;
 							color: #fff;

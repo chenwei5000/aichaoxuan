@@ -716,3 +716,38 @@
 .product-con .red{
 		color: #82848f!important;
 	}
+
+.lives-list .scribe-btn {
+	position: absolute;
+	bottom: 20rpx;
+	left: 50%;
+	transform: translateX(-152rpx);
+	z-index: 10086;
+}
+	
+.lives-list .subscribe--live-player-subscribe__btn {
+	width: auto !important;
+	height: 36rpx !important;
+	line-height: 36rpx !important;
+	font-size: 24rpx !important;
+	border-radius: 18rpx !important;
+	padding: 0 18rpx;
+	font-weight: normal !important;
+	margin: 0 !important;
+	color: #fff !important;
+	background-color: #FF2803 !important;
+}
+
+.pictrue-site .subscribe--live-player-subscribe__btn {
+	width: auto !important;
+	height: 62rpx !important;
+	line-height: 62rpx !important;
+	font-size: 24rpx !important;
+	border-radius: 31rpx !important;
+	padding: 0 31rpx;
+	font-weight: normal !important;
+	margin: 0 !important;
+	color: #FF0205 !important;
+	background-color: #fff !important;
+	border: 1px solid #FF0205;
+}

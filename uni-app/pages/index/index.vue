@@ -53,8 +53,8 @@
 				<!-- 直播列表 -->
 				<view class="live-content">
 					<view class="lives-list" v-for="item in liveList" :key="item.id">
-						
-						<navigator :url="liveUrl + item.roomid + '&custom_params=' + LiveCustomParams">
+						<subscribe class="scribe-btn" :room-id="item.roomid" v-if="item.live_status === '102'">直播预告</text>></subscribe>
+						<navigator :url="item.live_status === '102' ? (liveDeail + '?roomId=' + item.roomid) : (liveUrl + item.roomid + '&custom_params=' + LiveCustomParams)">
 							<view class="live-item">
 								<view class="item-left">
 									<view class="tips">
@@ -66,8 +66,7 @@
 									</view>
 									<view class="like">
 										<text class="join-live" v-if="item.live_status === '101'">进入直播</text>
-										<text class="join-live" v-else-if="item.live_status === '102'">订阅直播</text>
-										<text class="join-live" v-else>点击回放</text>
+										<text class="join-live" v-else-if="item.live_status === '103'">点击回放</text>
 									</view>
 									<image :src="item.share_img" mode=""></image>
 								</view>
@@ -365,7 +364,8 @@
 					navTop: [],
 					isFixed: false,
 				},
-				wxa_code_image:''
+				wxa_code_image:'',
+				liveDeail: '/pages/live-detail/index'
 			}
 		},
 		onLoad(options) {
@@ -794,6 +794,12 @@
 		padding-top: 1rpx;
 		padding-bottom: 20rpx;
 		background-color: #f4f4f4;
+		
+		.lives-list {
+			position: relative;
+		}
+
+		
 		.live-item {
 			margin: 20rpx 32rpx 0 32rpx;
 			width: 686rpx;
@@ -801,7 +807,6 @@
 			background-color: #fff;
 			border-radius:16rpx;
 			display: flex;
-			
 			.item-left {
 				position: relative;
 				width: 340rpx;
