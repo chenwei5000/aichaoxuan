@@ -30,12 +30,7 @@ export default {
 		}
 	},
 	methods: {
-		startTimer() {
-			this.updateTime();
-			this.timer = setInterval(() => {
-				this.updateTime();
-			}, 1000);
-		},
+		// 更新时间
 		updateTime() {
 			let t = this.timeData.remain;
 			this.timeData.day = Math.floor(t / 1000 / 60 / 60 / 24);
@@ -48,17 +43,39 @@ export default {
 				this.$emit('finish');
 			}
 		},
-		restart() {
-			if (this.timer != null) {
+		
+		// 开启倒计时
+		startTimer() {
+			if (this.timer) {
 				clearInterval(this.timer);
 			}
+			this.updateTime();
+			this.timer = setInterval(() => {
+				this.updateTime();
+			}, 1000);
+		},
+		
+		// 重新开始倒计时
+		restart() {
 			this.timeData.remain = this.time;
 			this.startTimer();
+		},
+		
+		// 暂停倒计时
+		pause() {
+			if(this.timer) {
+				clearInterval(this.timer);
+			}
+		},
+		
+		// 继续倒计时
+		continue() {
+			this.timeData.remain += 1000;
+			this.startTimer();		
 		}
 	},
 	mounted() {
-		this.timeData.remain = this.time;
-		this.startTimer();
+		this.restart();
 	},
 	beforeDestroy() {
 		clearInterval(this.timer);

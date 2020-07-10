@@ -82,6 +82,7 @@
 		data() {
 			return {
 				refund_reason_wap_img:[],
+				files:[],
 				    orderInfo:{},
 					goodsDetail:{},
 				    RefundArray: [],
@@ -141,6 +142,8 @@
 			      let index = e, that = this, pic = this.refund_reason_wap_img[index];
 			      that.refund_reason_wap_img.splice(index, 1);
 				  that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
+				  that.files.splice(index, 1);
+				  that.$set(that,'files',that.files);
 			    },
 			  
 			    /**
@@ -149,10 +152,51 @@
 			    */
 			    uploadpic:function(){
 			      let that=this;
-			      this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
-			        that.refund_reason_wap_img.push(res.data.url);
-					that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
-			      });
+			  //     this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
+			  //       that.refund_reason_wap_img.push(res.data.url);
+					// that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
+			  //     });
+					let nowtoken = store.state.app.token;
+					let shop_key = encodeURIComponent(store.state.app.shopKey);
+					let url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
+					console.log(url);
+					uni.chooseImage({
+						count: 1,
+						sizeType: ['compressed', 'original'],
+						sourceType: ['album', 'camera'],
+						success: function(res) {
+							console.log(res);
+							//res.tempFilePaths[0]
+							that.refund_reason_wap_img.push(res.tempFilePaths[0]);
+							uni.showLoading({
+							    title: "上传中"
+							});
+							uni.uploadFile({
+							    url: url,
+							    filePath: res.tempFilePaths[0],
+							    name: 'aftersale',
+								formData: {
+								    biz_type:'aftersale',
+								},
+								success: function(e) {
+									console.log(e);
+									e = JSON.parse(e.data);
+									that.files.push(e.data.name);
+									console.log(that.files)
+									uni.hideLoading();
+									uni.showToast({
+										title: e.msg
+									});
+							    },
+							    complete: function(e) {
+									console.log(e);
+							    }
+							});
+						},
+						fail: function(err) {
+							console.log(err);
+						}
+					});
 			    },
 
 			    /**
@@ -173,7 +217,7 @@
 				  		money:t.goodsDetail.most_return_money,
 				  		text:t.RefundArray[t.index] || '',
 				  		remark:value.refund_reason_wap_explain,
-				  		refund_reason_wap_img:t.refund_reason_wap_img.join(',')
+				  		refund_reason_wap_img:t.files.join(',')
 				  	},
 				  	dataType:'json',
 				  	header : {'content-type':'application/x-www-form-urlencoded'},
