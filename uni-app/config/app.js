@@ -3,7 +3,7 @@ module.exports = {
 	// 请求域名 格式： https://您的域名
 	// #ifdef MP
 	HTTP_REQUEST_URL:'https://www.ipinhai1.com',
-	HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api/',
+	HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
 	HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
 	APP_ID:'wx72ab3a22dc7b00f9',
 	// #endif
@@ -12,7 +12,7 @@ module.exports = {
 		//H5接口是浏览器地址
 		//HTTP_REQUEST_URL: window.location.protocol+"//"+window.location.host,
 		HTTP_REQUEST_URL:'https://www.ipinhai1.com',
-		HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api/',
+		HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
 		HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
 		APP_ID:'wx72ab3a22dc7b00f9',
 	// #endif
