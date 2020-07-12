@@ -60,6 +60,7 @@
 	</view>
 </template>
 <script>
+	import { HTTP_REQUEST_URL_NEW, HOST} from '@/config/app';
 	import { ordeRefundReason, orderRefundVerify, getOrderGoodsDetail} from '@/api/order.js';
 	import {
 		toLogin
@@ -158,7 +159,7 @@
 			  //     });
 					let nowtoken = store.state.app.token;
 					let shop_key = encodeURIComponent(store.state.app.shopKey);
-					let url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
+					let url = HTTP_REQUEST_URL_NEW+'/h5api/web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
 					console.log(url);
 					uni.chooseImage({
 						count: 1,
@@ -207,7 +208,7 @@
 			      let t = this, value = e.detail.value;
 				  //if (!value.refund_reason_wap_explain) return this.$util.Tips({title:'请输入退款原因'});
 				  
-				  var url = 'https://youpin.xiaosongzhixue.com/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
+				  var url = HTTP_REQUEST_URL_NEW+'/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
 				  uni.request({
 				      url: url,
 				  	method: 'POST',

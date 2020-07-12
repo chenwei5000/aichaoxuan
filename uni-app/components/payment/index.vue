@@ -24,6 +24,7 @@
 </template>
 
 <script>
+	import { HTTP_REQUEST_URL_NEW, HOST} from '@/config/app';
 	import {
 		orderPay,
 		WxJsapiPay,
@@ -251,7 +252,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com%2Fstore'+encodeURIComponent(goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(HOST+goPages);
 						}, 100);
 						break;
 				}

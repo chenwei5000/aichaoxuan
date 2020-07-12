@@ -89,9 +89,9 @@
         },
         "router" : {
             "mode" : "history",
-            "base" : "/store/"
+            "base" : "/"
         },
-        "domain" : "youpin.xiaosongzhixue.com",
+        "domain" : "store.aichaoxuan.com",
         "sdkConfigs" : {
             "maps" : {}
         },

@@ -120,6 +120,7 @@
 	</view>
 </template>
 <script>
+	import { HTTP_REQUEST_URL_NEW, HOST, APP_ID} from '@/config/app';
 	import {
 		orderConfirm,
 		getCouponsOrderPrice,
@@ -178,7 +179,7 @@
 						payStatus: 1,
 					},
 				],
-				payType: 'weixin', //支付方式
+				payType: 'wxpay', //支付方式
 				openType: 0, //优惠券打开方式 1=使用
 				active: 0, //支付方式切换
 				coupon: {
@@ -287,7 +288,7 @@
 			// #ifdef  H5
 			if (this.$wechat.isWeixin()){
 				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+APP_ID+'&redirect_uri='+encodeURIComponent(HOST+'/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
 					location.href = url;
 				}else{
 					this.code = uni.getStorageSync('jsapi_code')
@@ -296,7 +297,7 @@
 			if (uni.getStorageSync('goPages')){
 				var goPages = uni.getStorageSync('goPages');
 				uni.removeStorageSync('goPages');
-				location.href = 'https://youpin.xiaosongzhixue.com/store'+goPages;
+				location.href = HOST+goPages;
 			}
 			// #endif
 			this.textareaStatus = true;
@@ -726,7 +727,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url=https%3A%2F%2Fyoupin.xiaosongzhixue.com%2Fstore'+encodeURIComponent(goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(HOST+goPages);
 						}, 100);
 						break;
 				}

@@ -96,6 +96,7 @@
 </template>
 
 <script>
+	import { HTTP_REQUEST_URL_NEW, HOST, APP_ID} from '@/config/app';
 	import {
 		getOrderList,
 		orderData,
@@ -173,14 +174,14 @@
 			// #ifdef  H5
 			if (this.$wechat.isWeixin()){
 				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx12ba7e2db2d73692&redirect_uri='+encodeURIComponent('https://youpin.xiaosongzhixue.com/store/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+APP_ID+'&redirect_uri='+encodeURIComponent(HOST+'/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
 					location.href = url;
 				}
 			}
 			if (uni.getStorageSync('goPages')){
 				var goPages = uni.getStorageSync('goPages');
 				uni.removeStorageSync('goPages');
-				location.href = 'https://youpin.xiaosongzhixue.com/store'+goPages;
+				location.href = HOST+goPages;
 			}
 			// #endif
 			if (this.isLogin) {
