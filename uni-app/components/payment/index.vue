@@ -24,7 +24,7 @@
 </template>
 
 <script>
-	import { HTTP_REQUEST_URL_NEW, HOST} from '@/config/app';
+	import { HTTP_REQUEST_URL_NEW } from '@/config/app';
 	import {
 		orderPay,
 		WxJsapiPay,
@@ -252,7 +252,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(HOST+goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(location.protocol+'//'+location.hostname+goPages);
 						}, 100);
 						break;
 				}

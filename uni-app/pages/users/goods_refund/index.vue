@@ -44,7 +44,7 @@
 	</view>
 </template>
 <script>
-	import { HTTP_REQUEST_URL_NEW, HOST} from '@/config/app';
+	import { HTTP_REQUEST_URL_NEW } from '@/config/app';
 	import { ordeRefundReason, orderRefundVerify, getOrderGoodsDetail} from '@/api/order.js';
 	import {
 		toLogin

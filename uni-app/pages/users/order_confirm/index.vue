@@ -120,7 +120,7 @@
 	</view>
 </template>
 <script>
-	import { HTTP_REQUEST_URL_NEW, HOST, APP_ID} from '@/config/app';
+	import { HTTP_REQUEST_URL_NEW } from '@/config/app';
 	import {
 		orderConfirm,
 		getCouponsOrderPrice,
@@ -288,7 +288,7 @@
 					// #ifdef  H5
 					if (this.$wechat.isWeixin()){
 						if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-							var url = this.$wechat.getJsApiCodeUrl(HOST+'/pages/users/order_confirm/index?cartId='+this.cartId);
+							var url = this.$wechat.getJsApiCodeUrl(location.protocol+'//'+location.hostname+'/pages/users/order_confirm/index?cartId='+this.cartId);
 							location.href = url;
 						}else{
 							this.code = uni.getStorageSync('jsapi_code')
@@ -297,7 +297,7 @@
 					if (uni.getStorageSync('goPages')){
 						var goPages = uni.getStorageSync('goPages');
 						uni.removeStorageSync('goPages');
-						location.href = HOST+goPages;
+						location.href = location.protocol+'//'+location.hostname+goPages;
 					}
 					// #endif
 			this.textareaStatus = true;
@@ -728,7 +728,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(HOST+goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(location.protocol+'//'+location.hostname+goPages);
 						}, 100);
 						break;
 				}

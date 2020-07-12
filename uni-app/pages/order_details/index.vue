@@ -209,7 +209,7 @@
 
 
 <script>
-	import { HTTP_REQUEST_URL_NEW, HOST} from '@/config/app';
+	import { HTTP_REQUEST_URL_NEW } from '@/config/app';
 	import {
 		getOrderDetail,
 		orderAgain,
@@ -293,7 +293,7 @@
 				// #ifdef  H5
 				if (this.$wechat.isWeixin()){
 					if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-						var url = this.$wechat.getJsApiCodeUrl(HOST+'/pages/order_details/index?order_id='+this.order_id);
+						var url = this.$wechat.getJsApiCodeUrl(location.protocol+'//'+location.hostname+'/pages/order_details/index?order_id='+this.order_id);
 						console.log(url);
 						location.href = url;
 					}
@@ -301,7 +301,7 @@
 				if (uni.getStorageSync('goPages')){
 					var goPages = uni.getStorageSync('goPages');
 					uni.removeStorageSync('goPages');
-					location.href = HOST+goPages;
+					location.href = location.protocol+'//'+location.hostname+goPages;
 				}
 				// #endif
 			if (this.isLogin) {
