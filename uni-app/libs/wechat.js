@@ -8,6 +8,7 @@ import {
 } from "@/api/public";
 import {
 	WX_AUTH,
+	WX_APPID,
 	STATE_KEY,
 	LOGINTYPE,
 	BACK_URL
@@ -45,6 +46,7 @@ class AuthWechat {
 				.then(res => {
 					this.instance.config(res.data);
 					this.initConfig = res.data;
+					Cache.set(WX_APPID, res.data.appId || 0)
 					this.status = true;
 					this.instance.ready(() => {
 						resolve(this.instance);
@@ -205,10 +207,17 @@ class AuthWechat {
 
 	getJsApiCodeUrl(backurl)
 	{
-	    let that = this;
-	    let appId = that.initConfig.appId;
-	    let redirect_uri = encodeURIComponent(backurl);
-	    return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
+		let appId = uni.getStorageSync(WX_APPID);
+		if(appId)
+		{
+		    let redirect_uri = encodeURIComponent(backurl);
+		    return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
+		}else
+		{
+		    //没有缓存则重新授权一遍
+		    this.toAuth();
+
+		}
 	}
 	/**
 	 * 跳转自动登陆

@@ -9,6 +9,7 @@ module.exports = {
 	EXPIRES_TIME: 'EXPIRES_TIME',
 	//�Ƿ���Ȩ
 	WX_AUTH: 'WX_AUTH',
+	WX_APPID: 'WX_APPID',
 	//���ں���Ȩcode
 	STATE_KEY: 'wx_authorize_state',
 	//�û�����
