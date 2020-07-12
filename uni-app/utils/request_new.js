@@ -28,7 +28,7 @@ function baseRequest_new(url, method, data, {noAuth = false, noVerify = false})
   
   return new Promise((reslove, reject) => {
     uni.request({
-      url: Url + '/h5api/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,
+      url: Url + '/web/?method=' + url+'&shop_key='+shop_key+'&login_token='+nowtoken,
       method: method || 'GET',
       header: header,
       data: data || {},
