@@ -5,7 +5,6 @@ module.exports = {
 	HTTP_REQUEST_URL:'https://www.ipinhai1.com',
 	HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
 	HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
-	APP_ID:'wx72ab3a22dc7b00f9',
 	// #endif
 	
 	// #ifdef H5
@@ -14,7 +13,6 @@ module.exports = {
 		HTTP_REQUEST_URL:'https://www.ipinhai1.com',
 		HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
 		HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
-		APP_ID:'wx72ab3a22dc7b00f9',
 	// #endif
 	HOST:'https://store.aichaoxuan.com',
 	

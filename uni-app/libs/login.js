@@ -54,6 +54,10 @@ export function toLogin(push, pathLogin) {
 	// #endif
 }
 
+// export function getJsApiCodeUrl(backurl)
+// {
+//     return auth.getJsApiCodeUrl(backurl);
+// }
 
 export function checkLogin()
 {

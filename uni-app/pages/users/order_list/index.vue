@@ -174,7 +174,7 @@
 			// #ifdef  H5
 			if (this.$wechat.isWeixin()){
 				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+APP_ID+'&redirect_uri='+encodeURIComponent(HOST+'/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					var url = this.$wechat.getJsApiCodeUrl(HOST+'/pages/users/order_list/index?status='+this.orderStatus);
 					location.href = url;
 				}
 			}

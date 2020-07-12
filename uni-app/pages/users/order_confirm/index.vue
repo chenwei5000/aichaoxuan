@@ -285,23 +285,24 @@
 		 */
 		onShow: function() {
 			let _this = this
-			// #ifdef  H5
-			if (this.$wechat.isWeixin()){
-				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+APP_ID+'&redirect_uri='+encodeURIComponent(HOST+'/pages/users/order_confirm/index?cartId='+this.cartId)+'&response_type=code&scope=snsapi_base#wechat_redirect';
-					location.href = url;
-				}else{
-					this.code = uni.getStorageSync('jsapi_code')
-				}
-			}
-			if (uni.getStorageSync('goPages')){
-				var goPages = uni.getStorageSync('goPages');
-				uni.removeStorageSync('goPages');
-				location.href = HOST+goPages;
-			}
-			// #endif
+					// #ifdef  H5
+					if (this.$wechat.isWeixin()){
+						if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
+							var url = this.$wechat.getJsApiCodeUrl(HOST+'/pages/users/order_confirm/index?cartId='+this.cartId);
+							location.href = url;
+						}else{
+							this.code = uni.getStorageSync('jsapi_code')
+						}
+					}
+					if (uni.getStorageSync('goPages')){
+						var goPages = uni.getStorageSync('goPages');
+						uni.removeStorageSync('goPages');
+						location.href = HOST+goPages;
+					}
+					// #endif
 			this.textareaStatus = true;
 			if (this.isLogin && this.toPay == false) {
+
 				this.getaddressInfo();
 				this.$nextTick(function() {
 					this.$refs.addressWindow.getAddressList();
