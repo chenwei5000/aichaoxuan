@@ -144,7 +144,7 @@
 			    let that = this;
 				let nowtoken = store.state.app.token;
 				let shop_key = encodeURIComponent(store.state.app.shopKey);
-				let url = HTTP_REQUEST_URL_NEW+'/h5api/web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
+				let url = HTTP_REQUEST_URL_NEW+'web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
 				console.log(url);
 				uni.chooseImage({
 					count: 1,

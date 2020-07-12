@@ -18,7 +18,7 @@ export function setShopKey(key) {
 	// 既没有参数，也没有缓存，则默认shop_key
 	if(LastShopKey === undefined)
 	{
-		Cache.set(SHOP_KEY, 'e6948c206d911463dfcdccf929e09485' || 0);
+		Cache.set(SHOP_KEY, 'aa19790355ba09dfe510460e672911dc' || 0);
 	}
     }
 }
@@ -30,7 +30,7 @@ export function getShopKey()
     if (store.state.app.shopKey) {
 	shop_key = encodeURIComponent(store.state.app.shopKey);
     }else{
-	shop_key = encodeURIComponent('e6948c206d911463dfcdccf929e09485');
+	shop_key = encodeURIComponent('aa19790355ba09dfe510460e672911dc');
     }
     return shop_key;
 }

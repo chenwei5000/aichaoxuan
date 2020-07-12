@@ -148,7 +148,7 @@
 			      let t = this, value = e.detail.value;
 				  //if (!value.refund_reason_wap_explain) return this.$util.Tips({title:'请输入退款原因'});
 				  
-				  var url = HTTP_REQUEST_URL_NEW+'/h5api/web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
+				  var url = HTTP_REQUEST_URL_NEW+'web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
 				  uni.request({
 				      url: url,
 				  	method: 'POST',
