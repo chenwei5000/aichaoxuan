@@ -4,8 +4,7 @@ module.exports = {
 	// #ifdef MP
 	HTTP_REQUEST_URL:'https://www.ipinhai1.com',
 	HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
-	HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
-	APP_ID:'wx72ab3a22dc7b00f9',
+	HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com/h5api',
 	// #endif
 	
 	// #ifdef H5
@@ -13,10 +12,8 @@ module.exports = {
 		//HTTP_REQUEST_URL: window.location.protocol+"//"+window.location.host,
 		HTTP_REQUEST_URL:'https://www.ipinhai1.com',
 		HTTP_REQUEST_URL_NEW:'https://store.aichaoxuan.com/h5api',
-		HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com',
-		APP_ID:'wx72ab3a22dc7b00f9',
+		HTTP_REQUEST_URL_TEST:'https://youpin.xiaosongzhixue.com/h5api',
 	// #endif
-	HOST:'https://store.aichaoxuan.com',
 	
 	HEADER:{
 		'content-type': 'application/json'

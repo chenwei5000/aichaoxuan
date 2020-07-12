@@ -96,7 +96,7 @@
 </template>
 
 <script>
-	import { HTTP_REQUEST_URL_NEW, HOST, APP_ID} from '@/config/app';
+	import { HTTP_REQUEST_URL_NEW } from '@/config/app';
 	import {
 		getOrderList,
 		orderData,
@@ -174,14 +174,14 @@
 			// #ifdef  H5
 			if (this.$wechat.isWeixin()){
 				if (!uni.getStorageSync('jsapi_code') || uni.getStorageSync('jsapi_code') == ''){
-					var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid='+APP_ID+'&redirect_uri='+encodeURIComponent(HOST+'/pages/users/order_list/index?status='+this.orderStatus)+'&response_type=code&scope=snsapi_base#wechat_redirect';
+					var url = this.$wechat.getJsApiCodeUrl(location.protocol+'//'+location.hostname+'/pages/users/order_list/index?status='+this.orderStatus);
 					location.href = url;
 				}
 			}
 			if (uni.getStorageSync('goPages')){
 				var goPages = uni.getStorageSync('goPages');
 				uni.removeStorageSync('goPages');
-				location.href = HOST+goPages;
+				location.href = location.protocol+'//'+location.hostname+goPages;
 			}
 			// #endif
 			if (this.isLogin) {

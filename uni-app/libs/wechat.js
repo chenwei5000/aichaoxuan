@@ -203,6 +203,13 @@ class AuthWechat {
 		return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_userinfo&state=${state}#wechat_redirect`;
 	}
 
+	getJsApiCodeUrl(backurl)
+	{
+	    let that = this;
+	    let appId = that.initConfig.appId;
+	    let redirect_uri = encodeURIComponent(backurl);
+	    return `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appId}&redirect_uri=${redirect_uri}&response_type=code&scope=snsapi_base#wechat_redirect`;
+	}
 	/**
 	 * 跳转自动登陆
 	 */
