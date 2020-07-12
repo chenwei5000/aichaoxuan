@@ -1004,7 +1004,7 @@
 		.page_content {
 			
 			/* #ifdef H5 */
-			padding-top: 10rpx;
+			// padding-top: 10rpx;
 			/* #endif */
 			
 
