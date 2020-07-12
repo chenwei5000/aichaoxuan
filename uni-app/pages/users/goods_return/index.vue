@@ -153,11 +153,11 @@
 			    */
 			    uploadpic:function(){
 			      let that=this;
-			  //     this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
-			  //       that.refund_reason_wap_img.push(res.data.url);
-					// that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
-			  //     });
-					let nowtoken = store.state.app.token;
+			       this.$util.uploadImageOne({url:'Upload.Image',name:'aftersale'},function(res){
+			         that.refund_reason_wap_img.push(res.data.url);
+					 that.$set(that,'refund_reason_wap_img',that.refund_reason_wap_img);
+			       });
+					/* let nowtoken = store.state.app.token;
 					let shop_key = encodeURIComponent(store.state.app.shopKey);
 					let url = HTTP_REQUEST_URL_NEW+'web/?method=Upload.Image&shop_key='+shop_key+'&login_token='+nowtoken;
 					console.log(url);
@@ -197,7 +197,7 @@
 						fail: function(err) {
 							console.log(err);
 						}
-					});
+					}); */
 			    },
 
 			    /**
@@ -208,7 +208,7 @@
 			      let t = this, value = e.detail.value;
 				  //if (!value.refund_reason_wap_explain) return this.$util.Tips({title:'请输入退款原因'});
 				  
-				  var url = HTTP_REQUEST_URL_NEW+'web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
+				  /* var url = HTTP_REQUEST_URL_NEW+'web/?method=Order.AddAfterSale&shop_key='+encodeURIComponent(store.state.app.shopKey)+'&login_token='+store.state.app.token;
 				  uni.request({
 				      url: url,
 				  	method: 'POST',
@@ -239,19 +239,23 @@
 				  	fail: function(err){
 				  		return this.$util.Tips({ title: err });
 				  	}
-				  });
+				  }); */
 			      //收集form表单
 			      // if (!value.refund_reason_wap_explain) return app.Tips({title:'请输入退款原因'});
-			      // orderRefundVerify({
-			      //   text: that.RefundArray[that.index] || '',
-			      //   refund_reason_wap_explain: value.refund_reason_wap_explain,
-			      //   refund_reason_wap_img: that.refund_reason_wap_img.join(','),
-			      //   order_id: that.orderId
-			      // }).then(res=>{
-			      //   return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
-			      // }).catch(err=>{
-			      //   return this.$util.Tips({ title: err });
-			      // })
+			       orderRefundVerify({
+			         og_id:t.og_id,
+			         apply_type:1,
+			         money:t.goodsDetail.most_return_money,
+			         text:t.RefundArray[t.index] || '',
+			         refund_reason_wap_explain:value.refund_reason_wap_explain,
+			         refund_reason_wap_img:t.refund_reason_wap_img.join(',')
+			       }).then(res=>{
+			         uni.navigateTo({
+			         	url: '/pages/users/user_return_list/index',
+			         });
+			       }).catch(err=>{
+			         return this.$util.Tips({ title: err });
+			       })
 			    },
 			    bindPickerChange: function (e) {
 					this.$set(this,'index',e.detail.value);

@@ -182,16 +182,23 @@
 				  });
 			      //收集form表单
 			      // if (!value.refund_reason_wap_explain) return app.Tips({title:'请输入退款原因'});
-			      // orderRefundVerify({
-			      //   text: that.RefundArray[that.index] || '',
-			      //   refund_reason_wap_explain: value.refund_reason_wap_explain,
-			      //   refund_reason_wap_img: that.refund_reason_wap_img.join(','),
-			      //   order_id: that.orderId
-			      // }).then(res=>{
-			      //   return this.$util.Tips({ title: '申请成功', icon: 'success' }, { tab: 5, url: '/pages/users/user_return_list/index?isT=1' });
-			      // }).catch(err=>{
-			      //   return this.$util.Tips({ title: err });
-			      // })
+			       orderRefundVerify({
+			         og_id:t.og_id,
+			         apply_type:1,
+			         money:t.goodsDetail.most_return_money,
+			         text:t.RefundArray[t.index] || '',
+			         refund_reason_wap_explain:value.refund_reason_wap_explain,
+			         aftersale:t.refund_reason_wap_img.join(',')
+			       }).then(res=>{
+					   console.log(res);
+					   if (res.status == 200) {
+					   	return this.$util.Tips({ title: '申请成功', icon: 'success' }, '/pages/users/user_return_list/index');
+					   } else {
+						   this.$util.Tips({ title: res.msg });
+					   }
+			       }).catch(err=>{
+			         return this.$util.Tips({ title: err });
+			       })
 			    },
 			    bindPickerChange: function (e) {
 					this.$set(this,'index',e.detail.value);

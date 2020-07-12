@@ -1,6 +1,7 @@
 import {
  	TOKENNAME,
- 	HTTP_REQUEST_URL
+ 	HTTP_REQUEST_URL,
+	HTTP_REQUEST_URL_NEW
  } from '../config/app.js';
  import store from '../store';
  import {
@@ -265,7 +266,7 @@ import {
  					title: '图片上传中',
  				});
 				uni.uploadFile({
-					url: HTTP_REQUEST_URL + 'web/?method=' + uploadUrl,
+					url: HTTP_REQUEST_URL_NEW + '/web/?method=' + uploadUrl,
 					filePath: res.tempFilePaths[0],
 					name: inputName,
 					formData: {
