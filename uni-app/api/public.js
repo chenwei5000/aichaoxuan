@@ -12,8 +12,8 @@ export function getWechatConfig() {
   //  { noAuth: true }
   //);
   return request_new.get(
-    //"Weixin.GetJssdkConfig",
-    "Site.GetWechatConfig",
+    "Weixin.GetJssdkConfig",
+    //"Site.GetWechatConfig",
     { url: document.location.href },
     { noAuth: true }
   );
