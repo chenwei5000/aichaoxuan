@@ -730,7 +730,7 @@
 						break;
 					case "WECHAT_H5_PAY": //h5
 						setTimeout(() => {
-							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(location.protocol+'//'+location.hostname+goPages);
+							location.href = jsConfig.mweb_url+'&redirect_url='+encodeURIComponent(location.protocol+'//'+location.hostname+goPages + '&status=0');
 						}, 100);
 						break;
 				}
