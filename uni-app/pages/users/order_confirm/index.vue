@@ -472,7 +472,6 @@
 					}else{
 						that.cartArr[2].payStatus = 1
 					}
-					
 					// that.$set(that, 'cartArr', that.cartArr);
 					that.$set(that, 'ChangePrice', that.totalPrice);
 				}).catch(err => {
@@ -737,7 +736,6 @@
 				
 				let that = this,
 					data = {};
-				
 				if (!that.payType) return that.$util.Tips({
 					title: '请选择支付方式'
 				});
@@ -769,6 +767,7 @@
 					phone: that.contactsTel,
 					addressId: that.addressId,
 					formId: '',
+					cartId: that.cartId,
 					couponId: that.couponId,
 					payType: that.payType,
 					useIntegral: that.useIntegral,
