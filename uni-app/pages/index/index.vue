@@ -14,7 +14,7 @@
 			<view class="page_content" style="position: relative;" v-if="navIndex == 0">
 		<!-- #endif -->
 		<!-- #ifdef MP -->
-			<view class="page_content" :style="'padding-top: 355rpx !important;'" v-if="navIndex == 0">
+			<view class="page_content" :style="'padding-top: 345rpx !important;'" v-if="navIndex == 0">
 		<!-- #endif -->
 			<view class="swiper">
 				<swiper 

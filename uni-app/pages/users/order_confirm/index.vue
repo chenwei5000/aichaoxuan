@@ -681,14 +681,18 @@
 									title: '取消支付'
 								}, {
 									tab: 5,
-									url: 'pages/index/index'
+									url: goPages + '&status=0'
 								});
 							},
-							complete: function(e) {
-								console.log(e);
+							complete: function(res) {
+								console.log(res);
+								uni.hideLoading();
 								//关闭当前页面跳转至订单状态
-								if (e.errMsg == 'requestPayment:cancel') return that.$util.Tips({
+								if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 									title: '取消支付'
+								}, {
+									tab: 5,
+									url: goPages + '&status=0'
 								});
 							},
 						})
@@ -705,7 +709,6 @@
 								icon: 'success',
 							})
 						}).cache(res => {
-							uni.removeStorageSync('goPages');
 							if (res.errMsg == 'requestPayment:cancel') return that.$util.Tips({
 								title: '取消支付'
 							}, {
