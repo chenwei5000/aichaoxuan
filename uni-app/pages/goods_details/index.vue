@@ -576,7 +576,7 @@
 					that.$set(that, 'PromotionCode', storeInfo.code_base);
 					that.$set(that, 'activity', data.activity ? data.activity : []);
 					if (storeInfo.is_seckill==1){
-						let timestamp = (new Date()).valueOf();
+						let timestamp = parseInt(new Date().getTime()/1000);
 						if (timestamp>storeInfo.start_time){
 							that.$set(that, 'skill_start', true);
 						}
@@ -996,7 +996,6 @@
 				let data = this.storeInfo;
 				let href = location.href;
 				let shop_key= getShopKey();
-				console.log(data);
 				if (this.$wechat.isWeixin()) {
 					getUserInfo().then(res => {
 						href =
@@ -1010,6 +1009,7 @@
 							link: href,
 							imgUrl: data.slider_image[0]
 						};
+						console.log(configAppMessage);
 						this.$wechat.wechatEvevt([
 							"updateAppMessageShareData",
 							"updateTimelineShareData",
