@@ -5,6 +5,12 @@
 		</view>
 		
 		<view style="width: 750rpx;margin-top: 32rpx;" v-for="(item, index) in list" :key="index" v-if="list.length > 0">
+			<view style="position: absolute;right: 0;width: 210rpx;height: 44rpx;background-image: url(../../static/images/ysjbg.png);background-size: 210rpx 44rpx;" v-if="item.time_text != ''">
+				
+				<view style="width: 210rpx;height: 44rpx;display:flex;justify-content: center;align-items: center;">
+					<text style="font-size:24rpx;color:rgba(255,255,255,1);">{{ item.time_text }}</text>
+				</view>
+			</view>
 			<image
 				style="width: 690rpx;height: 260rpx;border-top-left-radius: 16rpx;border-top-right-radius: 16rpx;margin-left: 30rpx;margin-right: 30rpx;"
 				@tap="detail(item.sku_id)"
