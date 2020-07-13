@@ -106,7 +106,6 @@
 <style>
 	@import url("@/plugin/animate/animate.min.css");
 	@import 'static/css/base.css';
-	@import 'static/iconfont/iconfont.css';
 	@import 'static/css/guildford.css';
 	@import 'static/css/style.scss';
 	view{

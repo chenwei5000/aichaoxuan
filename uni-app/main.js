@@ -5,7 +5,6 @@ import Cache from './utils/cache'
 import util from 'utils/util'
 import { setShopKey } from './libs/public.js'
 import { getShopKey } from './libs/public.js'
-import './static/iconfont/fonts/iconfont.css'
 Vue.prototype.$util = util;
 Vue.prototype.$Cache = Cache;
 Vue.prototype.$eventHub = new Vue();
