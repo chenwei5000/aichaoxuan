@@ -1,5 +1,5 @@
 {
-    "name" : "chaoxuanshop",
+    "name" : "亲测好物",
     "appid" : "__UNI__7919780",
     "description" : "",
     "versionName" : "1.0.0",
@@ -65,36 +65,10 @@
             "postcss" : true,
             "es6" : true
         },
-        "plugins" : {
-            "live-player-plugin" : {
-                "version" : "1.1.1",
-                "provider" : "wx2b03c6e691cd7370"
-            }
-        },
-        "permission" : {},
-        "usingComponents" : true
-    },
-    "mp-alipay" : {
-        "usingComponents" : true
-    },
-    "mp-baidu" : {
-        "usingComponents" : true
-    },
-    "mp-toutiao" : {
-        "usingComponents" : true
-    },
-    "h5" : {
-        "devServer" : {
-            "https" : false
-        },
-        "router" : {
-            "mode" : "history",
-            "base" : "/"
-        },
-        "domain" : "store.aichaoxuan.com",
-        "sdkConfigs" : {
-            "maps" : {}
-        },
-        "title" : "亲测好物"
+        "plugins" : {},
+        "live-player-plugin" : {
+            "version" : "1.1.1",
+            "provider" : "wx2b03c6e691cd7370"
+        }
     }
 }
