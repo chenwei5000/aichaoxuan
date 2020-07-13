@@ -8,16 +8,52 @@
 			</view>
 			<view class='nav acea-row row-between-wrapper'>
 				<view>购物数量： &nbsp;&nbsp;<text class='num font-color'>{{cartCount}}</text></view>
-				<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0" class='administrate acea-row row-center-wrapper'
+				<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0|| cartList.unorder.length>0" class='administrate acea-row row-center-wrapper'
 				 @click='manage'>{{ footerswitch ? '管理' : '取消'}}</view>
 			</view>
-			<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0">
+			<view v-if="cartList.valid.length > 0 || cartList.invalid.length > 0 || cartList.unorder.length > 0">
 				<view class='list'>
 					<checkbox-group @change="checkboxChange">
 						<block v-for="(item,index) in cartList.valid" :key="index">
 							<view class='item acea-row row-between-wrapper'>
 								<!-- #ifndef MP -->
 								<checkbox :value="(item.id).toString()" :checked="item.checked" />
+								<!-- #endif -->
+								<!-- #ifdef MP -->
+								<checkbox :value="item.id" :checked="item.checked" />
+								<!-- #endif -->
+								<navigator :url='"/pages/goods_details/index?id="+item.product_attr_unique' hover-class='none' class='picTxt acea-row row-between-wrapper'>
+									<view class='pictrue'>
+										<image v-if="item.productInfo.attrInfo" :src='item.productInfo.attrInfo.image'></image>
+										<image v-else :src='item.productInfo.image'></image>
+									</view>
+									<view class='text'>
+										<view class='line1'>{{item.productInfo.store_name}}</view>
+										<view class='infor line1' v-if="item.productInfo.attrInfo">属性：{{item.productInfo.attrInfo.suk}}</view>
+										<view class='money'>￥{{item.truePrice}}</view>
+									</view>
+									<view class='carnum acea-row row-center-wrapper'>
+										<view class="reduce" :class="item.numSub ? 'on' : ''" @click.stop='subCart(index)'>-</view>
+										<view class='num'>{{item.cart_num}}</view>
+										<!-- <view class="num">
+											<input type="number" v-model="item.cart_num" @click.stop @input="iptCartNum(index)" @blur="blurInput(index)"/>
+										</view> -->
+										<view class="plus" :class="item.numAdd ? 'on' : ''" @click.stop='addCart(index)'>+</view>
+									</view>
+								</navigator>
+							</view>
+						</block>
+					</checkbox-group>
+				</view>
+				<view class='list' style='margin-top:0px'>
+					<view v-if="cartList.unorder.length >0" class='goodsNav acea-row row-between-wrapper'>
+						<view>不可结算商品</view>
+					</view>
+					<checkbox-group @change="checkboxChange">
+						<block v-for="(item,index) in cartList.unorder" :key="index">
+							<view class='item acea-row row-between-wrapper'>
+								<!-- #ifndef MP -->
+								<checkbox disabled="true" :value="(item.id).toString()" :checked="false" />
 								<!-- #endif -->
 								<!-- #ifdef MP -->
 								<checkbox :value="item.id" :checked="item.checked" />
@@ -81,7 +117,7 @@
 			<view class='footer acea-row row-between-wrapper' v-if="cartList.valid.length > 0">
 				<view>
 					<checkbox-group @change="checkboxAllChange">
-						<checkbox value="all" :checked="!!isAllSelect" /><text class='checkAll'>全选 ({{cartCount}})</text>
+						<checkbox value="all" :checked="!!isAllSelect" /><text class='checkAll'>全选 </text>
 					</checkbox-group>
 				</view>
 				<view class='money acea-row row-middle' v-if="footerswitch==true">
@@ -139,6 +175,7 @@
 				hostProduct: [],
 				cartList: {
 					valid: [],
+					unorder: [],
 					invalid: []
 				},
 				isAllSelect: false, //全选
@@ -178,6 +215,7 @@
 				this.hotLimit = 10;
 				this.cartList = {
 						valid: [],
+						unorder: [],
 						invalid: []
 					},
 					this.isAllSelect = false; //全选
@@ -405,6 +443,7 @@
 				getCartList().then(res => {
 					let cartList = res.data;
 					let valid = cartList.valid;
+					let unorder =  cartList.unorder; 
 					let numSub = [{
 						numSub: true
 					}, {
@@ -433,6 +472,25 @@
 							}
 							valid[index].checked = true;
 							selectValue.push(valid[index].id);
+						}
+					}
+					if (unorder.length > 0) {
+						for (let index in unorder) {
+							if (unorder[index].cart_num == 1) {
+								unorder[index].numSub = true;
+							} else {
+								unorder[index].numSub = false;
+							}
+							let productInfo = unorder[index].productInfo;
+							if (productInfo.hasOwnProperty('attrInfo') && unorder[index].cart_num == unorder[index].productInfo.attrInfo.stock) {
+								unorder[index].numAdd = true;
+							} else if (unorder[index].cart_num == unorder[index].productInfo.stock) {
+								unorder[index].numAdd = true;
+							} else {
+								unorder[index].numAdd = false;
+							}
+							unorder[index].checked = false;
+							//selectValue.push(unorder[index].id);
 						}
 					}
 					that.$set(that, 'cartList', cartList);
