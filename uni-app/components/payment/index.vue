@@ -108,6 +108,7 @@
 				    status = 'WECHAT_PAY'
 					let code = uni.getStorageSync('jsapi_code');
 					data.code = code;
+					uni.removeStorageSync('jsapi_code');
 					WxJsapiPay(data).then(res => {
 						console.log(res)
 						jsConfig = res.data.jsApiParams;
@@ -222,7 +223,6 @@
 						// #ifdef H5
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
-						uni.removeStorageSync('jsapi_code');
 						uni.setStorageSync('goPages',goPages);
 						this.$wechat.pay(jsConfig).then(res => {
 							uni.showToast({
