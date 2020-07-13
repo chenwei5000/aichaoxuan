@@ -39,15 +39,11 @@
 			<view class="bottom-mask">
 				<view class="mask-btn">
 					<view class="mask-btn-left">
-						<button data-name="shareBtn" open-type="share">
-							<icon class="iconfont icon-iconfontlink"></icon>
-						</button>
+						<image src="../../static/images/link.png" mode=""></image>
 						<view>发送小程序链接</view>
 					</view>
 					<view class="mask-btn-right">
-						<button type="default">
-							<icon class="iconfont icon-haibao"></icon>
-						</button>
+						<image src="../../static/images/image.png" mode=""></image>
 						<view>生成图片海报</view>
 					</view>
 				</view>
@@ -254,8 +250,9 @@
 				> view {
 					width: 50%;
 					flex: 1;
+					text-align: center;
 					
-					button {
+					image {
 						width: 120rpx;
 						height: 120rpx;
 						line-height: 120rpx;
@@ -263,9 +260,6 @@
 						color: #555;
 						border-radius: 50%;
 						margin: 0 auto;
-						icon {
-							font-size: 48rpx !important;
-						}
 					}
 					view {
 						text-align: center;
