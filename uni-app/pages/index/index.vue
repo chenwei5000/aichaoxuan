@@ -101,6 +101,80 @@
 
 			</block>
 			<!-- #endif -->
+			
+			<!-- 直播 -->
+			<!-- #ifdef H5 -->
+			<block v-if="liveList.length>0">
+			<view style="width: 750rpx;background-color: #fff;margin-top: 20rpx;">
+				<view style="width: 718rpx;height: 70rpx;display: flex;align-items: center;justify-content: space-between;">
+					<view style="width: 320rpx;height: 70rpx;">
+						<image src="../../static/images/lives.png" style="width: 100%; height: 100%;" mode=""></image>
+					</view>
+					<navigator url="../live/live">
+					<view style="height: 70rpx;display: flex;align-items: center;">
+						<text style="font-size:24rpx;color:rgba(255,2,5,1);">全部直播</text>
+						<image style="width: 12rpx;height: 20rpx;margin-left: 26rpx;" src="../../static/images/livemore.png"></image>
+					</view>
+					</navigator>
+				</view>
+				
+				<!-- 直播列表 -->
+				<view class="live-content">
+					<view class="lives-list" v-for="item in liveList" :key="item.id">
+						<!-- #ifdef MP -->
+						<navigator :url="item.live_status === '102' ? (liveDeail + '?roomId=' + item.roomid) : (liveUrl + item.roomid + '&custom_params=' + LiveCustomParams)">
+						<!-- #endif -->
+						
+						<!-- #ifdef H5 -->
+						<navigator :url="liveDeail + '?roomId=' + item.roomid" >
+						<!-- #endif -->
+							<view class="live-item">
+								<view class="item-left">
+									<view class="tips">
+										<view class="tips-left">
+											<text v-if="item.live_status === '101'">直播中 {{ item.status }}</text>
+											<text v-else-if="item.live_status === '102'">直播预告</text>
+											<text v-else>精彩回放</text>
+										</view>
+									</view>
+									<view class="like">
+										<text class="join-live" v-if="item.live_status === '101'">进入直播</text>
+										<text class="join-live" v-else-if="item.live_status === '103'">点击回放</text>
+									</view>
+									<image :src="item.share_img" mode=""></image>
+								</view>
+								<view class="item-right">
+									<text>{{ item.name }}</text>
+									<view>
+										<!-- start_time -->
+										<view>
+											<image :src="item.cover_img" mode=""></image>
+										</view>
+										<text>{{ item.anchor_name }}</text>
+									</view>
+									<view class="item-pro">
+										<view>
+											<text>￥{{  item.goods[0] && item.goods[0].price }}</text>
+											<image :src="item.goods[0] && item.goods[0].cover_img" mode=""></image>
+										</view>
+										<view v-if="item.goods.length >= 2">
+											<view class="mask-view">
+												<text>{{ item.goods.length }}</text>
+												<text>宝贝</text>
+											</view>
+											<image :src="item.goods[0] && item.goods[0].cover_img" mode=""></image>
+										</view>
+									</view>
+								</view>
+							</view>
+						</navigator>
+					</view>
+				</view>
+			</view>
+			
+			</block>
+			<!-- #endif -->
+			
 			<!-- 限时秒杀 -->
 
 			<view class="spike-box" v-if="spikeList.length>0">
@@ -232,11 +306,11 @@
 <script>
 	let app = getApp();
 	import { getIndexData } from '@/api/api.js';
-	// #ifdef MP-WEIXIN
 	import {
 		getTemlIds,
 		getLiveLists
 	} from '@/api/api.js';
+	// #ifdef MP-WEIXIN
 	import {
 		SUBSCRIBE_MESSAGE,
 		SHOP_KEY,
@@ -401,9 +475,9 @@
 				shop_key = getShopKey();
 				this.LiveCustomParams = encodeURIComponent(JSON.stringify({ path: 'pages/index/index', shop_key: shop_key }))
 			}
-			
-			this.getLiveList()
 			// #endif
+			this.getLiveList()
+			
 		},
 		onShow() {
 			let self = this
@@ -660,6 +734,7 @@
 			getLiveList: function() {
 				getLiveLists(1, 20).then(res => {
 					this.liveList = res.data.live_list.splice(0, 2)
+					console.log(this.liveList)
 				}).catch(res => {
 
 				})

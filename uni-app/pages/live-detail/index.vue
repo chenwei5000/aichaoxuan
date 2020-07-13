@@ -6,7 +6,13 @@
 				<view>{{ liveData.name }}</view>
 				<text>{{ liveData.start_time }}开播</text>
 			</view>
+			<!-- #ifdef MP -->
 			<subscribe class="scribe-btn" :room-id="roomid"></subscribe>
+			<!-- #endif -->
+			
+			<!-- #ifdef H5 -->
+			<button type="default" class="scribe-btn"  @click="openminishare">立即订阅</button>
+			<!-- #endif -->
 			<view class="pic-big">
 				<image :src="liveData.cover_img" mode=""></image>
 			</view>
@@ -32,7 +38,13 @@
 		
 		<!-- 3.0 分享直播 -->
 		<view class="share-btn">
-			<button @click="openPopup">分享直播</button>
+			<!-- #ifdef MP -->
+				<button @click="openPopup">分享直播</button>
+			<!-- #endif -->
+			
+			<!-- #ifdef H5 -->
+				<button @click="openminishare">分享直播</button>
+			<!-- #endif -->
 		</view>
 		
 		<uni-popup ref="popup" type="bottom">
@@ -50,8 +62,14 @@
 				<button class="cancel-btn" type="default" @click="cancelPopup">取消</button>
 			</view>
 		</uni-popup>
+
+		<uni-popup ref="erweima" type="center">
+			<view style="width: 600rpx;background: #fff;display: flex;flex-direction: column;align-items: center;">
+				<image style="width: 500rpx;height: 500rpx;margin: 20rpx;" :src="wxa_code_image"></image>
+				<view style="margin: 20rpx;font-size: 28rpx;text-align: center;">长按保存或识别进入小程序</view>
+			</view>
+		</uni-popup>
 		
-		<!-- 海报 -->
 	</view>
 </template>
 
@@ -60,13 +78,16 @@
 		get_Lives_Detail,
 		get_Lives_Prolist
 	} from '@/api/api.js'
-	
+	import {
+		getWechatShareInfo
+	} from '@/api/store.js'
 	export default {
 		data() {
 			return {
 				roomid: 0,
 				liveData: {},
-				goodsList: []
+				goodsList: [],
+				wxa_code_image: ''
 			}
 		},
 		onLoad(option) {
@@ -93,7 +114,17 @@
 			},
 			cancelPopup() {
 				this.$refs.popup.close()
-			}
+			},
+			closePopup() {
+				this.$refs.erweima.close()
+			},
+			openminishare: function() {
+				this.$refs.erweima.open()
+				let that = this;
+				getWechatShareInfo(0).then(res => {
+					that.wxa_code_image = res.data.wxa.wxa_code_image
+				});
+			},
 		},
 		onShareAppMessage(options) {
 			　var that = this
@@ -151,11 +182,29 @@
 			.text-info {
 				margin-bottom: 32rpx;
 			}
+			/* #ifdef MP */
 			.scribe-btn {
 				position: absolute;
 				top: 42rpx;
 				right: 42rpx;
 			}
+			/* #endif */
+			
+			/* #ifdef H5 */
+			.scribe-btn {
+				position: absolute;
+				top: 32rpx;
+				right: 42rpx;
+				width: 190rpx;
+				height: 62rpx;
+				line-height: 62rpx;
+				border: 2rpx solid #FF0205;
+				background-color: #fff;
+				font-size: 24rpx;
+				color: #FF0205;
+				border-radius: 31rpx;
+			}
+			/* #endif */
 			
 			.pic-big {
 				width: 600rpx;
