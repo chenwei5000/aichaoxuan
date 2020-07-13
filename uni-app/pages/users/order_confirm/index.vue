@@ -576,6 +576,7 @@
 					if(ua.match(/MicroMessenger/i) == 'micromessenger'){
 					    status = 'WECHAT_PAY'
 						data.code = that.code;
+						uni.removeStorageSync('jsapi_code')
 						WxJsapiPay(data).then(e => {
 							console.log(e)
 							jsConfig = e.data.jsApiParams;
@@ -700,7 +701,6 @@
 						// #ifdef H5
 						console.log('公众号支付')
 						jsConfig = JSON.parse(jsConfig);
-						uni.removeStorageSync('jsapi_code');
 						uni.setStorageSync('goPages',goPages);
 						
 						this.$wechat.pay(jsConfig).then(res => {

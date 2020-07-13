@@ -100,7 +100,6 @@ class AuthWechat {
 		//支付签名时间戳，
 		//NOTE: 注意微信jssdk中的所有使用timestamp字段均为小写。
 		//但最新版的支付后台生成签名使用的timeStamp字段名需大写其中的S字符
-		uni.removeStorageSync('jsapi_code');
 		config.timestamp = config.timeStamp;
 		console.log('== lib wechat.js config ==', config);
 		return new Promise((resolve, reject) => {
