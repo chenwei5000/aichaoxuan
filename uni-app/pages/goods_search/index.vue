@@ -89,13 +89,14 @@
 					page: that.page,
 					limit: that.limit
 				}).then(res => {
-					let list = res.data,
+					let list = res.data.list,
 						loadend = list.length < that.limit;
 					that.bastList = that.$util.SplitArray(list, that.bastList);
+					
 					that.$set(that,'bastList',that.bastList);
 					that.loading = false;
 					that.loadend = loadend;
-					that.loadTitle = loadend ? "😕人家是有底线的~~" : "加载更多";
+					that.loadTitle = loadend ? "我也是有底线的" : "加载更多";
 					that.page = that.page + 1;
 				}).catch(err => {
 					that.loading = false,
