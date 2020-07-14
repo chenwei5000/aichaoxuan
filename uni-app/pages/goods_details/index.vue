@@ -174,7 +174,7 @@
 		collectAdd,
 		collectDel,
 		postCartAdd,
-		getWechatShareInfo
+		getMiniShareInfo
 	} from '@/api/store.js';
 	import {
 		getUserInfo
@@ -625,7 +625,7 @@
 			},
 			openminishare: function() {
 				let that = this;
-				getWechatShareInfo(this.id).then(res => {
+				getMiniShareInfo(1, this.id).then(res => {
 					that.wxa_code_image = res.data.wxa.wxa_code_image;
 					that.open('mini');
 				});

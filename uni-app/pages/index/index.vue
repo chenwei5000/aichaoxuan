@@ -337,7 +337,7 @@
 		getProductslist,
 		getProductHot,
 		getIndexProductList,
-		getWechatShareInfo,
+		getMiniShareInfo,
 		getShareInfo
 	} from '@/api/store.js';
 	import {
@@ -754,7 +754,7 @@
 			},
 			openminishare: function() {
 				let that = this;
-				getWechatShareInfo(0).then(res => {
+				getMiniShareInfo(1, 0).then(res => {
 					that.wxa_code_image = res.data.wxa.wxa_code_image;
 					that.open('mini');
 				});
