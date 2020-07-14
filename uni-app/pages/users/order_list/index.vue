@@ -330,7 +330,7 @@
 			 */
 			goOrderDetails: function(index) {
 				let that = this;
-				if (!index) return that.$util.Tips({
+				if (!that.orderList[index].id) return that.$util.Tips({
 					title: '缺少订单号无法查看订单详情'
 				});
 				
