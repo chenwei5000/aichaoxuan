@@ -58,7 +58,8 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        /* "appid" : "wx72ab3a22dc7b00f9", 线上配置 *//* "appid" : "wx9af5c0ce0db3632c", 测试环境配置 */
+        /* "appid" : "wx72ab3a22dc7b00f9", 线上配置 */
+	/* "appid" : "wx9af5c0ce0db3632c", 测试环境配置 */
         "appid" : "wx72ab3a22dc7b00f9",
         "setting" : {
             "urlCheck" : false,
@@ -90,9 +91,11 @@
         },
         "router" : {
             "mode" : "history",
-            "base" : "/store/"
+            "base" : ""
         },
-        "domain" : "youpin.xiaosongzhixue.com",
+        /* "domain" : "youpin.xiaosongzhixue.com",  测试*/
+        /* "domain" : "store.aichaoxuan.com",  线上*/
+        "domain" : "store.aichaoxuan.com", 
         "sdkConfigs" : {
             "maps" : {}
         },
