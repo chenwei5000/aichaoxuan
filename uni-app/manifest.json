@@ -58,9 +58,8 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        /* "appid" : "wx72ab3a22dc7b00f9", 线上配置 */
-		/* "appid" : "wx9af5c0ce0db3632c", 测试环境配置 */
-        "appid" : "wx9af5c0ce0db3632c",
+        /* "appid" : "wx72ab3a22dc7b00f9", 线上配置 *//* "appid" : "wx9af5c0ce0db3632c", 测试环境配置 */
+        "appid" : "wx72ab3a22dc7b00f9",
         "setting" : {
             "urlCheck" : false,
             "minified" : true,
@@ -68,10 +67,35 @@
             "es6" : true
         },
         "plugins" : {
-			"live-player-plugin" : {
-				"version" : "1.1.2",
-				"provider" : "wx2b03c6e691cd7370"
-			}
-		}
+            "live-player-plugin" : {
+                "version" : "1.1.2",
+                "provider" : "wx2b03c6e691cd7370"
+            }
+        },
+        "permission" : {},
+        "usingComponents" : true
+    },
+    "mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "h5" : {
+        "devServer" : {
+            "https" : false
+        },
+        "router" : {
+            "mode" : "history",
+            "base" : "/store/"
+        },
+        "domain" : "youpin.xiaosongzhixue.com",
+        "sdkConfigs" : {
+            "maps" : {}
+        },
+        "title" : "亲测好物"
     }
 }
