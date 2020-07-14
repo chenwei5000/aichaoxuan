@@ -33,21 +33,21 @@
 										<view class='money'>￥{{item.truePrice}}</view>
 									</view>
 									<view class='carnum acea-row row-center-wrapper'>
-										<view class="reduce" :class="item.numSub ? 'on' : ''" @click.stop='subCart(index)'>-</view>
+										<view class="reduce" :class="item.numSub ? 'on' : ''" @click.stop='subCart("valid",index)'>-</view>
 										<view class='num'>{{item.cart_num}}</view>
 										<!-- <view class="num">
 											<input type="number" v-model="item.cart_num" @click.stop @input="iptCartNum(index)" @blur="blurInput(index)"/>
 										</view> -->
-										<view class="plus" :class="item.numAdd ? 'on' : ''" @click.stop='addCart(index)'>+</view>
+										<view class="plus" :class="item.numAdd ? 'on' : ''" @click.stop='addCart("valid",index)'>+</view>
 									</view>
 								</navigator>
 							</view>
 						</block>
 					</checkbox-group>
 				</view>
-				<view class='list' style='margin-top:0px'>
-					<view v-if="cartList.unorder.length >0" class='goodsNav acea-row row-between-wrapper'>
-						<view>不可结算商品</view>
+				<view class='list' style='margin-top:5rpx;margin-bottom: 5rpx;'>
+					<view v-if="cartList.unorder.length >0" class=''>
+						<view style='padding-left: 30rpx;'>　　不可结算商品</view>
 					</view>
 					<checkbox-group @change="checkboxChange">
 						<block v-for="(item,index) in cartList.unorder" :key="index">
@@ -64,17 +64,17 @@
 										<image v-else :src='item.productInfo.image'></image>
 									</view>
 									<view class='text'>
-										<view class='line1'>{{item.productInfo.store_name}}</view>
+										<view class='line1'><text style="color: red;">[秒]</text>{{item.productInfo.store_name}}</view>
 										<view class='infor line1' v-if="item.productInfo.attrInfo">属性：{{item.productInfo.attrInfo.suk}}</view>
 										<view class='money'>￥{{item.truePrice}}</view>
 									</view>
 									<view class='carnum acea-row row-center-wrapper'>
-										<view class="reduce" :class="item.numSub ? 'on' : ''" @click.stop='subCart(index)'>-</view>
+										<view class="reduce" :class="item.numSub ? 'on' : ''" @click.stop='subCart("unorder",index)'>-</view>
 										<view class='num'>{{item.cart_num}}</view>
 										<!-- <view class="num">
 											<input type="number" v-model="item.cart_num" @click.stop @input="iptCartNum(index)" @blur="blurInput(index)"/>
 										</view> -->
-										<view class="plus" :class="item.numAdd ? 'on' : ''" @click.stop='addCart(index)'>+</view>
+										<view class="plus" :class="item.numAdd ? 'on' : ''" @click.stop='addCart("unorder",index)'>+</view>
 									</view>
 								</navigator>
 							</view>
@@ -388,10 +388,16 @@
 					 this.$set(this.cartList,'valid',this.cartList.valid)
 				 }
 			 },
-			subCart: function(index) {
+			subCart: function(type,index) {
 				let that = this;
 				let status = false;
-				let item = that.cartList.valid[index];
+				let item = [];
+				if(type=='valid'){
+					item = that.cartList.valid[index];					
+				}else{
+					item = that.cartList.unorder[index];					
+				}
+
 				item.cart_num = Number(item.cart_num) - 1;
 				if (item.cart_num < 1) status = true;
 				if (item.cart_num <= 1) {
@@ -403,14 +409,25 @@
 				}
 				if (false == status) {
 					that.setCartNum(item.id, item.cart_num, function(data) {
-						that.cartList.valid[index] = item;
+						if(type=='valid')
+						{
+							that.cartList.valid[index] = item;
+						}else{
+							that.cartList.unorder[index] = item;
+						}
 						that.switchSelect();
 					});
 				}
 			},
-			addCart: function(index) {
+			addCart: function(type,index) {
 				let that = this;
-				let item = that.cartList.valid[index];
+				let item = [];
+				if(type=='valid'){
+					item = that.cartList.valid[index];				
+				}else{
+					item = that.cartList.unorder[index];			
+				}
+
 				item.cart_num = Number(item.cart_num) + 1;
 				let productInfo = item.productInfo;
 				if (productInfo.hasOwnProperty('attrInfo') && item.cart_num >= item.productInfo.attrInfo.stock) {
@@ -422,7 +439,12 @@
 					item.numSub = false;
 				}
 				that.setCartNum(item.id, item.cart_num, function(data) {
-					that.cartList.valid[index] = item;
+					if(type=='valid')
+					{
+						that.cartList.valid[index] = item;
+					}else{
+						that.cartList.unorder[index] = item;
+					}
 					that.switchSelect();
 				});
 			},
