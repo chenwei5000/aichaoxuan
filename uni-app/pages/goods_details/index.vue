@@ -93,9 +93,9 @@
 			   </scroll-view>
 			</view>
 		<view class='footer acea-row row-between-wrapper'>
-			<navigator open-type='switchTab' hover-class="none" class="item" :url="'/pages/user/index'">
-				<view class="iconfont icon-yonghu1"></view>
-				<view>我的</view>
+			<navigator open-type='switchTab' hover-class="none" class="item" :url="'/pages/index/index'">
+				<view class="iconfont icon-shouye3"></view>
+				<view>首页</view>
 			</navigator>
 			<navigator open-type='switchTab' class="animated item" :class="animated==true?'bounceIn':''" url='/pages/order_addcart/order_addcart'
 			 hover-class="none">
