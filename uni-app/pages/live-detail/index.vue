@@ -79,7 +79,7 @@
 		get_Lives_Prolist
 	} from '@/api/api.js'
 	import {
-		getWechatShareInfo
+		getMiniShareInfo
 	} from '@/api/store.js'
 	export default {
 		data() {
@@ -91,9 +91,46 @@
 			}
 		},
 		onLoad(option) {
+			// #ifdef MP
+			// 小程序码携带参数的处理
+			if(options.scene)
+			{
+				//有小程序码
+				getMiniappShareInfo(decodeURIComponent(options.scene)).then(res => {
+					console.log(res);
+					if(res.data.shop_key) setShopKey(res.data.shop_key);
+					if(res.data.room_id)
+					{
+						console.log('set room_id',res.data.room_id);
+						this.roomid= res.data.room_id;
+					}
+					console.log('product id =',this.roomid);
+					if (!this.roomid){
+						return this.$util.Tips({
+							title: '缺少参数无法查看直播'
+						}, {
+							tab: 3,
+							url: 1
+						});
+					}
+					this.getData();
+				});
+			}else
+			{	// 没有小程序码
+				this.roomid = option.roomId;
+				if (!this.roomid){
+					return this.$util.Tips({
+						title: '缺少参数无法查看直播'
+					}, {
+						tab: 3,
+						url: 1
+					});
+				}
+				this.getData();
+			}
+			// #endif
 			// 获取跳转过来携带的 roomID
 			this.roomid = option.roomId
-			
 			this.getData()
 		},
 		methods: {
@@ -121,7 +158,7 @@
 			openminishare: function() {
 				this.$refs.erweima.open()
 				let that = this;
-				getWechatShareInfo(0).then(res => {
+				getMiniShareInfo(2, this.roomid).then(res => {
 					that.wxa_code_image = res.data.wxa.wxa_code_image
 				});
 			},

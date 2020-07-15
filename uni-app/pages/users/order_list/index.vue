@@ -39,11 +39,11 @@
 							<view v-else-if="orderStatus == 40 && item.shipping_type==1" class='font-color'>已完成</view>
 							<view v-else-if="item.shipping_type==2" class='font-color'>待核销</view>
 						</view>
-						<view class='item-info acea-row row-between row-top' v-for="(goods,index) in item.cartInfo" :key="index">
-							<view class='pictrue' @click='goOrderDetails(item.id)'>
+						<view class='item-info acea-row row-between row-top' v-for="(goods,index1) in item.cartInfo" :key="index1">
+							<view class='pictrue' @click='goOrderDetails(index)'>
 								<image :src='goods.productInfo.image'></image>
 							</view>
-							<view class='text acea-row row-between' @click='goOrderDetails(item.id)'>
+							<view class='text acea-row row-between' @click='goOrderDetails(index)'>
 								<view class='name line2'>{{goods.productInfo.store_name}}</view>
 								<view class='money'>
 									<view v-if="goods.productInfo.attrInfo">￥{{goods.productInfo.attrInfo.price}}</view>
@@ -66,8 +66,8 @@
 					<view class='bottom acea-row row-right row-middle'>
 						<view class='bnt cancelBnt' v-if="orderStatus==0 || orderStatus == 9" @click='cancelOrder(index,item.id)'>取消订单</view>
 						<view class='bnt bg-color' v-if="orderStatus == 0" @click='goPay(item.pay_price,item.id,item.pay_code)'>立即付款</view>
-						<view class='bnt bg-color' v-else-if="orderStatus == 1 || orderStatus == 9" @click='goOrderDetails(item.id)'>查看详情</view>
-						<view class='bnt bg-color' v-else-if="orderStatus == 2 && item.delivery_type" @click='goOrderDetails(item.id)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="orderStatus == 1 || orderStatus == 9" @click='goOrderDetails(index)'>查看详情</view>
+						<view class='bnt bg-color' v-else-if="orderStatus == 2 && item.delivery_type" @click='goOrderDetails(index)'>查看详情</view>
 						<!-- <view class='bnt bg-color' v-else-if="orderStatus == 3" @click='goOrderDetails(item.id)'>去评价</view> -->
 						<!-- <view class='bnt bg-color' v-else-if="item.seckill_id < 1 && item.bargain_id < 1 && item.combination_id < 1 && orderStatus == 4"
 						 @click='goOrderDetails(item.id)'>再次购买</view> -->
@@ -328,10 +328,16 @@
 			/**
 			 * 去订单详情
 			 */
-			goOrderDetails: function(order_id) {
-				if (!order_id) return that.$util.Tips({
+			goOrderDetails: function(index) {
+				let that = this;
+				if (!that.orderList[index].id) return that.$util.Tips({
 					title: '缺少订单号无法查看订单详情'
 				});
+				
+				uni.navigateTo({
+					url: '/pages/order_details/index?order_id=' + that.orderList[index].id
+				})
+				return;
 				// #ifdef MP
 				uni.showLoading({
 					title: '正在加载',

@@ -90,8 +90,13 @@ export function getSearchKeyword(){
   return request_new.get('Home.ListSearchKeyword',{},{noAuth:true});
 }
 
-export function getWechatShareInfo(goods_id) {
-  return request_new.get('Share.GetWechatShareInfo', { goods_id:goods_id}, { noAuth: true });
+/**
+ * 获取小程序码分享信息
+ * @param int object_type 分享对象类型
+ * @param int object_id   分享对象ID
+ */
+export function getMiniShareInfo(object_type, object_id) {
+  return request_new.get('Share.GetWxaShareInfo', {object_type:object_type, object_id:object_id}, { noAuth: true });
 }
 
 export function getShareInfo() {
