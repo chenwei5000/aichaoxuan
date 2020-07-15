@@ -93,18 +93,18 @@
 		onLoad(option) {
 			// #ifdef MP
 			// 小程序码携带参数的处理
-			if(options.scene)
+			if(option.scene)
 			{
 				//有小程序码
-				getMiniappShareInfo(decodeURIComponent(options.scene)).then(res => {
-					console.log(res);
+				getMiniappShareInfo(decodeURIComponent(option.scene)).then(res => {
+					// console.log(res);
 					if(res.data.shop_key) setShopKey(res.data.shop_key);
 					if(res.data.room_id)
 					{
 						console.log('set room_id',res.data.room_id);
 						this.roomid= res.data.room_id;
 					}
-					console.log('product id =',this.roomid);
+					// console.log('product id =',this.roomid);
 					if (!this.roomid){
 						return this.$util.Tips({
 							title: '缺少参数无法查看直播'
