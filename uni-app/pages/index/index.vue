@@ -280,7 +280,7 @@
 		<view class="floatright">
 			<image src="/static/images/minishare.png" @tap="openminishare()"></image>
 		</view>
-		<uni-popup ref="showmini" type="center">
+		<uni-popup ref="showmini" type="center" >
 			<view style="width: 600rpx;background: #fff;display: flex;flex-direction: column;align-items: center;">
 				<image style="width: 500rpx;height: 500rpx;margin: 20rpx;" :src="wxa_code_image"></image>
 				<view style="margin: 20rpx;font-size: 28rpx;text-align: center;">长按保存或识别进入小程序</view>
@@ -829,7 +829,10 @@
 		text-align: center;
 		border-radius: 8rpx;
 	}
-	
+	.uni-popup {
+		position: relative;
+		z-index: 10010 !important;
+	}
 	// 联系店主的遮罩
 	.shop-mask {
 		position: absolute;
@@ -838,7 +841,7 @@
 		width: 528rpx;
 		height: 704rpx;
 		background-color: #fff;
-		transform: translate(-50%, -60%);
+		transform: translate(-50%, -40%);
 		overflow: hidden;
 		
 		.close-mask {
